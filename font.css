@@ -1,0 +1,13 @@
+/* bakbak-one-regular - latin */
+@font-face {
+    font-family: 'Bakbak One';
+    font-style: normal;
+    font-weight: 400;
+    src: url('./assets/fonts/bakbak-one-v6-latin-regular.eot'); /* IE9 Compat Modes */
+    src: local(''),
+         url('./assets/fonts/bakbak-one-v6-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('./assets/fonts/bakbak-one-v6-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+         url('./assets/fonts/bakbak-one-v6-latin-regular.woff') format('woff'), /* Modern Browsers */
+         url('./assets/fonts/bakbak-one-v6-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('./assets/fonts/bakbak-one-v6-latin-regular.svg#BakbakOne') format('svg'); /* Legacy iOS */
+}

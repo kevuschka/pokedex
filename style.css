@@ -1,0 +1,122 @@
+*, *:before, *:after {
+    -webkit-box-sizing: border-box; 
+    -moz-box-sizing: border-box; 
+    box-sizing: border-box;
+}
+
+body, p {
+    margin: 0;
+}
+
+html {
+    transition: all 125ms ease-in-out;
+    font-family: 'Bakbak One';
+    font-style: normal;
+    font-weight: 400;
+}
+
+.flex {
+    display: flex;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.h-100 {
+    height: 100%;
+}
+
+.column {
+    flex-direction: column;
+}
+
+.cursor-p {
+    cursor: pointer;
+}
+
+.cursor-d {
+    cursor: default;
+}
+
+.d-none {
+    display: none;
+}
+
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.lightgray {
+    color: rgb(155, 155, 155);
+}
+
+.wrapper {
+    background-color: white;
+    color: black;
+    height: 100vh;
+    width: 100%;
+}
+
+.header {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 130px;
+    justify-content: center;
+    border-bottom-left-radius: 32px;
+    border-bottom-right-radius: 32px;
+    background-color: rgba(0, 0, 0, 0.1);
+    transform: translateY(-20vh);
+    transition: all 1s ease-in-out;
+}
+
+.show-header {
+    transform: translateY(0);
+}
+
+.header-wrapper {
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
+}
+
+.header-title {
+    font-size: 48px;
+    color: rgb(54, 53, 53);
+}
+
+.header-functionality-wrapper {
+    gap: 20px;
+    align-self: flex-end;
+}
+
+.header-searchbar {
+    align-items: center;
+    border-radius: 32px;
+    background-color: rgba(150, 149, 149, 0.071);
+}
+
+.header-searchbar-input {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    border-radius: 32px;
+    padding: 5px 12px;
+}
+
+.header-searchbar-input:focus {
+    background-color: white;
+}
+
+.header-sound, .header-favorites, .header-settings {
+    border-radius: 11%;
+    padding: 3px;
+    background-color: transparent;
+    width: 35px;
+    height: 35px;
+}
