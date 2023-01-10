@@ -113,6 +113,10 @@ html {
     background-color: rgba(150, 149, 149, 0.071);
 }
 
+.header-searchbar:hover {
+    background-color: rgba(150, 149, 149, 0.412);
+}
+
 .header-searchbar-input {
     outline: none;
     border: none;
