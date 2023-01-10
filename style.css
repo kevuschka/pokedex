@@ -113,7 +113,7 @@ html {
     background-color: white;
 }
 
-.header-sound, .header-favorites, .header-settings {
+.header-music, .header-sound, .header-favorites, .header-settings {
     border-radius: 11%;
     padding: 3px;
     background-color: transparent;

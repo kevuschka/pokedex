@@ -1,11 +1,12 @@
 let modus = 'white';
 let sound = 1;
 let bgSound = 1;
-let pageNumber = 0;
+let currentPageNumber = 0;
 let pokemonsPerPage = 20;
 let pokemonsPerPageMobile = 10;
 let currentPokemonList = []; 
 let allPokemons = [];
+let favPokemons = [];
 const bgMusic = new Audio('assets/sounds/poke_theme_music.mp3');
 const select = new Audio('assets/sounds/select_sound.mp3');
 
@@ -14,14 +15,16 @@ const select = new Audio('assets/sounds/select_sound.mp3');
 
 async function init() {
     await getLocalStorage();
+    await setLocalStorage();
     let url;
     if(!currentPokemonList.length) {
-        if(window.innerWidth > 800) url = `https://pokeapi.co/api/v2/pokemon/?offset=${pageNumber}0&limit=${pokemonsPerPage}`;
-        else url = `https://pokeapi.co/api/v2/pokemon/?offset=${pageNumber}0&limit=${pokemonsPerPageMobile}`
+        if(window.innerWidth > 800) url = `https://pokeapi.co/api/v2/pokemon/?offset=${currentPageNumber}0&limit=${pokemonsPerPage}`;
+        else url = `https://pokeapi.co/api/v2/pokemon/?offset=${currentPageNumber}0&limit=${pokemonsPerPageMobile}`
         let response = await fetch(url);
         currentPokemonList = await response.json();
         localStorage.setItem('currentPokemonList', JSON.stringify(currentPokemonList));
     }
+    if(!allPokemons.length) await preloadAllPokemons();
     console.log('pokemon', currentPokemonList);
     renderHeader();
 }
@@ -34,7 +37,8 @@ function renderHeader() {
     content.innerHTML = templateHeaderTitle();
     content.innerHTML += templateHeaderFunctionalityWrapper();
     let headerFunctionality = document.getElementById(`header-functionality-wrapper`);
-    headerFunctionality.innerHTML = templateHeaderSoundIcon();
+    headerFunctionality.innerHTML = templateHeaderMusicIcon();
+    headerFunctionality.innerHTML += templateHeaderSoundIcon();
     headerFunctionality.innerHTML += templateHeaderSearchbar();
     headerFunctionality.innerHTML += templateHeaderFavorites();
     headerFunctionality.innerHTML += templateHeaderSettings();
@@ -57,9 +61,15 @@ function templateHeaderFunctionalityWrapper() {
 }
 
 
+function templateHeaderMusicIcon() {
+    return `<img class="header-music cursor-p d-none" id="header-music" src="assets/img/music_icon.png" onclick="muteMusic()">
+            <img class="header-music cursor-p" id="header-music-mute" src="assets/img/music_icon_pause.png" onclick="unmuteMusic()">`;
+}
+
+
 function templateHeaderSoundIcon() {
-    return `<img class="header-sound cursor-p d-none" id="header-sound" src="assets/img/sound_icon.png" onclick="mute()">
-            <img class="header-sound cursor-p" id="header-sound-mute" src="assets/img/sound_icon_mute.png" onclick="unmute()">`;
+    return `<img class="header-sound cursor-p" id="header-sound" src="assets/img/sound_icon.png" onclick="muteSound()">
+            <img class="header-sound cursor-p d-none" id="header-sound-mute" src="assets/img/sound_icon_mute.png" onclick="unmuteSound()">`;
 }
 
 
@@ -116,7 +126,7 @@ function unmarkAllHeaderIcons() {
 }
 
 
-function loadPokemons() {
+async function loadPokemons() {
 
 }
 
@@ -126,6 +136,13 @@ function loadPokemons() {
 //         currentPokemonList.push(responseAsText['results'][i]);
 //     }
 // }
+
+async function preloadAllPokemons() {
+    let allPokemonUrl = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1153`;
+    let list = await fetch(allPokemonUrl)
+    allPokemons = await list.json();
+    localStorage.setItem(`allPokemons`, JSON.stringify(allPokemons));
+} 
 
 
 function searchPokemon() {
@@ -137,23 +154,40 @@ function searchPokemon() {
 }
 
 
-function mute() {
-    addClasslist(`header-sound`, `d-none`);
-    removeClasslist(`header-sound-mute`, `d-none`);
+function muteMusic() {
+    addClasslist(`header-music`, `d-none`);
+    removeClasslist(`header-music-mute`, `d-none`);
     bgMusic.pause();
-    sound = 0;
-    localStorage.setItem('sound') = 
+    bgSound = 0;
+    localStorage.setItem('bgSound', bgSound);
 }
 
 
-function unmute() {
-    removeClasslist(`header-sound`, `d-none`);
-    addClasslist(`header-sound-mute`, `d-none`);
+function unmuteMusic() {
+    removeClasslist(`header-music`, `d-none`);
+    addClasslist(`header-music-mute`, `d-none`);
     bgMusic.volume = 0.06;
     bgMusic.loop = true;
     bgMusic.play(); 
+    bgSound = 1;
+    localStorage.setItem('bgSound', bgSound);
 }
 
+
+function muteSound() {
+    addClasslist(`header-sound`, `d-none`);
+    removeClasslist(`header-sound-mute`, `d-none`);
+    sound = 0;
+    localStorage.setItem('sound', sound);
+}
+
+
+function unmuteSound() {
+    removeClasslist(`header-sound`, `d-none`);
+    addClasslist(`header-sound-mute`, `d-none`);
+    sound = 1;
+    localStorage.setItem('sound', sound);
+}
 
 
 
@@ -174,12 +208,23 @@ function removeClasslist(id, classe) {
 async function getLocalStorage() {
     modus = localStorage.getItem('modus') || 'white';
     sound = localStorage.getItem('sound') || 1;
-    bgSound = localStorage.getItem('bgSound') || 1;
-    pageNumber = localStorage.getItem('pageNumber') || 0;
+    bgSound = localStorage.getItem('bgSound') || 0;
+    currentPageNumber = localStorage.getItem('currentPageNumber') || 0;
     pokemonsPerPage = localStorage.getItem('pokemonsPerPage') || 20;
     pokemonsPerPageMobile = localStorage.getItem('pokemonsPerPageMobile') || 10;
     currentPokemonList = await JSON.parse(localStorage.getItem(`currentPokemonList`)) || [];  
     allPokemons = await JSON.parse(localStorage.getItem(`allPokemons`)) || [];
+    favPokemons = await JSON.parse(localStorage.getItem(`favPokemons`)) || [];
+}
+
+
+async function setLocalStorage() {
+    localStorage.setItem('modus', modus);
+    localStorage.setItem('bgSound', bgSound);
+    localStorage.setItem('sound', sound);
+    localStorage.setItem('currentPageNumber', currentPageNumber);
+    localStorage.setItem('pokemonsPerPage', pokemonsPerPage);
+    localStorage.setItem('pokemonsPerPageMobile', pokemonsPerPageMobile);
 }
 
 
