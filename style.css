@@ -51,8 +51,21 @@ html {
     position: absolute;
 }
 
+/* header icon color lightgray: #d9d9d9 
+   searchbar background color : #525252
+   
+*/
+
 .lightgray {
     color: rgb(155, 155, 155);
+}
+
+.bg-darkmode {
+    background-color: rgba(0,0,0,0.5);
+}
+
+.bg-normal {
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .wrapper {
@@ -70,7 +83,6 @@ html {
     justify-content: center;
     border-bottom-left-radius: 32px;
     border-bottom-right-radius: 32px;
-    background-color: rgba(0, 0, 0, 0.1);
     transform: translateY(-20vh);
     transition: all 1s ease-in-out;
 }
@@ -119,4 +131,15 @@ html {
     background-color: transparent;
     width: 35px;
     height: 35px;
+}
+
+
+@media screen and (min-width: 1400px) {
+    .header {
+        justify-content: center;
+    }
+
+    .header-wrapper {
+        max-width: 1400px;
+    }
 }
