@@ -51,6 +51,10 @@ html {
     position: absolute;
 }
 
+.sticky {
+    position: sticky;
+}
+
 /* header icon color lightgray: #d9d9d9 
    searchbar background color : #525252
 */
@@ -59,12 +63,54 @@ html {
 /*background-image: linear-gradient(red, yellow); */
 
 :root {
-    -red: #fb6c6c;
-    -blue: #76bdfe;
-    -lightgreen: #48d0af;
-    -green: #48d0b0;
-    -yellow: #ffd86f;
-    -purple:  rgb(111, 72, 208)
+    --red: #fb6c6c;
+    --blue: #76bdfe;
+    --lightgreen: #48d0af;
+    --green: #48d0b0;
+    --yellow: #fae155;
+    --purple:  rgb(133, 103, 209);
+    --brown: #e5c499;
+    --white: rgb(228, 228, 228);
+    --pink: #e4a1d9;
+}
+
+.red {
+    background-color: var(--red);
+    /* background-image: linear-gradient(var(--red) 55%, white); */
+}
+
+.blue {
+    background-color: var(--blue);
+    /* background-image: linear-gradient(var(--blue) 55%, white); */
+}
+
+.yellow {
+    background-color: var(--yellow);
+    /* background-image: linear-gradient(var(--yellow) 55%, white); */
+}
+
+.purple {
+    background-color: var(--purple);
+    /* background-image: linear-gradient(var(--purple) 55%, white); */
+}
+
+.green {
+    background-color: var(--green);
+    /* background-image: linear-gradient(var(--green) 55%, white); */
+}
+
+.brown {
+    background-color: var(--brown);
+    /* background-image: linear-gradient(var(--green) 55%, white); */
+}
+
+.white {
+    background-color: var(--white);
+    /* background-image: linear-gradient(var(--green) 55%, white); */
+}
+
+.pink {
+    background-color: var(--pink);
 }
 
 .lightgray {
@@ -76,7 +122,21 @@ html {
 }
 
 .bg-normal {
-    background-color: rgba(0, 0, 0, 0.1);
+    /* background-color: rgba(0, 0, 0, 0.1); */
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.9), white); */
+    background-color: white;
+}
+
+.opa-off {
+    opacity: 0;
+}
+
+.opa-on {
+    opacity: 1;
+}
+
+.tranY-0 {
+    transform: translateY(0) !important;
 }
 
 .wrapper {
@@ -84,6 +144,7 @@ html {
     color: black;
     height: 100vh;
     width: 100%;
+    overflow: hidden;
 }
 
 .header {
@@ -91,21 +152,20 @@ html {
     left: 0;
     right: 0;
     height: 130px;
+    min-height: 130px;
     justify-content: center;
-    border-bottom-left-radius: 32px;
-    border-bottom-right-radius: 32px;
     transform: translateY(-20vh);
     transition: all 1s ease-in-out;
-}
-
-.show-header {
-    transform: translateY(0);
+    padding-right: 16px;
+    background-color: transparent;
+    z-index: 1;
 }
 
 .header-wrapper {
     justify-content: space-between;
     align-items: center;
-    padding: 10px 40px;
+    padding: 20px 40px;
+    background-color: white;
 }
 
 .header-title {
@@ -148,13 +208,85 @@ html {
     height: 35px;
 }
 
+.content-container {
+    height: 100vh;
+    transition: all 1s ease-in-out;
+    
+}
+
+.pokemon-list-wrapper {
+    justify-content: center;
+    
+}
+
+.pokemon-list {
+    justify-content: center;
+    flex-flow: row wrap;
+    padding: 150px 22px 22px;
+    gap: 18px;
+    transition: all 125ms ease-in;
+    overflow-y: auto;
+}
+
+.pokemon-list-element-container {
+    flex: 1 1 220px;
+    height: 130px;
+    padding: 16px 16px 8px;
+    border-radius: 16px;
+    color: white;
+    max-width: 250px;
+    opacity: 0.9;
+}
+
+.pokemon-list-element-container:hover {
+    opacity: 1;
+    box-shadow: 1px 1px 5px rgb(0 0 0 / 26%);
+}
+
+.pokemon-list-element {
+    width: 100%;
+    height: 100%;
+    gap: 6px;
+}
+
+.pokemon-list-element-id-container {
+    top: 10px;
+    right: 16px;
+    justify-content: flex-end;
+    color: rgba(0,0,0,0.07);
+}
+
+.pokemon-list-element-name-container {
+    font-size: 22px;
+}
+
+.pokemon-list-element-type-container {
+    max-width: 140px;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.pokemon-list-element-type {
+    background-color: rgb(255 255 255 / 20%);
+    padding: 1px 12px;
+    border-radius: 14px;
+    font-size: 14px;
+}
+
+.pokemon-list-element > img {
+    width: 90px;
+    bottom: 6px;
+    right: 1px;
+}
+
+
 
 @media screen and (min-width: 1400px) {
-    .header {
-        justify-content: center;
+    .header-wrapper {
+        padding: 20px 140px;
     }
 
-    .header-wrapper {
-        max-width: 1400px;
+    .pokemon-list {
+        padding: 150px 140px 22px;
     }
 }

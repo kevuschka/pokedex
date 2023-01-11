@@ -7,7 +7,7 @@ function renderHeader() {
     let headerFunctionality = document.getElementById(`header-functionality-wrapper`);
     renderHeaderFunctionalityTemplates(headerFunctionality);
     renderHeaderColor();
-    addClasslist(`header`, `show-header`);
+    addClasslist(`header`, `tranY-0`);
 }
 
 
@@ -96,7 +96,7 @@ function markFavoritesIcon() {
     addClasslist(`header-favorites-dark`,`d-none`);
     removeClasslist(`header-favorites-white`,`d-none`); 
     darkmodeOnOff();
-    init();
+    // init();
 }
 
 
@@ -172,7 +172,17 @@ function unmuteSound() {
 
 
 function darkmodeOnOff() {
-    if(darkmode) darkmode = 0;
-    else darkmode = 1;
+    if(darkmode) {
+        darkmode = 0;
+        renderHeaderColor();
+        document.getElementById(`content-container`).style.backgroundColor = 'white';
+        
+        
+    }
+    else {
+        darkmode = 1;
+        renderHeaderColor();
+        document.getElementById(`content-container`).style.backgroundColor = 'rgba(0,0,0,0.5)';
+    }
     localStorage.setItem('darkmode', darkmode);
 }

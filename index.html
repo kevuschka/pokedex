@@ -12,13 +12,14 @@
     <script src="header.js"></script>
 </head>
 <body onload="init()">
-    <div class="wrapper relative" id="wrapper"></div>
-    <div class="popups" id="popups"></div>
-    <div class="header flex absolute" id="header"></div>
-    <div class="content-conatiner w-100 flex column" id="content-container">
-        <div class="pokemon-list-wrapper" id="pokemon-list-wrapper"></div>
-        <div class="pokemon-selected-wrapper" id="pokemon-selected-wrapper"></div>
+    <div class="wrapper flex column relative" id="wrapper">
+        <div class="popups" id="popups"></div>
+        <div class="header absolute flex" id="header"></div>
+        <div class="content-container w-100 flex column" id="content-container">
+            <div class="pokemon-list-wrapper h-100 w-100 flex" id="pokemon-list-wrapper"></div>
+            <div class="pokemon-selected-wrapper" id="pokemon-selected-wrapper"></div>
+        </div>
+        <div class="footer absolute" id="footer"></div>
     </div>
-    <div class="footer absolute" id="footer"></div>
 </body>
 </html>
