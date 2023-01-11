@@ -1,9 +1,9 @@
-let darkmode = 0;
-let sound = 1;
+let darkmode;
+let sound;
 let bgSound = 0;
-let currentPageNumber = 0;
-let pokemonsPerPage = 20;
-let pokemonsPerPageMobile = 20;
+let currentPageNumber;
+let pokemonsPerPage;
+let pokemonsPerPageMobile;
 let allPokemonsPageBasic = []; 
 let allPokemonsPageElements = [];
 let allPokemonsBasic = [];
@@ -100,6 +100,14 @@ async function setLocalStorage() {
     localStorage.setItem('pokemonsPerPageMobile', pokemonsPerPageMobile);
 }
 
+function selectSound() {
+    select.play();
+}
+
+function noSelectSound() {
+    select.pause();
+    select.currentTime = 0;
+}
 
 // ########## POKEMON ##########
 
@@ -107,16 +115,12 @@ async function renderPokemonsPage(elements) {
     let wrapper = document.getElementById(`pokemon-list-wrapper`);
     wrapper.innerHTML = templatePokemonList();
     let content = document.getElementById(`pokemon-list`);
-    addTimeScreen();
     content.innerHTML = '';
     await renderPokemonsListContent(elements, content);
     renderPageColor();
 }
 
 
-function addTimeScreen() {
-    
-}
 
 function templatePokemonList() {
     return `<div class="pokemon-list flex w-100" id="pokemon-list"></div>`;
@@ -139,7 +143,7 @@ async function renderPokemonsListContent(elements, content) {
 
 
 function templatePokemonsListElement(i, name, id) {
-    return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}">
+    return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="selectSound()" onmouseout="noSelectSound()">
                 <div class="pokemon-list-element flex column">
                     <div class="pokemon-list-element-id-container flex absolute"><p>#${getPokemonId(i, id)}</p></div>
                     <div class="pokemon-list-element-name-container"><p>${name}</p></div>
