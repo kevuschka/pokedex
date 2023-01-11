@@ -53,8 +53,19 @@ html {
 
 /* header icon color lightgray: #d9d9d9 
    searchbar background color : #525252
-   
 */
+
+
+/*background-image: linear-gradient(red, yellow); */
+
+:root {
+    -red: #fb6c6c;
+    -blue: #76bdfe;
+    -lightgreen: #48d0af;
+    -green: #48d0b0;
+    -yellow: #ffd86f;
+    -purple:  rgb(111, 72, 208)
+}
 
 .lightgray {
     color: rgb(155, 155, 155);
