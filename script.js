@@ -11,6 +11,7 @@ let favPokemons = [];
 const bgMusic = new Audio('assets/sounds/poke_theme_music.mp3');
 const select = new Audio('assets/sounds/select_sound.mp3');
 let searchResults = [];
+let settingsOpen = 0;
 // localStorage.setItem('name', JSON.stringify(name));
 // let name = JSON.parse(localStorage.getItem(`name`)) || [];
 
@@ -200,7 +201,6 @@ async function renderPokemonBackgroundColor(i) {
     let response = await resp.json();
     let color = response['color']['name'];
     addClasslist(`pokemon-list-element-container-${i}`, `${color}`);
-    // document.getElementById(``).style.backgroundColor = linear-gradient(red, yellow);
 }
 
 function renderPageColor() {
@@ -209,6 +209,7 @@ function renderPageColor() {
 }
 
 
+// CLICK ON LIST ELEMENT (POKEMON)
 function clickOnElement(i) {
     selectSound();
     document.getElementById(`pokemon-list-element-container-${i}`).style.boxShadow = 'none';
@@ -223,19 +224,11 @@ function holdOnElement(i) {
 
 
 function clickOutElement(i) {
-    setTimeout(() => {
-        document.getElementById(`pokemon-list-element-container-${i}`).style = '';
-    }, 200); 
+    document.getElementById(`pokemon-list-element-container-${i}`).style.borderStyle = 'none';
 }
 
 
-function hoverElementOut(i) {
-    noSelectSound();
-}
-
-
-// PLAY MUSIC & SOUND
-
+// SOUND 
 function selectSound() {
     if(sound) select.play();
 }
@@ -246,3 +239,9 @@ function noSelectSound() {
         select.currentTime = 0;
     }
 }
+
+function hoverElementOut(i) {
+    noSelectSound();
+}
+
+

@@ -133,15 +133,15 @@ function cleanSettingsIcon() {
 
 function markSettingsIcon() {
     cleanSettingsIcon();
-    if(darkmode) removeClasslist(`header-settings-gray`, `d-none`);  
-    else removeClasslist(`header-settings-dark`, `d-none`);  
-}
-
-
-function unmarkSettingsIcon() {
-    cleanSettingsIcon();
-    if(darkmode) removeClasslist(`header-settings-dark`, `d-none`); 
-    else removeClasslist(`header-settings-gray`,`d-none`);
+    if(settingsOpen) {
+        settingsOpen = 0;
+        if(darkmode) removeClasslist(`header-settings-dark`, `d-none`);  
+        else removeClasslist(`header-settings-gray`, `d-none`);  
+    } else {
+        settingsOpen = 1;
+        if(darkmode) removeClasslist(`header-settings-gray`, `d-none`);  
+        else removeClasslist(`header-settings-dark`, `d-none`);  
+    }
 }
 
 
@@ -181,7 +181,9 @@ function muteMusic() {
 }
 
 
-// SOUND 
+
+// SOUND
+
 //function renderSoundIcon() {};
 // function muteSound() {
 //     addClasslist(`header-sound-gray`, `d-none`);
