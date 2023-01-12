@@ -48,9 +48,10 @@ function templateHeaderFunctionalityWrapper() {
 
 
 function templateHeaderMusicIcon() {
-    return `<img class="header-music cursor-p d-none" id="header-music-gray" src="assets/img/music_icon.png" onclick="unmuteMusic()">
-            <img class="header-music cursor-p d-none" id="header-music-dark" src="assets/img/music_icon_dark.png" onclick="unmuteMusic()">
-            <img class="header-music cursor-p d-none" id="header-music-mute" src="assets/img/music_icon_pause.png" onclick="muteMusic()">`;
+    return `<img class="header-music cursor-p d-none" id="header-music-gray" src="assets/img/music_icon2.png" onclick="unmuteMusic()">
+            <img class="header-music cursor-p d-none" id="header-music-dark" src="assets/img/music_icon_dark2.png" onclick="unmuteMusic()">
+            <img class="header-music cursor-p d-none" id="header-music-mute" src="assets/img/music_icon_pause.png" onclick="muteMusic()">
+            <img class="header-music cursor-p d-none" id="header-music-mute-dark" src="assets/img/music_icon_pause_dark.png" onclick="muteMusic()">`;
 }
 
 
@@ -71,57 +72,138 @@ function templateHeaderSearchbar() {
 
 function templateHeaderFavorites() {
     return `<img class="header-favorites cursor-p d-none" id="header-favorites-gray" src="assets/img/outline_star_icon.png" onclick="markFavoritesIcon()">
-            <img class="header-favorites cursor-p d-none" id="header-favorites-dark" src="assets/img/outline_star_icon_dark.png" onclick="markFavoritesIcon()">
-            <img class="header-favorites cursor-p d-none" id="header-favorites-white" src="assets/img/outline_star_icon_white.png" onclick="unmarkFavoritesIcon()">`;
+            <img class="header-favorites cursor-p d-none" id="header-favorites-dark" src="assets/img/outline_star_icon_dark.png" onclick="markFavoritesIcon()">`;
 }
 
 
 function templateHeaderSettings() {
     return `<img class="header-settings cursor-p d-none" id="header-settings-gray" src="assets/img/settings_icon.png" onclick="markSettingsIcon()">
-            <img class="header-settings cursor-p d-none" id="header-settings-dark" src="assets/img/settings_icon_dark.png" onclick="markSettingsIcon()">
-            <img class="header-settings cursor-p d-none" id="header-settings-white" src="assets/img/settings_icon_white.png" onclick="unmarkSettingsIcon()">`;
+            <img class="header-settings cursor-p d-none" id="header-settings-dark" src="assets/img/settings_icon_dark.png" onclick="markSettingsIcon()">`;
 }
 
+
+// RENDER HEADER ICONS 
 
 function renderHeaderIcons() {
-    unmarkFavoritesIcon();
-    unmarkSettingsIcon();
-    muteMusic();
-    unmuteSound();
+    renderFavoritesIcon();
+    renderSettingsIcon();
+    renderMusicIcon();
+    // renderSoundIcon();
+    
 }
 
 
-function markFavoritesIcon() {
+// FAVORITES
+function renderFavoritesIcon() {
+    cleanFavoritesIcon();
+    if(window.location.pathname == 'favorites.html') renderFavoritesIconOnFavorites();
+    else renderFavoritesIconStandard();
+}
+
+function cleanFavoritesIcon() {
     addClasslist(`header-favorites-gray`, `d-none`);
     addClasslist(`header-favorites-dark`,`d-none`);
-    removeClasslist(`header-favorites-white`,`d-none`); 
-    darkmodeOnOff();
-    // init();
 }
 
 
-function unmarkFavoritesIcon() {
-    addClasslist(`header-favorites-white`,`d-none`);
+function renderFavoritesIconOnFavorites() {
+    if(darkmode) removeClasslist(`header-favorites-gray`,`d-none`);
+    else removeClasslist(`header-favorites-dark`,`d-none`);
+}
+
+
+function renderFavoritesIconStandard() {
     if(darkmode) removeClasslist(`header-favorites-dark`,`d-none`);
-    else removeClasslist(`header-favorites-gray`, `d-none`);
+    else removeClasslist(`header-favorites-gray`,`d-none`);
+}
+
+
+// SETTINGS
+function renderSettingsIcon() {
+    cleanSettingsIcon();
+    if(darkmode) removeClasslist(`header-settings-dark`, `d-none`);
+    else removeClasslist(`header-settings-gray`, `d-none`);
+}
+
+function cleanSettingsIcon() {
+    addClasslist(`header-settings-gray`,`d-none`);
+    addClasslist(`header-settings-dark`, `d-none`); 
 }
 
 
 function markSettingsIcon() {
-    addClasslist(`header-settings-gray`,`d-none`);
-    addClasslist(`header-settings-dark`, `d-none`);  
-    removeClasslist(`header-settings-white`, `d-none`);
+    cleanSettingsIcon();
+    if(darkmode) removeClasslist(`header-settings-gray`, `d-none`);  
+    else removeClasslist(`header-settings-dark`, `d-none`);  
 }
 
 
 function unmarkSettingsIcon() {
-    addClasslist(`header-settings-white`,`d-none`);
+    cleanSettingsIcon();
     if(darkmode) removeClasslist(`header-settings-dark`, `d-none`); 
     else removeClasslist(`header-settings-gray`,`d-none`);
 }
 
 
+// MUSIC
+function renderMusicIcon() {
+    cleanMusicIcon();
+    if(darkmode) removeClasslist('header-music-dark', 'd-none');
+    else removeClasslist('header-music-gray', 'd-none');
+}
 
+
+function cleanMusicIcon() {
+    addClasslist(`header-music-gray`, `d-none`); 
+    addClasslist('header-music-dark', 'd-none');
+    addClasslist(`header-music-mute`, `d-none`);
+    addClasslist(`header-music-mute-dark`, `d-none`);
+}
+
+
+function unmuteMusic() {
+    cleanMusicIcon();
+    if(darkmode) removeClasslist(`header-music-mute-dark`, `d-none`);
+    else removeClasslist(`header-music-mute`, `d-none`);
+    bgMusic.volume = 0.06;
+    bgMusic.loop = true;
+    bgMusic.play(); 
+    bgSound = 1;
+}
+
+
+function muteMusic() {
+    cleanMusicIcon();
+    if(darkmode) removeClasslist(`header-music-dark`, `d-none`);
+    else removeClasslist(`header-music-gray`, `d-none`);
+    bgMusic.pause();
+    bgSound = 0;
+}
+
+
+// SOUND 
+//function renderSoundIcon() {};
+// function muteSound() {
+//     addClasslist(`header-sound-gray`, `d-none`);
+//     addClasslist(`header-sound-dark`, `d-none`);
+//     removeClasslist(`header-sound-mute`, `d-none`);
+//     sound = 0;
+//     localStorage.setItem('sound', sound);
+// }
+
+
+// function unmuteSound() {
+//     addClasslist(`header-sound-mute`, `d-none`);
+//     if(darkmode) removeClasslist(`header-sound-dark`, `d-none`); 
+//     else removeClasslist(`header-sound-gray`, `d-none`);
+//     sound = 1;
+//     localStorage.setItem('sound', sound);
+// }
+
+
+
+
+// SEARCHBAR & SEARCHING
 function searchPokemon() {
     let input = document.getElementById(`header-searchbar-input`).value;
     searchResults = [];
@@ -133,44 +215,12 @@ function searchPokemon() {
 }
 
 
-function muteMusic() {
-    addClasslist(`header-music-mute`, `d-none`);
-    if(darkmode) removeClasslist(`header-music-dark`, `d-none`); 
-    else removeClasslist(`header-music-gray`, `d-none`); 
-    bgMusic.pause();
-    bgSound = 0;
-}
 
 
-function unmuteMusic() {
-    addClasslist(`header-music-gray`, `d-none`);
-    addClasslist(`header-music-dark`, `d-none`);
-    removeClasslist(`header-music-mute`, `d-none`);
-    bgMusic.volume = 0.06;
-    bgMusic.loop = true;
-    bgMusic.play(); 
-    bgSound = 1;
-}
 
 
-function muteSound() {
-    addClasslist(`header-sound-gray`, `d-none`);
-    addClasslist(`header-sound-dark`, `d-none`);
-    removeClasslist(`header-sound-mute`, `d-none`);
-    sound = 0;
-    localStorage.setItem('sound', sound);
-}
 
-
-function unmuteSound() {
-    addClasslist(`header-sound-mute`, `d-none`);
-    if(darkmode) removeClasslist(`header-sound-dark`, `d-none`); 
-    else removeClasslist(`header-sound-gray`, `d-none`);
-    sound = 1;
-    localStorage.setItem('sound', sound);
-}
-
-
+// DARKMODE
 function darkmodeOnOff() {
     if(darkmode) {
         darkmode = 0;
@@ -186,3 +236,5 @@ function darkmodeOnOff() {
     }
     localStorage.setItem('darkmode', darkmode);
 }
+
+

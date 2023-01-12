@@ -11,7 +11,6 @@ let favPokemons = [];
 const bgMusic = new Audio('assets/sounds/poke_theme_music.mp3');
 const select = new Audio('assets/sounds/select_sound.mp3');
 let searchResults = [];
-
 // localStorage.setItem('name', JSON.stringify(name));
 // let name = JSON.parse(localStorage.getItem(`name`)) || [];
 
@@ -100,23 +99,16 @@ async function setLocalStorage() {
     localStorage.setItem('pokemonsPerPageMobile', pokemonsPerPageMobile);
 }
 
-function selectSound() {
-    select.play();
-}
 
-function noSelectSound() {
-    select.pause();
-    select.currentTime = 0;
-}
 
 // ########## POKEMON ##########
 
-async function renderPokemonsPage(elements) {
+async function renderPokemonsPage(elementsNumber) {
     let wrapper = document.getElementById(`pokemon-list-wrapper`);
     wrapper.innerHTML = templatePokemonList();
     let content = document.getElementById(`pokemon-list`);
     content.innerHTML = '';
-    await renderPokemonsListContent(elements, content);
+    await renderPokemonsListContent(elementsNumber, content);
     renderPageColor();
 }
 
@@ -129,10 +121,12 @@ function templatePokemonList() {
 
 // ########## RENDER POKEMON LIST CONTENT ##########
 
-async function renderPokemonsListContent(elements, content) {
+async function renderPokemonsListContent(elementsNumber, content) {
+    if(currentPage().includes('favorites.html')) {}
+    else if(currentPage().includes('index.html')) {}
     let name;
     let id;
-    for (let i = 0; i < elements; i++) {
+    for (let i = 0; i < elementsNumber; i++) {
         name = `${allPokemonsPageBasic['results'][i]['name'].charAt(0).toUpperCase()}` + `${allPokemonsPageBasic['results'][i]['name'].slice(1)}`;
         id = allPokemonsPageElements[i]['id'];
         content.innerHTML += templatePokemonsListElement(i, name, id);
@@ -142,8 +136,18 @@ async function renderPokemonsListContent(elements, content) {
 }
 
 
+function renderPokemonPageContent(elementsNumber, content) {
+
+}
+
+
+function currentPage() {
+    return window.location.pathname;
+}
+
+
 function templatePokemonsListElement(i, name, id) {
-    return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="selectSound()" onmouseout="noSelectSound()">
+    return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onmouseout="hoverElementOut(${i})" onmousedown="clickOnElement(${i})" onmouseup="clickOutElement(${i})">
                 <div class="pokemon-list-element flex column">
                     <div class="pokemon-list-element-id-container flex absolute"><p>#${getPokemonId(i, id)}</p></div>
                     <div class="pokemon-list-element-name-container"><p>${name}</p></div>
@@ -205,3 +209,40 @@ function renderPageColor() {
 }
 
 
+function clickOnElement(i) {
+    selectSound();
+    document.getElementById(`pokemon-list-element-container-${i}`).style.boxShadow = 'none';
+    document.getElementById(`pokemon-list-element-container-${i}`).style.borderStyle = 'inset';
+}
+
+
+function holdOnElement(i) {
+    document.getElementById(`pokemon-list-element-container-${i}`).style.boxShadow = 'none';
+    document.getElementById(`pokemon-list-element-container-${i}`).style.borderStyle = 'inset';
+}
+
+
+function clickOutElement(i) {
+    setTimeout(() => {
+        document.getElementById(`pokemon-list-element-container-${i}`).style = '';
+    }, 200); 
+}
+
+
+function hoverElementOut(i) {
+    noSelectSound();
+}
+
+
+// PLAY MUSIC & SOUND
+
+function selectSound() {
+    if(sound) select.play();
+}
+
+function noSelectSound() {
+    if(sound) {
+        select.pause();
+        select.currentTime = 0;
+    }
+}

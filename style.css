@@ -63,7 +63,7 @@ html {
 /*background-image: linear-gradient(red, yellow); */
 
 :root {
-    --red: #fb6c6c;
+    --red: #fd7777;
     --blue: #76bdfe;
     --lightgreen: #48d0af;
     --green: #48d0b0;
@@ -76,37 +76,37 @@ html {
 
 .red {
     background-color: var(--red);
-    /* background-image: linear-gradient(var(--red) 55%, white); */
+    background-image: linear-gradient(var(--red) 55%, #ad4141);
 }
 
 .blue {
     background-color: var(--blue);
-    /* background-image: linear-gradient(var(--blue) 55%, white); */
+    background-image: linear-gradient(var(--blue) 55%, #5991c5);
 }
 
 .yellow {
     background-color: var(--yellow);
-    /* background-image: linear-gradient(var(--yellow) 55%, white); */
+    background-image: linear-gradient(var(--yellow) 55%, #c9b546);
 }
 
 .purple {
     background-color: var(--purple);
-    /* background-image: linear-gradient(var(--purple) 55%, white); */
+    background-image: linear-gradient(var(--purple) 55%, rgb(124, 97, 194));
 }
 
 .green {
     background-color: var(--green);
-    /* background-image: linear-gradient(var(--green) 55%, white); */
+    background-image: linear-gradient(var(--green) 55%, #43c2a4);
 }
 
 .brown {
     background-color: var(--brown);
-    /* background-image: linear-gradient(var(--green) 55%, white); */
+    background-image: linear-gradient(var(--brown) 55%, #d7a25d);
 }
 
 .white {
     background-color: var(--white);
-    /* background-image: linear-gradient(var(--green) 55%, white); */
+    background-image: linear-gradient(var(--white) 55%, rgb(177, 177, 177));
 }
 
 .pink {
@@ -156,7 +156,7 @@ html {
     justify-content: center;
     transform: translateY(-20vh);
     transition: all 1s ease-in-out;
-    padding-right: 16px;
+    margin-right: 16px;
     background-color: transparent;
     z-index: 1;
 }
@@ -241,6 +241,8 @@ html {
 .pokemon-list-element-container:hover {
     opacity: 1;
     box-shadow: 1px 1px 5px rgb(0 0 0 / 26%);
+    /* background-image: linear-gradient(rgba(255, 255, 255, 0.4) 55%, transparent); */
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 .pokemon-list-element {
