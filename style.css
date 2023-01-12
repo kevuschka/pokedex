@@ -157,7 +157,7 @@ html {
     transform: translateY(-20vh);
     transition: all 1s ease-in-out;
     margin-right: 16px;
-    background-color: transparent;
+    background-color: white;
     z-index: 1;
 }
 
@@ -165,7 +165,6 @@ html {
     justify-content: space-between;
     align-items: center;
     padding: 20px 40px;
-    background-color: white;
 }
 
 .header-title {

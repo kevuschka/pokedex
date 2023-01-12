@@ -12,6 +12,7 @@ const bgMusic = new Audio('assets/sounds/poke_theme_music.mp3');
 const select = new Audio('assets/sounds/select_sound.mp3');
 let searchResults = [];
 let settingsOpen = 0;
+let pokemonInfoOpen = 0;
 // localStorage.setItem('name', JSON.stringify(name));
 // let name = JSON.parse(localStorage.getItem(`name`)) || [];
 
@@ -43,12 +44,21 @@ function getPokemonsPerPageNumber() {
 }
 
 
+// POKEMON INFOS LIST
 async function getPokemonsBasicInfo(urlBasic, pageNumber) {
     urlBasic = `https://pokeapi.co/api/v2/pokemon/?offset=${currentPageNumber}0&limit=${pageNumber}`;
     let response = await fetch(urlBasic);
     allPokemonsPageBasic = await response.json();
     localStorage.setItem('allPokemonsPageBasic', JSON.stringify(allPokemonsPageBasic));
 }
+
+
+async function getAllPokemonsBasicInfo() {
+    let allPokemonUrl = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1153`;
+    let list = await fetch(allPokemonUrl)
+    allPokemonsBasic = await list.json();
+    localStorage.setItem(`allPokemonsBasic`, JSON.stringify(allPokemonsBasic));
+} 
 
 
 async function getPokemonsElementsInfo(number) {
@@ -58,15 +68,7 @@ async function getPokemonsElementsInfo(number) {
         let resp = await fetch(url);
         allPokemonsPageElements.push(await resp.json());
     }
-}   
-
-
-async function getAllPokemonsBasicInfo() {
-    let allPokemonUrl = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1153`;
-    let list = await fetch(allPokemonUrl)
-    allPokemonsBasic = await list.json();
-    localStorage.setItem(`allPokemonsBasic`, JSON.stringify(allPokemonsBasic));
-} 
+}  
 
 
 // HELP FUNCTIONS
