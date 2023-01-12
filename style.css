@@ -129,6 +129,7 @@ html {
 
 .opa-off {
     opacity: 0;
+    /* backdrop-filter: ; */
 }
 
 .opa-on {
@@ -137,6 +138,10 @@ html {
 
 .tranY-0 {
     transform: translateY(0) !important;
+}
+
+.tranX-0 {
+    transform: translateX(0);
 }
 
 .wrapper {
@@ -157,8 +162,14 @@ html {
     transform: translateY(-20vh);
     transition: all 1s ease-in-out;
     margin-right: 16px;
-    background-color: white;
+    /* background-color: white; */
+    background-color: rgba(255, 255, 255, 0.733);
     z-index: 1;
+    transition: all 1s ease;
+}
+
+.header:hover, .header-wrapper:hover {
+    background-color: white;
 }
 
 .header-wrapper {

@@ -18,6 +18,7 @@ let pokemonInfoOpen = 0;
 
 
 async function init() {
+    await includeHTML();
     await getLocalStorage();
     await setLocalStorage();
     let urlBasic;
@@ -133,8 +134,9 @@ async function renderPokemonsListContent(elementsNumber, content) {
         name = `${allPokemonsPageBasic['results'][i]['name'].charAt(0).toUpperCase()}` + `${allPokemonsPageBasic['results'][i]['name'].slice(1)}`;
         id = allPokemonsPageElements[i]['id'];
         content.innerHTML += templatePokemonsListElement(i, name, id);
-        renderPokemonTypes(i);
-        await renderPokemonBackgroundColor(i);
+        renderPokemonTypes(i, `pokemon-list-element-type-container-${i}`);
+        let color = await getPokemonBackgroundColor(i);
+        addClasslist(`pokemon-list-element-container-${i}`, `${color}`);
     }
 }
 
@@ -150,7 +152,7 @@ function currentPage() {
 
 
 function templatePokemonsListElement(i, name, id) {
-    return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onmouseout="hoverElementOut(${i})" onmousedown="clickOnElement(${i})" onmouseup="clickOutElement(${i})">
+    return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="renderPokemon(${i})" onmouseout="hoverElementOut(${i})" onmousedown="clickOnElement(${i})" onmouseup="clickOutElement(${i})">
                 <div class="pokemon-list-element flex column">
                     <div class="pokemon-list-element-id-container flex absolute"><p>#${getPokemonId(i, id)}</p></div>
                     <div class="pokemon-list-element-name-container"><p>${name}</p></div>
@@ -178,8 +180,9 @@ function getPokemonImage(i) {
 }
 
 
-function renderPokemonTypes(i) {
-    let content = document.getElementById(`pokemon-list-element-type-container-${i}`);
+function renderPokemonTypes(i, contentId) {
+    let content = document.getElementById(contentId);
+    content.innerHTML = '';
     let array = getPokemonTypes(i);
     for (let j = 0; j < array.length; j++) 
         content.innerHTML += `<div class="pokemon-list-element-type flex"><p>${array[j]}</p></div>`;
@@ -197,12 +200,12 @@ function getPokemonTypes(i) {
 }
 
 
-async function renderPokemonBackgroundColor(i) {
+async function getPokemonBackgroundColor(i) {
     let url = allPokemonsPageElements[i]['species']['url'];
     let resp = await fetch(url);
     let response = await resp.json();
     let color = response['color']['name'];
-    addClasslist(`pokemon-list-element-container-${i}`, `${color}`);
+    return color;
 }
 
 function renderPageColor() {

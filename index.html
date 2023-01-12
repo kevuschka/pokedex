@@ -14,16 +14,9 @@
     <script scr="assets/js/searchbar.js"></script>
     <script src="assets/js/favorites.js"></script>
     <script scr="assets/js/pokemon.js"></script>
+    <script src="assets/js/w3_template.js"></script>
 </head>
 <body onload="init()">
-    <div class="wrapper flex column relative" id="wrapper">
-        <div class="popups" id="popups"></div>
-        <div class="header absolute flex" id="header"></div>
-        <div class="content-container w-100 flex column" id="content-container">
-            <div class="pokemon-list-wrapper h-100 w-100 flex" id="pokemon-list-wrapper"></div>
-            <div class="pokemon-selected-wrapper" id="pokemon-selected-wrapper"></div>
-        </div>
-        <div class="footer absolute" id="footer"></div>
-    </div>
+    <div w3-include-html="assets/templates/landing_page.html" class="wrapper flex column relative" id="wrapper"></div>
 </body>
 </html>
