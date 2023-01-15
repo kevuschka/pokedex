@@ -55,6 +55,10 @@ html {
     position: sticky;
 }
 
+.fixed {
+    position: fixed;
+}
+
 /* header icon color lightgray: #d9d9d9 
    searchbar background color : #525252
 */
@@ -141,7 +145,7 @@ html {
 }
 
 .tranX-0 {
-    transform: translateX(0);
+    transform: translateX(0) !important;
 }
 
 .wrapper {
@@ -239,12 +243,12 @@ html {
 }
 
 .pokemon-list-element-container {
-    flex: 1 1 220px;
+    flex: 1 1 230px;
     height: 130px;
     padding: 16px 16px 8px;
     border-radius: 16px;
     color: white;
-    max-width: 250px;
+    max-width: 270px;
     opacity: 0.9;
 }
 
@@ -290,6 +294,12 @@ html {
     right: 1px;
 }
 
+
+
+.pokemon-selected-wrapper {
+    transform: translateX(50vw);
+    transition: all 1s ease-in-out;
+}
 
 
 @media screen and (min-width: 1400px) {
