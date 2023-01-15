@@ -81,7 +81,6 @@ async function getPokemonsBasicInfo(targetPageNumber) {
 async function getPokemonsElementsInfo(number) {
     pagePokemonsElementData = [];
     for (let i = 0; i < number; i++) {
-        console.log('i:', i);
         let url = pagePokemonsBasicData['results'][i]['url'];
         let resp = await fetch(url);
         pagePokemonsElementData.push(await resp.json());
@@ -216,7 +215,7 @@ function templatePokemonsListElement(i, name, id) {
     return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="renderPokemon(${i})" onmousedown="clickOnElement(${i})" onmouseup="clickOutElement(${i})">
                 <div class="pokemon-list-element flex column">
                     <div class="pokemon-list-element-id-container flex absolute"><p>#${getPokemonId(i, id)}</p></div>
-                    <div class="pokemon-list-element-name-container"><p>${name}</p></div>
+                    <div class="pokemon-list-element-name-container"><p>${getPokemonName(name)}</p></div>
                     <div class="pokemon-list-element-type-container flex" id="pokemon-list-element-type-container-${i}"></div>
                     <img src="${getPokemonImage(i)}" class="pokemon-list-element-image absolute" id="pokemon-list-element-image-${i}">
                 </div>
@@ -224,13 +223,29 @@ function templatePokemonsListElement(i, name, id) {
 }
 
 
-function getPokemonId(i, id) {
-    let rest = 4 - id.toString().length;
-    let newId = '';
-    for (let j = 0; j < rest; j++) {
-        newId += '0';
+function getPokemonName(name) {
+    let nameArray = name.split('-');
+    let betterArray = [];
+    let finalName = '';
+    for (let j = 0; j < nameArray.length; j++) {
+        betterArray[j] = `${nameArray[j].charAt(0).toUpperCase()}` + `${nameArray[j].slice(1)}`;
+        finalName += `${betterArray[j]}`;
+        finalName += ' ';
     }
-    return newId + id.toString();
+    return finalName;
+}
+
+
+function getPokemonId(i, id) {
+    if((id.toString().length) < 5 ) {
+        let rest = 4 - id.toString().length;
+        let newId = '';
+        for (let j = 0; j < rest; j++) {
+            newId += '0';
+        }
+        return newId + id.toString();
+    } else return id;
+    
 }
 
 
