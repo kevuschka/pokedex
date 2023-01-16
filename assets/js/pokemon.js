@@ -10,12 +10,19 @@ let pokemonInfo = {
     'about': [
         {   
             'species' :  '',
-            'height' : '',
-            'weight' : '',
-            'Abilities' : ''
+            'height' : 
+                {
+                    'meter': '',
+                    'inch': ''
+                },
+            'weight' : 
+                {
+                    'kg': '',
+                    'lbs': '',
+                },
+            'abilities' : []
         },
         { 
-            'Gendar' : '',
             'egg groups': '',
             'egg cycle': ''
         }
@@ -69,6 +76,83 @@ function copyPokemonElementData(i) {
 }
 
 
+function copyPokemonBackgroundColor(i) {
+    pokemonInfo['backgroundColor'] = getPokemonBackgroundColor(i);
+}
+
+
+function copyPokemonAboutTab() {
+    copyPokemonSpecies();
+    copyPokemonHeight();
+    copyPokemonWeight();
+    copyPokemonAbilities();
+    copyPokemonGendar();
+    copyPokemonEggGroups();
+    copyPokemonEggCycle();
+}
+
+
+async function copyPokemonSpecies() {
+    let url = pokemonElementData['species']['url'];
+    let resp = await fetch(url);
+    let response = await resp.json();
+    for (let i = 0; i < response['genera'].length; i++) {
+        if (response['genera'][i]['language']['name'] == lang) {
+            pokemonInfo['about']['species'] = `${response['genera'][i]['genus']}`;
+            break;
+        } 
+    }
+}
+
+
+async function copyPokemonHeight() {
+    let data = pokemonElementData['height'];
+    let meter = (data/10).toFixed(2);
+    let feet = (meter*3.28084).toFixed(2);
+    let feetInt = Number.parseInt(feet.toString());
+    let feetDec = Number.parseFloat('0' + feet.toString().split((feet.toString().indexOf('.'))));
+    let inch = (feetDec*12).toFixed(2);
+    let height = feetInt + inch;
+    pokemonInfo['about']['height']['meter'] = meter;
+    pokemonInfo['about']['height']['inch'] = height;
+}
+
+
+function copyPokemonWeight() {
+    let data = pokemonElementData['weight'];
+    let kilogramm = (data/10).toString(2);
+    let lbs = (kilogramm*2,204623).toString(1);
+    pokemonInfo['about']['weight']['kg'] = kilogramm;
+    pokemonInfo['about']['weight']['lbs'] = lbs;
+}
+
+
+async function copyPokemonAbilities() {
+    pokemonInfo['about']['abilities'] = [];
+    let abilities = (pokemonElementData['abilities'].length)-1;
+    for (let i = 0; i < abilities.length; i++) {
+        let url = abilities[i]['ability']['url'];
+        let resp = await fetch(url);
+        let response = await resp.json();
+        for (let j = 0; j < response['names'].length; j++) {
+            if (response['names'][j]['language']['name'] == lang) {
+                pokemonInfo['about']['abilities'].push(response['names'][j]['name']);
+                break;
+            }
+        }
+    }
+}
+
+
+function copyPokemonGendar() {
+
+}
+
+
+
+
+
+
 // LOAD INFOS
 async function loadPokemonInformation(i) {
 
@@ -102,7 +186,7 @@ function templatePokemonWrapper() {
 
 
 function templatePokemonHeaderAndImage(i) {
-    return `<div class="pokemon-selected-header-wrapper" id="pokemon-selected-header-wrapper">
+    return `<div class="pokemon-selected-header-wrapper absolute" id="pokemon-selected-header-wrapper">
                 <div class="pokemon-selected-header flex w-100 h-100">
                     <div class="pokemon-selected-header-function-icons w-100 flex">
                         <img src="assets/img/back_arrow_white.png" class="pokemon-selected-header-arrow cursor-p" onclick="hideSelectedPokemonWrapper(${i})"> 
@@ -121,7 +205,7 @@ function templatePokemonHeaderAndImage(i) {
 
 
 function templatePokemonInfoWrapper() {
-    return `<div class="pokemon-selected-info-wrapper flex column absolute">
+    return `<div class="pokemon-selected-info-wrapper flex column">
                 <div class="pokemon-selected-info-tab-wrapper flex w-100" id="pokemon-selected-info-tab-wrapper"></div>
                 <div class="pokemon-selected-info-data-wrapper" id="pokemon-selected-info-data-wrapper"></div>
             </div>`;

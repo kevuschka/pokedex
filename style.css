@@ -316,13 +316,29 @@ html {
 .pokemon-selected {
     border-radius: 22px;
     height: 100%;
+    padding-top: 150px;
     background-color: antiquewhite;
     transition: all 125ms ease-in-out;
     transform: translateX(50vw);
+    overflow-y: scroll;
 }
 
 .pokemon-selected-header-function-icons {
     z-index: 1;
+}
+
+.pokemon-selected-header-wrapper {
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.pokemon-selected-info-wrapper {
+    background-color: white;
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
+    z-index: 1;
+    color: black;
 }
 
 

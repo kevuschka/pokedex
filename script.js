@@ -15,6 +15,7 @@ let settingsOpen = 0;
 let pokemonInfoOpen = 0;
 let currentDate;
 let count;
+let lang = 'en';
 // localStorage.setItem('name', JSON.stringify(name));
 // let name = JSON.parse(localStorage.getItem(`name`)) || [];
 
@@ -26,7 +27,7 @@ async function init() {
     await getPokemonsBasicInfo(getPokemonsPerPageNumber());
     await getPokemonsElementsInfo(getPokemonsPerPageNumber());
     await updateAllPokemonsBasicData()
-    console.log('pokemon', pagePokemonsBasicData);
+    console.log('pokemon on page', pagePokemonsBasicData);
     renderHeader();
     await renderPokemonsPage(getPokemonsPerPageNumber());
 }
@@ -35,6 +36,7 @@ async function init() {
 // LOCALSTORAGE
 
 async function getLocalStorage() {
+    lang = localStorage.getItem('lang') || 'en';
     darkmode = JSON.parse(localStorage.getItem('darkmode')) || 0;
     sound = JSON.parse(localStorage.getItem('sound')) || 1;
     // currentPageNumber = JSON.parse(localStorage.getItem('currentPageNumber')) || 0;
@@ -49,7 +51,6 @@ async function getLocalStorage() {
 async function setLocalStorage() {
     localStorage.setItem('darkmode', darkmode);
     localStorage.setItem('sound', sound);
-    // localStorage.setItem('currentPageNumber', currentPageNumber);
     localStorage.setItem('pokemonsPerPage', pokemonsPerPage);
     localStorage.setItem('pokemonsPerPageMobile', pokemonsPerPageMobile);
 }
