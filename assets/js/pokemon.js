@@ -5,6 +5,16 @@ let pokemonElementData = [];
 let selectedPokemonIndex = -1;
 let sideWrapperIsOpen = false;
 
+let doubleDamageFrom = [];
+let halfDamageFrom = [];
+let noDamageFrom = [];
+let doubleDamageTo = [];
+let halfDamageTo = [];
+let noDamageTo = [];
+
+let damageFrom = [];
+let damageTo = [];
+
 let pokemonInfo = {
     'backgroundColor': '',
     'about': [
@@ -81,31 +91,32 @@ function copyPokemonBackgroundColor(i) {
 }
 
 
-function copyPokemonAboutTab() {
-    copyPokemonSpecies();
-    copyPokemonHeight();
-    copyPokemonWeight();
-    copyPokemonAbilities();
-    copyPokemonGendar();
-    copyPokemonEggGroups();
-    copyPokemonEggCycle();
-}
+// function copyPokemonAboutTab() {
+//     copyPokemonSpecies();
+//     copyPokemonHeight();
+//     copyPokemonWeight();
+//     copyPokemonAbilities();
+//     copyPokemonGendar();
+//     copyPokemonEggGroups();
+//     copyPokemonEggCycle();
+// }
 
 
-async function copyPokemonSpecies() {
+async function getPokemonSpecies() {
     let url = pokemonElementData['species']['url'];
     let resp = await fetch(url);
     let response = await resp.json();
     for (let i = 0; i < response['genera'].length; i++) {
         if (response['genera'][i]['language']['name'] == lang) {
-            pokemonInfo['about']['species'] = `${response['genera'][i]['genus']}`;
-            break;
+            // pokemonInfo['about']['species'] = `${response['genera'][i]['genus']}`;
+            // break;
+            return `${response['genera'][i]['genus']}`;
         } 
     }
 }
 
 
-async function copyPokemonHeight() {
+async function getPokemonHeight() {
     let data = pokemonElementData['height'];
     let meter = (data/10).toFixed(2);
     let feet = (meter*3.28084).toFixed(2);
@@ -113,21 +124,23 @@ async function copyPokemonHeight() {
     let feetDec = Number.parseFloat('0' + feet.toString().split((feet.toString().indexOf('.'))));
     let inch = (feetDec*12).toFixed(2);
     let height = feetInt + inch;
-    pokemonInfo['about']['height']['meter'] = meter;
-    pokemonInfo['about']['height']['inch'] = height;
+    // pokemonInfo['about']['height']['meter'] = meter;
+    // pokemonInfo['about']['height']['inch'] = height;
+    return [meter, height];
 }
 
 
-function copyPokemonWeight() {
+function getPokemonWeight() {
     let data = pokemonElementData['weight'];
     let kilogramm = (data/10).toString(2);
     let lbs = (kilogramm*2,204623).toString(1);
-    pokemonInfo['about']['weight']['kg'] = kilogramm;
-    pokemonInfo['about']['weight']['lbs'] = lbs;
+    // pokemonInfo['about']['weight']['kg'] = kilogramm;
+    // pokemonInfo['about']['weight']['lbs'] = lbs;
+    return [kilogramm, lbs];
 }
 
 
-async function copyPokemonAbilities() {
+async function getPokemonAbilities() {
     pokemonInfo['about']['abilities'] = [];
     let abilities = (pokemonElementData['abilities'].length)-1;
     for (let i = 0; i < abilities.length; i++) {
@@ -136,20 +149,99 @@ async function copyPokemonAbilities() {
         let response = await resp.json();
         for (let j = 0; j < response['names'].length; j++) {
             if (response['names'][j]['language']['name'] == lang) {
-                pokemonInfo['about']['abilities'].push(response['names'][j]['name']);
-                break;
+                // pokemonInfo['about']['abilities'].push(response['names'][j]['name']);
+                // break;
+                return response['names'][j]['name'];
             }
         }
     }
 }
 
 
-function copyPokemonGendar() {
+async function renderTypeDamageValues() {
+    cleanDamageArrays();
+    for (let i = 0; i < pokemonInfo['types'].length; i++) {
+        let url = pokemonInfo['types'][i]['type']['url'];
+        let resp = await fetch(url);
+        let response = await resp.json();   
+        getTypeDamageFromValues(response);
+        getTypeDamageToValues(response);
+    }
+    if(i == 2) {
+        renderTypeDamageFromValues();
+        renderTypeDamageToValues(); 
+    } else copyDamageValues();
+}
+
+
+function cleanDamageArrays() {
+    doubleDamageFrom = [];
+    halfDamageFrom = [];
+    noDamageFrom = [];
+    doubleDamageTo = [];
+    halfDamageTo = [];
+    noDamageTo = [];
+}
+
+
+function getTypeDamageFromValues(response) {
+    if(response['damage_relations']['double_damage_from'].length > 0) 
+        for (let j = 0; j < response['damage_relations']['double_damage_from'].length; j++) 
+            doubleDamageFrom.push([response['damage_relations']['double_damage_from'][j]['name'], 2]);
+    if(response['damage_relations']['half_damage_from'].length > 0) 
+        for (let j = 0; j < response['damage_relations']['half_damage_from'].length; j++) 
+            halfDamageFrom.push([response['damage_relations']['half_damage_from'][j]['name'], 0.5]);
+    if(response['damage_relations']['no_damage_from'].length > 0) 
+        for (let j = 0; j < response['damage_relations']['no_damage_from'].length; j++) 
+            noDamageFrom.push([response['damage_relations']['no_damage_from'][j]['name'], 0]);
+}
+
+
+function getTypeDamageToValues(response) {
+    if(response['damage_relations']['double_damage_to'].length > 0) 
+        for (let j = 0; j < response['damage_relations']['double_damage_to'].length; j++) 
+            doubleDamageTo.push([response['damage_relations']['double_damage_to'][j]['name'], 2]);
+    if(response['damage_relations']['half_damage_to'].length > 0) 
+        for (let j = 0; j < response['damage_relations']['half_damage_to'].length; j++) 
+            halfDamageTo.push([response['damage_relations']['half_damage_to'][j]['name'], 0.5]);
+    if(response['damage_relations']['no_damage_to'].length > 0) 
+        for (let j = 0; j < response['damage_relations']['no_damage_to'].length; j++) 
+            noDamageTo.push([response['damage_relations']['no_damage_to'][j]['name'], 0]);
+}
+
+
+function renderTypeDamageFromValues() {
+    let current = [];
+    let arrayLength = doubleDamageFrom.length;
+        current.push(array[i]);
+        array.splice(i,1);
 
 }
 
 
 
+function  copyDamageValues() {
+    damageFrom = [];
+    damageTo = [];
+    if(doubleDamageFrom.length > 0)
+        for (let i = 0; i < doubleDamageFrom.length; i++) 
+            damageFrom.push(doubleDamageFrom[i]);
+    if(halfDamageFrom.length > 0)
+        for (let i = 0; i < halfDamageFrom.length; i++)
+            damageFrom.push(halfDamageFrom[i]);
+    if(noDamageFrom.length > 0)
+        for (let i = 0; i < noDamageFrom.length; i++)
+            damageFrom.push(noDamageFrom[i]);
+    if(doubleDamageTo.length > 0)
+        for (let i = 0; i < doubleDamageTo.length; i++) 
+            damageTo.push(doubleDamageTo[i]);
+    if(halfDamageTo.length > 0)
+        for (let i = 0; i < halfDamageTo.length; i++)
+            damageTo.push(halfDamageTo[i]);
+    if(noDamageTo.length > 0)
+        for (let i = 0; i < noDamageTo.length; i++)
+            damageTo.push(noDamageTo[i]);
+}
 
 
 

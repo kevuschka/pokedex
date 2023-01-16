@@ -253,7 +253,8 @@ function getPokemonId(i, id) {
 function getPokemonImage(i) {
     if (pagePokemonsElementData[i]['sprites']['other']['official-artwork']['front_default']) return `${pagePokemonsElementData[i]['sprites']['other']['official-artwork']['front_default']}`;
     else if (pagePokemonsElementData[i]['sprites']['other']['home']['front_default']) return `${pagePokemonsElementData[i]['sprites']['other']['home']['front_default']}`;
-    else return `${pagePokemonsElementData[i]['sprites']['other']['dream_world']['front_default']}`;
+    else if(pagePokemonsElementData[i]['sprites']['other']['dream_world']['front_default']) return `${pagePokemonsElementData[i]['sprites']['other']['dream_world']['front_default']}`;
+    else return `assets/img/no_pokemon_image.png`;
 }
 
 
