@@ -6,7 +6,17 @@ let pokemonsPerPage;
 let pokemonsPerPageMobile;
 let pagePokemonsBasicData = []; 
 let pagePokemonsElementData = [];
-let allPokemonsBasicData = [];
+
+let allPokemonsBasicData = {
+    'count': '',
+    'results': {
+        'results': [],
+        'names': [],
+        'generations': [],
+    }
+};
+
+
 let favPokemons = [];
 const bgMusic = new Audio('assets/sounds/poke_theme_music.mp3');
 const select = new Audio('assets/sounds/select_sound.mp3');
@@ -26,10 +36,10 @@ async function init() {
     await setLocalStorage();
     await getPokemonsBasicInfo(getPokemonsPerPageNumber());
     await getPokemonsElementsInfo(getPokemonsPerPageNumber());
-    await updateAllPokemonsBasicData()
     console.log('pokemon on page', pagePokemonsBasicData);
     renderHeader();
     await renderPokemonsPage(getPokemonsPerPageNumber());
+    await updateAllPokemonsBasicData();
 }
 
 
@@ -43,7 +53,7 @@ async function getLocalStorage() {
     pokemonsPerPage = JSON.parse(localStorage.getItem('pokemonsPerPage')) || 40;
     pokemonsPerPageMobile = JSON.parse(localStorage.getItem('pokemonsPerPageMobile')) || 40;
     currentDate = await JSON.parse(localStorage.getItem('currentDate')) || '';
-    allPokemonsBasicData = await JSON.parse(localStorage.getItem(`allPokemonsBasicData`)) || []; 
+    allPokemonsBasicData = await JSON.parse(localStorage.getItem(`allPokemonsBasicData`)) || emptyAllPokemonsBasicData(); 
     favPokemons = await JSON.parse(localStorage.getItem(`favPokemons`)) || [];
 }
 
@@ -105,11 +115,51 @@ async function updateAllPokemonsBasicData() {
 
 async function getAllPokemonsBasicInfo() {
     count = pagePokemonsBasicData['count'];
+    allPokemonsBasicData['count'] = count;
     let allPokemonUrl = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${count}`;
     let list = await fetch(allPokemonUrl);
-    allPokemonsBasicData = await list.json();
+    let originalList = await list.json();
+    console.log('originalList:', originalList);
+    for (let i = 0; i < originalList['results'].length; i++) getAllPokemonsBasicInfoPokemonData(originalList, i);
     localStorage.setItem(`allPokemonsBasicData`, JSON.stringify(allPokemonsBasicData));
 } 
+
+
+async function getAllPokemonsBasicInfoPokemonData(originalList, i) {
+    let url = originalList['results'][i]['url'];
+    let resp = await fetch(url);
+    let response = await resp.json();
+    let speciesURL = response['species']['url'];
+    let speciesResp = await fetch(speciesURL);
+    let species = await speciesResp.json();
+    allPokemonsBasicData['results']['results'].push(originalList['results'][i]);
+    allPokemonsBasicData['results']['names'].push(getAllNames(species));
+    allPokemonsBasicData['results']['generations'].push({'gen':getAllGenerations(species)});
+}
+
+/**
+ * That function loads the names of a pokemon in different languages.
+ * @param {object} species - species is the species JSON array of that pokemon to get the names data in 'names'
+ * @returns an array with names of a pokemon (in different language)
+ */
+function getAllNames(species) {
+    let array = [];
+    for (let i = 0; i < species['names'].length; i++)
+            array.push(species['names'][i]['name']);
+    return array;
+}
+
+/**
+ * That function loads the generations of a pokemon, in that the species was introduced in.
+ * @param {object} species - species is the species JSON array of that pokemon to get the generation data in 'generation'
+ * @returns an array with generations of a pokemon species
+ */
+function getAllGenerations(species) {
+    let array = [];
+    array.push(species['generation']['name']);
+    return array;
+
+}
 
 
 // GET DATE
@@ -324,3 +374,13 @@ function hoverElementOut(i) {
 }
 
 
+function emptyAllPokemonsBasicData() {
+    return {
+                'count': '',
+                'results': {
+                    'results': [],
+                    'names': [],
+                    'generations': [],
+                },
+            };
+}

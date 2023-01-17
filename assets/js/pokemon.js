@@ -86,9 +86,7 @@ function copyPokemonElementData(i) {
 }
 
 
-function copyPokemonBackgroundColor(i) {
-    pokemonInfo['backgroundColor'] = getPokemonBackgroundColor(i);
-}
+
 
 
 // function copyPokemonAboutTab() {
@@ -101,6 +99,7 @@ function copyPokemonBackgroundColor(i) {
 //     copyPokemonEggCycle();
 // }
 
+///////////////////////////////  P O K E M O N   S P E C I E S  ///////////////////////////////
 
 async function getPokemonSpecies() {
     let url = pokemonElementData['species']['url'];
@@ -115,6 +114,16 @@ async function getPokemonSpecies() {
     }
 }
 
+///////////////////////////////  P O K E M O N   H A B I T A T  ///////////////////////////////
+
+async function getPokemonHabitat() {
+    let url = pokemonElementData['species']['url'];
+    let resp = await fetch(url);
+    let response = await resp.json();
+    return response['habitat']['name'];
+}
+
+///////////////////////////////  P O K E M O N   H E I G H T  ///////////////////////////////
 
 async function getPokemonHeight() {
     let data = pokemonElementData['height'];
@@ -129,6 +138,7 @@ async function getPokemonHeight() {
     return [meter, height];
 }
 
+///////////////////////////////  P O K E M O N   W E I G H T  ///////////////////////////////
 
 function getPokemonWeight() {
     let data = pokemonElementData['weight'];
@@ -139,35 +149,57 @@ function getPokemonWeight() {
     return [kilogramm, lbs];
 }
 
+///////////////////////////////  P O K E M O N   A B I L I T Y  ///////////////////////////////
 
 async function getPokemonAbilities() {
-    pokemonInfo['about']['abilities'] = [];
+    let abilityArray= [];
     let abilities = (pokemonElementData['abilities'].length)-1;
-    for (let i = 0; i < abilities.length; i++) {
-        let url = abilities[i]['ability']['url'];
+    for (let i = 0; i < abilities; i++) {
+        let url = pokemonElementData['abilities'][i]['ability']['url'];
         let resp = await fetch(url);
         let response = await resp.json();
         for (let j = 0; j < response['names'].length; j++) {
             if (response['names'][j]['language']['name'] == lang) {
-                // pokemonInfo['about']['abilities'].push(response['names'][j]['name']);
-                // break;
-                return response['names'][j]['name'];
+                abilityArray.push(response['names'][j]['name']);
+                break;
             }
         }
     }
+    return abilityArray;
 }
 
+///////////////////////////////  P O K E M O N   G R O W T H - R A T E  ///////////////////////////////
+
+async function getPokemonGrowthRate() {
+    let url = pokemonElementData['species']['url'];
+    let resp = await fetch(url);
+    let response = await resp.json();
+    return response['growth_rate']['name']; 
+}
+
+///////////////////////////////  P O K E M O N   EGG GROUPS ///////////////////////////////
+
+async function getPokemonEggGroups() {
+    let array = [];
+    let url = pokemonElementData['species']['url'];
+    let resp = await fetch(url);
+    let response = await resp.json();
+    if(response['egg_groups'].length > 0) 
+        for (let i = 0; i < response['egg_groups'].length; i++) array.push(response['egg_groups'][i]['name']);
+    return response['growth_rate']['name']; 
+}
+///////////////////////////////  P O K E M O N   T Y P E   D A M A G E  ///////////////////////////////
 
 async function renderTypeDamageValues() {
     cleanDamageArrays();
-    for (let i = 0; i < pokemonInfo['types'].length; i++) {
-        let url = pokemonInfo['types'][i]['type']['url'];
+    for (let i = 0; i < pokemonElementData['types'].length; i++) {
+        let url = pokemonElementData['types'][i]['type']['url'];
         let resp = await fetch(url);
         let response = await resp.json();   
         getTypeDamageFromValues(response);
         getTypeDamageToValues(response);
     }
-    if(i == 2) {
+    if(i > 1) {
         renderTypeDamageFromValues();
         renderTypeDamageToValues(); 
     } else copyDamageValues();
@@ -175,6 +207,8 @@ async function renderTypeDamageValues() {
 
 
 function cleanDamageArrays() {
+    damageFrom = [];    /////////////////////// HERE
+    damageTo = [];      /////////////////////// HERE
     doubleDamageFrom = [];
     halfDamageFrom = [];
     noDamageFrom = [];
@@ -211,18 +245,111 @@ function getTypeDamageToValues(response) {
 
 
 function renderTypeDamageFromValues() {
-    let current = [];
-    let arrayLength = doubleDamageFrom.length;
-        current.push(array[i]);
-        array.splice(i,1);
-
+    renderDoubleDamageFrom();
+    renderHalfDamageFrom();
+    renderNoDamageFrom();
 }
 
 
+function renderTypeDamageToValues() {
+    renderDoubleDamageTo();
+    renderHalfDamageTo();
+    renderNoDamageTo();
+}
+
+////////////  D A M A G E   F R O M  ////////////
+function renderDoubleDamageFrom() {
+    if(doubleDamageFrom.length > 0)
+        for (let i = 0; i < doubleDamageFrom.length; i++) 
+            if(isNotAlreadyAdded(doubleDamageFrom, i)) 
+                if(isNotInOwnArray(doubleDamageFrom, i)) 
+                    if(isNotInThatArray(doubleDamageFrom, i, halfDamageFrom))
+                        if(isNotInThatArray(doubleDamageFrom, i, noDamageFrom)) 
+                            damageFrom.push(doubleDamageFrom[i]);
+}
+
+
+function renderHalfDamageFrom() {
+    if(halfDamageFrom.length > 0)
+        for (let i = 0; i < halfDamageFrom.length; i++) 
+            if(isNotAlreadyAdded(halfDamageFrom, i)) 
+                if(isNotInOwnArray(halfDamageFrom, i)) 
+                    if(isNotInThatArray(halfDamageFrom, i, noDamageFrom)) 
+                        damageFrom.push(halfDamageFrom[i]);
+}
+
+
+function renderNoDamageFrom() {
+    if(noDamageFrom.length > 0)
+        for (let i = 0; i < noDamageFrom.length; i++) 
+            if(isNotAlreadyAdded(noDamageFrom, i)) 
+                damageFrom.push(noDamageFrom[i]);
+}
+
+
+////////////  D A M A G E   T O  ////////////
+function renderDoubleDamageTo() {
+    if(doubleDamageTo.length > 0)
+        for (let i = 0; i < doubleDamageTo.length; i++) 
+            if(isNotAlreadyAdded(doubleDamageTo, i)) 
+                if(isNotInOwnArray(doubleDamageTo, i)) 
+                    if(isNotInThatArray(doubleDamageTo, i, halfDamageTo))
+                        if(isNotInThatArray(doubleDamageTo, i, noDamageTo)) 
+                            damageTo.push(doubleDamageTo[i]);
+}
+
+
+function renderHalfDamageTo() {
+    if(halfDamageTo.length > 0)
+        for (let i = 0; i < halfDamageTo.length; i++) 
+            if(isNotAlreadyAdded(halfDamageTo, i)) 
+                if(isNotInOwnArray(halfDamageTo, i)) 
+                    if(isNotInThatArray(halfDamageTo, i, noDamageTo)) 
+                        damageTo.push(halfDamageTo[i]);
+}
+
+
+function renderNoDamageTo() {
+    if(noDamageTo.length > 0)
+        for (let i = 0; i < noDamageTo.length; i++) 
+            if(isNotAlreadyAdded(noDamageTo, i)) 
+                damageTo.push(noDamageTo[i]);
+}
+
+
+//GENERAL
+function isNotAlreadyAdded(array, i) {
+    if(damageFrom.length > 0)
+        for (let j = 0; j < damageFrom.length; j++)
+            if(damageFrom[j][0].includes(array[i][0]))
+                return false;
+    return true;
+}
+
+
+function isNotInOwnArray(array, i) {
+    if(array.length > i+1) 
+        for (let j = i+1; j < array.length; j++) 
+            if(array[j][0].includes(array[i][0])) {
+                damageFrom.push([array[i][0], `${array[j][1]*array[i][1]}`]);
+                return false;
+            }
+    return true;
+}
+
+
+function isNotInThatArray(currentArray, currentIndex, targetArray) {
+    if(targetArray.length > 0)
+        for (let j = 0; j < targetArray.length; j++) 
+            if(targetArray[j][0].includes(currentArray[currentIndex][0])) {
+                damageFrom.push([currentArray[currentIndex][0], `${targetArray[j][1]*currentArray[currentIndex][1]}`]);
+                return false;
+            }
+    return true;
+}
+
 
 function  copyDamageValues() {
-    damageFrom = [];
-    damageTo = [];
     if(doubleDamageFrom.length > 0)
         for (let i = 0; i < doubleDamageFrom.length; i++) 
             damageFrom.push(doubleDamageFrom[i]);
