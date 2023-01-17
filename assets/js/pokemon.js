@@ -177,7 +177,7 @@ async function getPokemonGrowthRate() {
     return response['growth_rate']['name']; 
 }
 
-///////////////////////////////  P O K E M O N   EGG GROUPS ///////////////////////////////
+///////////////////////////////  P O K E M O N   E G G - G R O U P S ///////////////////////////////
 
 async function getPokemonEggGroups() {
     let array = [];
@@ -186,8 +186,9 @@ async function getPokemonEggGroups() {
     let response = await resp.json();
     if(response['egg_groups'].length > 0) 
         for (let i = 0; i < response['egg_groups'].length; i++) array.push(response['egg_groups'][i]['name']);
-    return response['growth_rate']['name']; 
+    return array; 
 }
+
 ///////////////////////////////  P O K E M O N   T Y P E   D A M A G E  ///////////////////////////////
 
 async function renderTypeDamageValues() {
