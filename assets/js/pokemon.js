@@ -15,6 +15,15 @@ let noDamageTo = [];
 let damageFrom = [];
 let damageTo = [];
 
+let evolution = [];
+let evo = [
+    {
+        'name': [],
+        'image': [],
+        'details': [],
+    }
+]
+
 let pokemonInfo = {
     'backgroundColor': '',
     'about': [
@@ -58,6 +67,8 @@ let pokemonInfo = {
         }
     ]
 };
+
+
 
 async function renderPokemon(i) {
     
@@ -372,6 +383,100 @@ function  copyDamageValues() {
 }
 
 
+async function doesPokemonEvolvesFrom() {
+    let url = pokemonElementData['species']['url'];
+    let resp = await fetch(url);
+    let species = await resp.json();
+    if(species['evolves_from_species'].length > 0) return true;
+    else return false;
+}
+
+
+async function getPokemonEvolvesFrom() {
+    let array = [];
+    let url = pokemonElementData['species']['url'];
+    let resp = await fetch(url);
+    let species = await resp.json();
+    for (let i = 0; i < species['evolves_from_species'].length; i++) {
+        array.push(species['evolves_from_species']['name']);
+    }
+    return array;
+}
+
+
+async function getPokemonEvolutionChain(species) {
+    evolution = [];
+    if(species['evolution_chain'].length > 0) {
+        let evoUrl = response['evolution_chain']['url'];
+        let evoResp = await fetch(evoUrl);
+        let evolutionChain = evoResp.json();
+        renderPokemonEvolutionChain(evolutionChain['chain']);
+    }
+}
+
+
+async function renderPokemonEvolutionChain(chain) {
+    cleanEvo();
+    if(chain['species'].length > 0) {
+        let urlLength = chain['species']['url'].length;
+        let pokemonNumber = Number(chain['species']['url'].charAt(urlLength-2));
+        evo['name'].push(chain['species']['name']);
+        evo['image'].push(await getPokemonImageAll(pokemonNumber));
+    }
+    renderPokemonEvoChainData(chain);
+    evolution.push(evo);
+    await renderPokemonEvolvesToData(chain);
+}
+
+///////////////////////
+// function getPokemonEvolvesToData(chain) {
+//     let urlLength = chain['species']['url'].length;
+//     let pokemonNumber = Number(evolutionChain['chain']['species']['url'].charAt(urlLength-2));
+//     evolution.push([
+//         {
+//             'name': evolutionChain['chain']['species']['name'],
+//             'image': getPokemonImageAll(pokemonNumber),
+//             'lvl':        }
+//     ]); 
+//     evoArray.push(evolutionChain['chain']);
+//     getPokemonEvolvesToData(evoArray, array) 
+// }
+//////////////////////
+// async function renderPokemonEvolutionChain(chain) {
+//     cleanEvo();
+//     if(chain['species'].length > 0) {
+//         let urlLength = chain['species']['url'].length;
+//         let pokemonNumber = Number(chain['species']['url'].charAt(urlLength-2));
+//         evo['name'].push(chain['species']['name']);
+//         evo['image'].push(await getPokemonImageAll(pokemonNumber));
+//     }
+//     renderPokemonEvoChainData(chain);
+//     evolution.push(evo);
+//     await renderPokemonEvolvesToData(chain);
+// }
+
+
+function renderPokemonEvoChainData(chain) {
+    if(chain['evolution_details'].length > 0) 
+        for (let index = 0; index < chain['evolution_details'].length; index++) {
+            let trigger = chain['evolution_details'][i]['trigger']['name'];
+            let minLevel = chain['evolution_details'][i]['min_level'];
+            evo['details'].push([
+                {
+                    'level': minLevel,
+                    'trigger': trigger,
+                }
+            ])
+        }
+}
+
+
+async function renderPokemonEvolvesToData(chain) {
+    if(chain['evolves_to'].length > 0) {
+        for (let i = 0; i < chain['evolves_to'].length; i++) 
+            await renderPokemonEvolutionChain(chain['evolves_to'][i]);
+}
+
 
 // LOAD INFOS
 async function loadPokemonInformation(i) {
@@ -482,4 +587,26 @@ function hideSelectedPokemonWrapper() {
 // UNMARK SELECTION
 function unmarkLastSelectedPokemon() {
     if(selectedPokemonIndex != -1) document.getElementById(`pokemon-list-element-container-${selectedPokemonIndex}`).style = `none`;
+}
+
+
+async function getPokemonImageAll(i) {
+    let url = allPokemonsBasicData['results']['results'][i]['url'];
+    let resp = await fetch(url);
+    let pokemon = await resp.json();
+    if (pokemonpokemon['sprites']['other']['official-artwork']['front_default']) return `${pokemon['sprites']['other']['official-artwork']['front_default']}`;
+    else if (pokemon['sprites']['other']['home']['front_default']) return `${pokemon['sprites']['other']['home']['front_default']}`;
+    else if(pokemonpokemon['sprites']['other']['dream_world']['front_default']) return `${pokemon['sprites']['other']['dream_world']['front_default']}`;
+    else return `assets/img/no_pokemon_image.png`;
+}
+
+
+function cleanEvo() {
+evo = [
+        {
+            'name': [],
+            'image': [],
+            'details': [],
+        }
+    ]
 }
