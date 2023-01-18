@@ -382,6 +382,7 @@ function  copyDamageValues() {
             damageTo.push(noDamageTo[i]);
 }
 
+///////////////////////////////  P O K E M O N   E V O L U T I O N  ///////////////////////////////
 
 async function doesPokemonEvolvesFrom() {
     let url = pokemonElementData['species']['url'];
@@ -404,7 +405,7 @@ async function getPokemonEvolvesFrom() {
 }
 
 
-async function getPokemonEvolutionChain(species) {
+async function renderPokemonEvolutionChain(species) {
     evolution = [];
     if(species['evolution_chain'].length > 0) {
         let evoUrl = response['evolution_chain']['url'];
@@ -415,7 +416,7 @@ async function getPokemonEvolutionChain(species) {
 }
 
 
-async function renderPokemonEvolutionChain(chain) {
+async function renderPokemonEvolutionData(chain) {
     cleanEvo();
     if(chain['species'].length > 0) {
         let urlLength = chain['species']['url'].length;
@@ -427,33 +428,6 @@ async function renderPokemonEvolutionChain(chain) {
     evolution.push(evo);
     await renderPokemonEvolvesToData(chain);
 }
-
-///////////////////////
-// function getPokemonEvolvesToData(chain) {
-//     let urlLength = chain['species']['url'].length;
-//     let pokemonNumber = Number(evolutionChain['chain']['species']['url'].charAt(urlLength-2));
-//     evolution.push([
-//         {
-//             'name': evolutionChain['chain']['species']['name'],
-//             'image': getPokemonImageAll(pokemonNumber),
-//             'lvl':        }
-//     ]); 
-//     evoArray.push(evolutionChain['chain']);
-//     getPokemonEvolvesToData(evoArray, array) 
-// }
-//////////////////////
-// async function renderPokemonEvolutionChain(chain) {
-//     cleanEvo();
-//     if(chain['species'].length > 0) {
-//         let urlLength = chain['species']['url'].length;
-//         let pokemonNumber = Number(chain['species']['url'].charAt(urlLength-2));
-//         evo['name'].push(chain['species']['name']);
-//         evo['image'].push(await getPokemonImageAll(pokemonNumber));
-//     }
-//     renderPokemonEvoChainData(chain);
-//     evolution.push(evo);
-//     await renderPokemonEvolvesToData(chain);
-// }
 
 
 function renderPokemonEvoChainData(chain) {
@@ -472,9 +446,9 @@ function renderPokemonEvoChainData(chain) {
 
 
 async function renderPokemonEvolvesToData(chain) {
-    if(chain['evolves_to'].length > 0) {
+    if(chain['evolves_to'].length > 0)
         for (let i = 0; i < chain['evolves_to'].length; i++) 
-            await renderPokemonEvolutionChain(chain['evolves_to'][i]);
+            await renderPokemonEvolutionData(chain['evolves_to'][i]);
 }
 
 
