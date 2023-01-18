@@ -56,7 +56,7 @@ async function renderPokemon(i) {
     
 
     copyPokemonElementData(i);
-    await loadPokemonInformation();
+    // await loadPokemonInformation();
     renderPokemonTemplate(i);
     renderPokemonContent(i);
 
@@ -198,24 +198,27 @@ function renderPokemonTemplate(i) {
     content.innerHTML = templatePokemonWrapper();
     let wrapper = document.getElementById(`pokemon-selected`);
     wrapper.innerHTML = templatePokemonHeaderAndImage(i);
-    wrapper.innerHTML += templatePokemonInfoWrapper(i);
+    wrapper.innerHTML += templatePokemonInfoWrapper();
+    templatePokemonInfoTabs();
 }
 
 
 function templatePokemonWrapper() {
     return `<div class="pokemon-selected-container sticky w-100" id="pokemon-selected-container">
-                <div class="pokemon-selected relative flex column w-100" id="pokemon-selected"></div>
+                <div class="pokemon-selected-inner-container w-100 h-100" id="pokemon-selected-inner-container">
+                    <div class="pokemon-selected relative flex column w-100" id="pokemon-selected"></div>
+                </div>
             </div>`;
 }
 
 
 function templatePokemonHeaderAndImage(i) {
-    return `<div class="pokemon-selected-header-wrapper absolute" id="pokemon-selected-header-wrapper">
-                <div class="pokemon-selected-header flex w-100 h-100">
+    return `<div class="pokemon-selected-header-wrapper fixed" id="pokemon-selected-header-wrapper">
+                <div class="pokemon-selected-header flex column w-100 h-100">
                     <div class="pokemon-selected-header-function-icons w-100 flex">
                         <img src="assets/img/back_arrow_white.png" class="pokemon-selected-header-arrow cursor-p" onclick="hideSelectedPokemonWrapper(${i})"> 
                         <img src="assets/img/liked.png" class="pokemon-selected-header-like cursor-p" id="pokemon-selected-header-liked"> 
-                        <img src="assets/img/unliked.png" class="pokemon-selected-header-like cursor-p" id="pokemon-selected-header-unliked">
+                        <img src="assets/img/unliked.png" class="pokemon-selected-header-like cursor-p d-none" id="pokemon-selected-header-unliked">
                     </div>
                     <div class="pokemon-selected-header-name-and-type flex column">
                         <div class="pokemon-selected-header-name-container" id="pokemon-selected-header-name-container"></div>
@@ -229,7 +232,7 @@ function templatePokemonHeaderAndImage(i) {
 
 
 function templatePokemonInfoWrapper() {
-    return `<div class="pokemon-selected-info-wrapper flex column">
+    return `<div class="pokemon-selected-info-wrapper h-100 flex column">
                 <div class="pokemon-selected-info-tab-wrapper flex w-100" id="pokemon-selected-info-tab-wrapper"></div>
                 <div class="pokemon-selected-info-data-wrapper" id="pokemon-selected-info-data-wrapper"></div>
             </div>`;
@@ -238,11 +241,11 @@ function templatePokemonInfoWrapper() {
 
 function templatePokemonInfoTabs() {
     let wrapper = document.getElementById(`pokemon-selected-info-tab-wrapper`);
-    wrapper.innerHTML = `<p class="pokemon-selected-info-tab">About</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab">Base Stats</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab">Evolution</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab">Moves</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab">Locations</p>`;
+    wrapper.innerHTML = `<p class="pokemon-selected-info-tab cursor-p">About</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab cursor-p">Base Stats</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab cursor-p">Evolution</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab cursor-p">Moves</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab cursor-p">Locations</p>`;
 }
 
 
@@ -265,10 +268,10 @@ function showSelectedPokemonWrapper(i) {
 
 
 function showSelectedPokemonInfo() {
-    if(sideWrapperIsOpen) addClasslist(`pokemon-selected`, `tranX-0`);
+    if(sideWrapperIsOpen) addClasslist(`pokemon-selected-inner-container`, `tranX-0`);
     else {
         setTimeout(() => {
-            addClasslist(`pokemon-selected`, `tranX-0`);
+            addClasslist(`pokemon-selected-inner-container`, `tranX-0`);
         }, 300); 
     }
     sideWrapperIsOpen = true;
