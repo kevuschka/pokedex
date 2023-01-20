@@ -34,6 +34,8 @@ async function init() {
     await includeHTML();
     await getLocalStorage();
     await setLocalStorage();
+    cleanValues();
+    await getMaxPokemonNumber();
     await getPokemonsBasicInfo(getPokemonsPerPageNumber());
     await getPokemonsElementsInfo(getPokemonsPerPageNumber());
     console.log('pokemon on page', pagePokemonsBasicData);
@@ -66,11 +68,26 @@ async function setLocalStorage() {
 }
 
 
-// PAGE Index & POKEMONS PER PAGE
+async function getMaxPokemonNumber() {
+    let url = 'https://pokeapi.co/api/v2/pokemon/';
+    let resp = await fetch(url);
+    let response = await resp.json();
+    count = response['count'];
+}
+
+
+// PAGE INDEX & POKEMONS PER PAGE
 
 function getPokemonsPerPageNumber() {
-    if(window.innerWidth > 800) return pokemonsPerPage;
-    else return pokemonsPerPageMobile;
+    if(window.innerWidth > 800) {
+        if((currentPageIndex + pokemonsPerPage) > count) 
+            return pokemonsPerPage = count - currentPageIndex;
+        else return pokemonsPerPage;
+    } else  {
+        if((currentPageIndex + pokemonsPerPageMobile) > count) 
+            return pokemonsPerPageMobile = count - currentPageIndex;
+        else return pokemonsPerPageMobile;
+    }
 }
 
 
@@ -383,4 +400,9 @@ function emptyAllPokemonsBasicData() {
                     'generations': [],
                 },
             };
+}
+
+
+function cleanValues() {
+    sideWrapperIsOpen = false;
 }

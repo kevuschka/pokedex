@@ -158,6 +158,10 @@ html {
     transform: translateX(0) !important;
 }
 
+.pad-top-50 {
+    padding-top: 60% !important;
+}
+
 .wrapper {
     background-color: white;
     color: black;
@@ -175,7 +179,6 @@ html {
     justify-content: center;
     transform: translateY(-20vh);
     transition: all 1s ease-in-out;
-    margin-right: 16px;
     /* background-color: white; */
     background-color: rgba(255, 255, 255, 0.733);
     z-index: 1;
@@ -233,6 +236,7 @@ html {
 }
 
 .content-container {
+    padding: 0 20px;
     overflow-y: auto;
     overflow-x: hidden;
     transition: all 1s ease-in-out;
@@ -313,23 +317,56 @@ html {
     padding: 22px 10px 22px 0;
 }
 
-.pokemon-selected-inner-container {
-    padding: 22px 0;
+.pokemon-selected {
     border-radius: 22px;
-    border: 1px solid rgba(0, 0, 0, 0.009);
-    background-color: antiquewhite;
+    height: 100%;
+    /* background-color: antiquewhite; */
+    background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.4) 0%, transparent 28%);
+
     transition: all 125ms ease-in-out;
     transform: translateX(50vw);
-    background-image: linear-gradient(transparent 50%, antiquewhite);
+    overflow: hidden;
 }
 
-.pokemon-selected {
-    height: 100%;
-    padding-top: 48%;
+.pokemon-selected-overlay-wrapper {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 22px;
+    padding-top: 0;
     overflow-y: scroll;
-    background-color: antiquewhite;
+    border: 2px solid rgba(0, 0, 0, 0.027);
+    background-color: transparent;
+    transition: all 125ms ease;
 }
 
+.pokemon-selected-overlay {
+    background-color: white;
+    color: black;
+    border-top-left-radius: 22px;
+    border-top-right-radius: 22px;
+    z-index: 1;
+    transform: translateY(0);
+
+}
+
+
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.pokemon-selected-overlay-wrapper::-webkit-scrollbar {
+    display: none;
+} 
+
+.pokemon-selected-overlay-wrapper {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+
+/* P O K E M O N   S E L E C T E D */
+
+/* H E A D E R */
 .pokemon-selected-header-function-icons {
     justify-content: space-between;
     padding: 22px;
@@ -353,12 +390,12 @@ html {
 }
 
 .pokemon-selected-image {
-    top: 80px;
+    top: 10%;
     width: 300px;
     right: 120px;
-    z-index: 1;
 }
 
+/* I N F O */
 .pokemon-selected-info-wrapper {
     background-color: white;
     border-top-left-radius: 22px;
@@ -367,15 +404,31 @@ html {
     color: black;
 }
 
-.pokemon-selected-info-tab-wrapper {
-    padding: 22px 0 0;
-    justify-content: space-evenly;
+.pokemon-selected-info-tab-wrapper{
+    overflow-x: auto;
+} 
+
+.pokemon-selected-info-tab-container {
+    justify-content: center;
+    padding: 22px 22px 0;
+    flex-wrap: nowrap;
+    gap: 22px;
 }
 
-.pokemon-selected-info-wrapper {
-    height: 100%;
+.pokemon-selected-info-tab {
+    justify-content: center;
+    align-items: center;
     padding-bottom: 10px;
-    border-bottom: 4px solid white;
+    border-bottom: 2px solid orange;
+}
+
+.sp-tab {
+    min-width: 80px;
+}
+
+.pokemon-selected-info-data-wrapper {
+    background-color: white;
+    height: 55rem;
 }
 
 @media screen and (min-width: 1400px) {
@@ -383,7 +436,11 @@ html {
         padding: 20px 140px;
     }
 
+    .content-container {
+        padding: 0 140px 22px;
+    }
+
     .pokemon-list {
-        padding: 150px 140px 22px;
+        padding-top: 150px;
     }
 }

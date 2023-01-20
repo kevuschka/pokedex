@@ -53,14 +53,21 @@ let pokemonInfo = {
 
 
 async function renderPokemon(i) {
-    
+    if(sideWrapperIsOpen) {
+        removeClasslist(`pokemon-selected-overlay-wrapper`, `pad-top-50`);
+        unmarkLastSelectedPokemon();
+        setTimeout(() => {
+            renderPokemonContent(i);
+        }, 200);
+        
+    } else {
+        copyPokemonElementData(i);
+        // await loadPokemonInformation();
+        renderPokemonTemplate(i);
+        await renderPokemonContent(i);
 
-    copyPokemonElementData(i);
-    // await loadPokemonInformation();
-    renderPokemonTemplate(i);
-    renderPokemonContent(i);
-
-    unmarkLastSelectedPokemon();
+        unmarkLastSelectedPokemon(); 
+    }
     selectedPokemonIndex = i;
     showSelectedPokemonWrapper(i);
 }
@@ -197,16 +204,19 @@ function renderPokemonTemplate(i) {
     let content = document.getElementById(`pokemon-selected-wrapper`);
     content.innerHTML = templatePokemonWrapper();
     let wrapper = document.getElementById(`pokemon-selected`);
-    wrapper.innerHTML = templatePokemonHeaderAndImage(i);
-    wrapper.innerHTML += templatePokemonInfoWrapper();
+    wrapper.innerHTML += templatePokemonHeaderAndImage(i);
+    let overlay = document.getElementById(`pokemon-selected-overlay`)
+    overlay.innerHTML += templatePokemonInfoWrapper();
     templatePokemonInfoTabs();
 }
 
 
 function templatePokemonWrapper() {
     return `<div class="pokemon-selected-container sticky w-100" id="pokemon-selected-container">
-                <div class="pokemon-selected-inner-container w-100 h-100" id="pokemon-selected-inner-container">
-                    <div class="pokemon-selected relative flex column w-100" id="pokemon-selected"></div>
+                <div class="pokemon-selected relative flex w-100 h-100" id="pokemon-selected">
+                    <div class="pokemon-selected-overlay-wrapper absolute flex" id="pokemon-selected-overlay-wrapper">
+                        <div class="pokemon-selected-overlay flex column w-100" id="pokemon-selected-overlay"></div>
+                    </div>
                 </div>
             </div>`;
 }
@@ -224,35 +234,46 @@ function templatePokemonHeaderAndImage(i) {
                         <div class="pokemon-selected-header-name-container" id="pokemon-selected-header-name-container"></div>
                         <div class="pokemon-selected-header-type-container" id="pokemon-selected-header-type-container"></div>
                     </div>
-                    <div class="pokemon-selected-header-pokemonNumber flex"><p>#${getPokemonId(i, pagePokemonsElementData[i]['id'])}</p></div>
+                    <div class="pokemon-selected-header-pokemonNumber flex"><p id="pokemon-selected-header-pokemonNumber"></p></div>
                 </div>
             </div>
-            <img src="${getPokemonImage(i)}" class="pokemon-selected-image absolute">`;
+            <img src="" class="pokemon-selected-image absolute" id="pokemon-selected-image">`;
 }
 
 
 function templatePokemonInfoWrapper() {
-    return `<div class="pokemon-selected-info-wrapper h-100 flex column">
-                <div class="pokemon-selected-info-tab-wrapper flex w-100" id="pokemon-selected-info-tab-wrapper"></div>
+    return `<div class="pokemon-selected-info-wrapper flex column">
+                <div class="pokemon-selected-info-tab-wrapper w-100">
+                    <div class="pokemon-selected-info-tab-container flex h-100" id="pokemon-selected-info-tab-container"></div>
+                </div>
                 <div class="pokemon-selected-info-data-wrapper" id="pokemon-selected-info-data-wrapper"></div>
             </div>`;
 }
 
 
 function templatePokemonInfoTabs() {
-    let wrapper = document.getElementById(`pokemon-selected-info-tab-wrapper`);
-    wrapper.innerHTML = `<p class="pokemon-selected-info-tab cursor-p">About</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab cursor-p">Base Stats</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab cursor-p">Evolution</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab cursor-p">Moves</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab cursor-p">Locations</p>`;
+    let wrapper = document.getElementById(`pokemon-selected-info-tab-container`);
+    wrapper.innerHTML = `<p class="pokemon-selected-info-tab flex cursor-p">About</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab flex sp-tab cursor-p">Base Stats</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab flex cursor-p">Evolution</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab flex cursor-p">Moves</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab flex cursor-p">Locations</p>`;
 }
 
 
 // CONTENT
-function renderPokemonContent(i) {
+async function renderPokemonContent(i) {
+    document.getElementById(`pokemon-selected-header-pokemonNumber`).innerHTML = `#${getPokemonId(i, pagePokemonsElementData[i]['id'])}`;
+    document.getElementById(`pokemon-selected-image`).src = `${getPokemonImage(i)}`;
     renderPokemonTypes(i, `pokemon-selected-header-type-container`);
+    await addBackgroundColor(i);
 }
+
+
+async function addBackgroundColor(i) {
+    document.getElementById(`pokemon-selected`).style.backgroundColor = `var(--${await getPokemonBackgroundColor(i)})`;
+}
+
 
 
 // SHOW & HIDE
@@ -262,23 +283,30 @@ function showSelectedPokemonWrapper(i) {
         document.getElementById(`pokemon-selected-wrapper`).style.height = `${height}px`;
     }, 100);
     document.getElementById(`pokemon-list-element-container-${i}`).style.border = `inset`;
-    document.getElementById(`pokemon-selected-wrapper`).style.width = `60%`;
+    if(window.innerWidth > 999) document.getElementById(`pokemon-selected-wrapper`).style.width = `60%`;
+    else document.getElementById(`pokemon-selected-wrapper`).style.width = `100%`;
     showSelectedPokemonInfo();
 }
 
 
 function showSelectedPokemonInfo() {
-    if(sideWrapperIsOpen) addClasslist(`pokemon-selected-inner-container`, `tranX-0`);
-    else {
+    // if(sideWrapperIsOpen) {
+    //     // addClasslist(`pokemon-selected`, `tranX-0`);
+    //     addClasslist(`pokemon-selected-overlay-wrapper`, `pad-top-50`);
+    // } else (!sideWrapperIsOpen)
         setTimeout(() => {
-            addClasslist(`pokemon-selected-inner-container`, `tranX-0`);
+            addClasslist(`pokemon-selected`, `tranX-0`);
         }, 300); 
-    }
+        setTimeout(() => {
+            addClasslist(`pokemon-selected-overlay-wrapper`, `pad-top-50`);
+        }, 480);
+    
     sideWrapperIsOpen = true;
 }
 
 
 function hideSelectedPokemonWrapper() {
+    removeClasslist(`pokemon-selected-overlay-wrapper`, `pad-top-50`);
     document.getElementById(`pokemon-selected-wrapper`).style.width = `0`;
     document.getElementById(`pokemon-selected-wrapper`).style.height = `0`;
     sideWrapperIsOpen = false;
