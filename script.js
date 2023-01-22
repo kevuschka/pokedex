@@ -7,6 +7,8 @@ let pokemonsPerPageMobile;
 let pagePokemonsBasicData = []; 
 let pagePokemonsElementData = [];
 
+
+
 let allPokemonsBasicData = {
     'count': '',
     'results': {
@@ -16,32 +18,75 @@ let allPokemonsBasicData = {
     }
 };
 
+let allPokemons = [];
+let pokemonData = {
+    'name': 
+        {
+            'name': '',
+            'names': [],
+        },
+    'generations': [],
+    'id':'',
+    'image': '',
+    'types': [],
+    'background_color': '',
+    'about': 
+        {   
+            'species' :  [],
+            'habitat': [],
+            'height' : 
+                {
+                    'meter': '',
+                    'inch': ''
+                },
+            'weight' : 
+                {
+                    'kg': '',
+                    'lbs': '',
+                },
+            'abilities' : [],
+            'growth_rate': [],
+            'egg_groups': [],
+        },
+    'base_stats': 
+        {   
+            'stats': [],
+            'total': '',
+            'type_defense': 
+                {
+                    'damage_to': [],
+                    'damage_from': [],
+                },
+        },
+    'evolution':  [],
+};
+
 
 let favPokemons = [];
 const bgMusic = new Audio('assets/sounds/poke_theme_music.mp3');
 const select = new Audio('assets/sounds/select_sound.mp3');
 let searchResults = [];
 let settingsOpen = 0;
-let pokemonInfoOpen = 0;
+
 let currentDate;
 let count;
 let lang = 'en';
-// localStorage.setItem('name', JSON.stringify(name));
-// let name = JSON.parse(localStorage.getItem(`name`)) || [];
+let currentPokemon;
 
 
 async function init() {
     await includeHTML();
     await getLocalStorage();
     await setLocalStorage();
+    await updateAllPokemonsData();
     cleanValues();
-    await getMaxPokemonNumber();
-    await getPokemonsBasicInfo(getPokemonsPerPageNumber());
-    await getPokemonsElementsInfo(getPokemonsPerPageNumber());
-    console.log('pokemon on page', pagePokemonsBasicData);
+    // await getMaxPokemonNumber();
+    // await getPagePokemonsBasicInfo(getPokemonsPerPageNumber());
+    // await getPokemonsElementsInfo(getPokemonsPerPageNumber());
+    // console.log('pokemon on page', pagePokemonsBasicData);
     renderHeader();
-    await renderPokemonsPage(getPokemonsPerPageNumber());
-    await updateAllPokemonsBasicData();
+    renderPokemonsPage(currentPageIndex, getPokemonsPerPageNumber());
+    
 }
 
 
@@ -55,7 +100,7 @@ async function getLocalStorage() {
     pokemonsPerPage = JSON.parse(localStorage.getItem('pokemonsPerPage')) || 40;
     pokemonsPerPageMobile = JSON.parse(localStorage.getItem('pokemonsPerPageMobile')) || 40;
     currentDate = await JSON.parse(localStorage.getItem('currentDate')) || '';
-    allPokemonsBasicData = await JSON.parse(localStorage.getItem(`allPokemonsBasicData`)) || emptyAllPokemonsBasicData(); 
+    allPokemons = await JSON.parse(localStorage.getItem(`allPokemons`)) || []; 
     favPokemons = await JSON.parse(localStorage.getItem(`favPokemons`)) || [];
 }
 
@@ -68,12 +113,12 @@ async function setLocalStorage() {
 }
 
 
-async function getMaxPokemonNumber() {
-    let url = 'https://pokeapi.co/api/v2/pokemon/';
-    let resp = await fetch(url);
-    let response = await resp.json();
-    count = response['count'];
-}
+// async function getMaxPokemonNumber() {
+//     let url = 'https://pokeapi.co/api/v2/pokemon/';
+//     let resp = await fetch(url);
+//     let response = await resp.json();
+//     count = response['count'];
+// }
 
 
 // PAGE INDEX & POKEMONS PER PAGE
@@ -98,85 +143,137 @@ function getPokemonsPerPageNumber() {
 
 
 // POKEMON LIST DATA
-async function getPokemonsBasicInfo(targetPageNumber) {
-    let url = `https://pokeapi.co/api/v2/pokemon/?offset=${currentPageIndex}&limit=${targetPageNumber}`;
+
+
+
+
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// LATEST DATA
+
+
+async function getCount() {
+    let url = `https://pokeapi.co/api/v2/pokemon`;
     let response = await fetch(url);
-    pagePokemonsBasicData = await response.json();
-    localStorage.setItem('pagePokemonsBasicData', JSON.stringify(pagePokemonsBasicData));
+    let list = await response.json();
+    count = list['count'];
 }
 
 
-async function getPokemonsElementsInfo(number) {
-    pagePokemonsElementData = [];
-    for (let i = 0; i < number; i++) {
-        let url = pagePokemonsBasicData['results'][i]['url'];
-        let resp = await fetch(url);
-        pagePokemonsElementData.push(await resp.json());
-    }
-}  
-
-
-// LATEST DATA
-async function updateAllPokemonsBasicData() {
-    if(allPokemonsBasicData.length == 0) {
-        await getAllPokemonsBasicInfo();
+async function updateAllPokemonsData() {
+    if(allPokemons.length == 0) {
+        await getAllPokemonsData();
         localStorage.setItem('currentDate', JSON.stringify(getDateAsArray()));
-    } else {
+    } else 
         if(!dataIsFromLatestDate()) {
             localStorage.setItem('currentDate', JSON.stringify(currentDate));
-            await getAllPokemonsBasicInfo();
+            await getAllPokemonsData();
         }
-    }
 }
 
 
-async function getAllPokemonsBasicInfo() {
-    count = pagePokemonsBasicData['count'];
-    allPokemonsBasicData['count'] = count;
+async function getAllPokemonsData() {
+    getCount();
     let allPokemonUrl = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${count}`;
-    let list = await fetch(allPokemonUrl);
-    let originalList = await list.json();
+    let response = await fetch(allPokemonUrl);
+    let allPokemonList = await response.json();
     console.log('originalList:', originalList);
-    for (let i = 0; i < originalList['results'].length; i++) getAllPokemonsBasicInfoPokemonData(originalList, i);
-    localStorage.setItem(`allPokemonsBasicData`, JSON.stringify(allPokemonsBasicData));
+    await renderPokemonsElementData(allPokemonList);
+    localStorage.setItem(`allPokemons`, JSON.stringify(allPokemons));
 } 
 
 
-async function getAllPokemonsBasicInfoPokemonData(originalList, i) {
-    let url = originalList['results'][i]['url'];
-    let resp = await fetch(url);
-    let response = await resp.json();
-    let speciesURL = response['species']['url'];
-    let speciesResp = await fetch(speciesURL);
-    let species = await speciesResp.json();
-    allPokemonsBasicData['results']['results'].push(originalList['results'][i]);
-    allPokemonsBasicData['results']['names'].push(getAllNames(species));
-    allPokemonsBasicData['results']['generations'].push({'gen':getAllGenerations(species)});
+async function renderPokemonsElementData(basicData) {
+    allPokemons = [];
+    for (let i = 0; i < basicData['results'].length; i++) {
+        let url = basicData['results'][i]['url'];
+        let response = await fetch(url);
+        let pagePokemonsElementData = await response.json();
+        getPokemonName(basicData['results'][i]['name']);
+        getPokemonId(pagePokemonsElementData);
+        getPokemonImage(pagePokemonsElementData);
+        getPokemonTypes(pokemon);
+        getPokemonSpeciesData(pagePokemonsElementData);
+        getPokemonHeight(pagePokemonsElementData);
+        getPokemonWeight(pagePokemonsElementData);
+        await getPokemonAbilities(pagePokemonsElementData);
+        getStats(pagePokemonsElementData);
+
+        allPokemons.push();
+    }
 }
 
-/**
- * That function loads the names of a pokemon in different languages.
- * @param {object} species - species is the species JSON array of that pokemon to get the names data in 'names'
- * @returns an array with names of a pokemon (in different language)
- */
-function getAllNames(species) {
-    let array = [];
-    for (let i = 0; i < species['names'].length; i++)
-            array.push(species['names'][i]['name']);
-    return array;
-}
 
-/**
- * That function loads the generations of a pokemon, in that the species was introduced in.
- * @param {object} species - species is the species JSON array of that pokemon to get the generation data in 'generation'
- * @returns an array with generations of a pokemon species
- */
-function getAllGenerations(species) {
-    let array = [];
-    array.push(species['generation']['name']);
-    return array;
+
+
+async function getPokemonSpeciesData(pokemon) {
+    let url = pokemon['species']['url'];
+    let response = await fetch(url);
+    let species = await response.json();
+    getAllNames(species);
+    getAllGenerations(species);
+    getPokemonBackgroundColor(species);
+    getPokemonSpecies(species);
+    getPokemonHabitat(species);
+    getPokemonGrowthRate(species);
+    getPokemonEggGroups(species);
+    await getPokemonEvolutionData(species);
+
 
 }
+
+
+async function getPokemonEvolutionData(species) {
+    if(species['evolution_chain'].length > 0) {
+        let url = response['evolution_chain']['url'];
+        let response = await fetch(url);
+        let evolution = await response.json();
+        await renderPokemonEvolutionData(evolution['chain'])
+    }
+}
+
+
+async function getPokemonTypeDamageData(pokemon) {
+    pokemonData['base_stats']['type_defense']['damage_to'] = [];
+    pokemonData['base_stats']['type_defense']['damage_from'] = [];
+    for (let i = 0; i < pokemon['types'].length; i++) {
+        let url = pokemon['types'][i]['type']['url'];
+        let response = await fetch(url);
+        let type = await response.json(); 
+        renderTypeDamageValues(type, pokemon['types'].length);
+    }
+}
+
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+// async function getPokemonsElementsInfo(number) {
+//     pagePokemonsElementData = [];
+//     for (let i = 0; i < number; i++) {
+//         let url = pagePokemonsBasicData['results'][i]['url'];
+//         let resp = await fetch(url);
+//         pagePokemonsElementData.push(await resp.json());
+//     }
+// }  
+
+
+
+
+
+// async function getAllPokemonsBasicInfoPokemonData(originalList, i) {
+//     let url = originalList['results'][i]['url'];
+//     let resp = await fetch(url);
+//     let response = await resp.json();
+//     let speciesURL = response['species']['url'];
+//     let speciesResp = await fetch(speciesURL);
+//     let species = await speciesResp.json();
+//     allPokemonsBasicData['results']['results'].push(originalList['results'][i]);
+//     // allPokemonsBasicData['results']['names'].push(getAllNames(species));
+//     allPokemonsBasicData['results']['generations'].push({'gen':getAllGenerations(species)});
+// }
+
+
+
+
 
 
 // GET DATE
@@ -235,15 +332,16 @@ function removeClasslist(id, classe) {
 
 // ########## POKEMON ##########
 
-async function renderPokemonsPage(elementsNumber) {
+async function renderPokemonsPage(from, to) {
     let wrapper = document.getElementById(`pokemon-list-wrapper`);
     wrapper.innerHTML = templatePokemonList();
     let content = document.getElementById(`pokemon-list`);
     content.innerHTML = '';
-    await renderPokemonsListContent(elementsNumber, content);
-    renderPageColor();
+    for (let i = from; i < to; i++) {
+        renderPokemonsListContent(i, content);
+        renderPageColor();
+    }
 }
-
 
 
 function templatePokemonList() {
@@ -253,17 +351,17 @@ function templatePokemonList() {
 
 // ########## RENDER POKEMON LIST CONTENT ##########
 
-async function renderPokemonsListContent(elementsNumber, content) {
+async function renderPokemonsListContent(elementNumber, content) {
     if(currentPage().includes('favorites.html')) {}
     else if(currentPage().includes('index.html')) {}
     let name;
     let id;
-    for (let i = 0; i < elementsNumber; i++) {
-        name = `${pagePokemonsBasicData['results'][i]['name'].charAt(0).toUpperCase()}` + `${pagePokemonsBasicData['results'][i]['name'].slice(1)}`;
-        id = pagePokemonsElementData[i]['id'];
+    for (let i = 0; i < elementNumber; i++) {
+        name = allPokemons[elementNumber]['name']['name'];
+        id = allPokemons[elementNumber]['id'];
         content.innerHTML += templatePokemonsListElement(i, name, id);
         renderPokemonTypes(i, `pokemon-list-element-type-container-${i}`);
-        let color = await getPokemonBackgroundColor(i);
+        let color = allPokemons[elementNumber]['background_color'];
         addClasslist(`pokemon-list-element-container-${i}`, `${color}`);
     }
 }
@@ -291,38 +389,13 @@ function templatePokemonsListElement(i, name, id) {
 }
 
 
-function getPokemonName(name) {
-    let nameArray = name.split('-');
-    let betterArray = [];
-    let finalName = '';
-    for (let j = 0; j < nameArray.length; j++) {
-        betterArray[j] = `${nameArray[j].charAt(0).toUpperCase()}` + `${nameArray[j].slice(1)}`;
-        finalName += `${betterArray[j]}`;
-        finalName += ' ';
-    }
-    return finalName;
-}
 
 
-function getPokemonId(i, id) {
-    if((id.toString().length) < 5 ) {
-        let rest = 4 - id.toString().length;
-        let newId = '';
-        for (let j = 0; j < rest; j++) {
-            newId += '0';
-        }
-        return newId + id.toString();
-    } else return id;
-    
-}
 
 
-function getPokemonImage(i) {
-    if (pagePokemonsElementData[i]['sprites']['other']['official-artwork']['front_default']) return `${pagePokemonsElementData[i]['sprites']['other']['official-artwork']['front_default']}`;
-    else if (pagePokemonsElementData[i]['sprites']['other']['home']['front_default']) return `${pagePokemonsElementData[i]['sprites']['other']['home']['front_default']}`;
-    else if(pagePokemonsElementData[i]['sprites']['other']['dream_world']['front_default']) return `${pagePokemonsElementData[i]['sprites']['other']['dream_world']['front_default']}`;
-    else return `assets/img/no_pokemon_image.png`;
-}
+
+
+
 
 
 function renderPokemonTypes(i, contentId) {
@@ -334,24 +407,10 @@ function renderPokemonTypes(i, contentId) {
 }
 
 
-function getPokemonTypes(i) {
-    let pokeType = [];
-    for (let j = 0; j < pagePokemonsElementData[i]['types'].length; j++) {
-        let typ = pagePokemonsElementData[i]['types'][j]['type']['name'];
-        let typs = `${typ.charAt(0).toUpperCase()}` + `${typ.slice(1)}`;
-        pokeType.push(typs);
-    }
-    return pokeType;
-}
 
 
-async function getPokemonBackgroundColor(i) {
-    let url = pagePokemonsElementData[i]['species']['url'];
-    let resp = await fetch(url);
-    let response = await resp.json();
-    let color = response['color']['name'];
-    return color;
-}
+
+
 
 function renderPageColor() {
     if(darkmode) document.getElementById(`content-container`).style.backgroundColor = 'rgba(0,0,0,0.5)';

@@ -6,49 +6,7 @@ let selectedPokemonIndex = -1;
 let sideWrapperIsOpen = false;
 let stats = [];
 
-let pokemonInfo = {
-    'backgroundColor': '',
-    'about': [
-        {   
-            'species' :  '',
-            'height' : 
-                {
-                    'meter': '',
-                    'inch': ''
-                },
-            'weight' : 
-                {
-                    'kg': '',
-                    'lbs': '',
-                },
-            'abilities' : []
-        },
-        { 
-            'egg groups': '',
-            'egg cycle': ''
-        }
-    ],
-    'base-stats': [
-        {
-            'hp':'',
-            'attack': '',
-            'defense': '',
-            'speed-attack': '',
-            'speed-defense': '',
-            'speed': '',
-            'total': ''
-        },
-        {
-            'type-defense': ''
-        },
-    ],
-    'evolution':  [
-        {
-            'lvl': '',
-            'image': ''
-        }
-    ]
-};
+
 
 
 
@@ -99,104 +57,201 @@ function copyPokemonElementData(i) {
 //     copyPokemonEggCycle();
 // }
 
+///////////////////////////////  P O K E M O N   N A M E  ///////////////////////////////
+
+function getPokemonName(basicData) {
+    let name = basicData;
+    let nameArray = name.split('-');
+    let betterArray = [];
+    let finalName = '';
+    for (let j = 0; j < nameArray.length; j++) {
+        betterArray[j] = `${nameArray[j].charAt(0).toUpperCase()}` + `${nameArray[j].slice(1)}`;
+        finalName += `${betterArray[j]}`;
+        finalName += ' ';
+    }
+    pokemonData['name']['name'] = finalName;
+}
+
+///////////////////////////////  A L L   P O K E M O N   N A M E S  ///////////////////////////////
+/**
+ * That function loads the names of a pokemon in different languages.
+ * @param {object} species - species is the species JSON array of that pokemon to get the names data in 'names'
+ * @returns an array with names of a pokemon (in different language)
+ */
+function getAllNames(species) {
+    pokemonData['name']['names'] = [];
+    for (let i = 0; i < species['names'].length; i++)
+        pokemonData['name']['names'].push(species['names'][i]['name']);
+}
+
+///////////////////////////////  P O K E M O N   G E N E R A T I O N S  ///////////////////////////////
+/**
+ * That function loads the generations of a pokemon, in that the species was introduced in.
+ * @param {object} species - species is the species JSON array of that pokemon to get the generation data in 'generation'
+ * @returns an array with generations of a pokemon species
+ */
+function getAllGenerations(species) {
+    pokemonData['generations'] = [];
+    pokemonData['generations'].push(species['generation']['name']);
+}
+
+///////////////////////////////  P O K E M O N   I D  ///////////////////////////////
+
+function getPokemonId(pokemon) {
+    let id = pokemon['id'];
+    if((id.toString().length) < 5 ) {
+        let rest = 4 - id.toString().length;
+        let newId = '';
+        for (let j = 0; j < rest; j++) {
+            newId += '0';
+        }
+        pokemonData['id'] = newId + id.toString();
+    } else pokemonData['id'] = id; 
+}
+
+///////////////////////////////  P O K E M O N   I M A G E  ///////////////////////////////
+
+function getPokemonImage(pokemon) {
+    if (pokemon['sprites']['other']['official-artwork']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['official-artwork']['front_default']}`;
+    else if (pokemon['sprites']['other']['home']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['home']['front_default']}`;
+    else if(pokemon['sprites']['other']['dream_world']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['dream_world']['front_default']}`;
+    else pokemonData['image'] = `assets/img/no_pokemon_image.png`;
+}
+
+///////////////////////////////  P O K E M O N   T Y P E S  ///////////////////////////////
+
+function getPokemonTypes(pokemon) {
+    pokemonData['types'] = [];
+    for (let j = 0; j < pokemon['types'].length; j++) {
+        let type = pokemon['types'][j]['type']['name'];
+        let typeName = `${type.charAt(0).toUpperCase()}` + `${type.slice(1)}`;
+        pokemonData['types'].push(typeName);
+    }
+}
+
+///////////////////////////////  P O K E M O N   B A C K G R O U N D - C O L O R  ///////////////////////////////
+
+function getPokemonBackgroundColor(species) {
+    // let url = pagePokemonsElementData[i]['species']['url'];
+    // let resp = await fetch(url);
+    // let response = await resp.json();
+    pokemonData['background_color'] = species['color']['name'];
+}
+
 ///////////////////////////////  P O K E M O N   S P E C I E S  ///////////////////////////////
 
-async function getPokemonSpecies() {
-    let url = pokemonElementData['species']['url'];
-    let resp = await fetch(url);
-    let response = await resp.json();
-    for (let i = 0; i < response['genera'].length; i++) {
-        if (response['genera'][i]['language']['name'] == lang) {
+function getPokemonSpecies(species) {
+    // let url = pokemonElementData['species']['url'];
+    // let resp = await fetch(url);
+    // let response = await resp.json();
+    pokemonData['about']['species'] = [];
+    for (let i = 0; i < species['genera'].length; i++) {
+        if (species['genera'][i]['language']['name'] == lang) {
             // pokemonInfo['about']['species'] = `${response['genera'][i]['genus']}`;
             // break;
-            return `${response['genera'][i]['genus']}`;
+            pokemonData['about']['species'].push(response['genera'][i]['genus']);
         } 
     }
 }
 
 ///////////////////////////////  P O K E M O N   H A B I T A T  ///////////////////////////////
 
-async function getPokemonHabitat() {
-    let url = pokemonElementData['species']['url'];
-    let resp = await fetch(url);
-    let response = await resp.json();
-    return response['habitat']['name'];
+function getPokemonHabitat(species) {
+    // let url = object['species']['url'];
+    // let resp = await fetch(url);
+    // let response = await resp.json();
+    pokemonData['about']['habitat'] = [];
+    pokemonData['about']['habitat'].push(species['habitat']['name']);
 }
 
 ///////////////////////////////  P O K E M O N   H E I G H T  ///////////////////////////////
 
-async function getPokemonHeight() {
-    let data = pokemonElementData['height'];
+function getPokemonHeight(pokemon) {
+    let data = pokemon['height'];
     let meter = (data/10).toFixed(2);
     let feet = (meter*3.28084).toFixed(2);
     let feetInt = Number.parseInt(feet.toString());
     let feetDec = Number.parseFloat('0' + feet.toString().split((feet.toString().indexOf('.'))));
     let inch = (feetDec*12).toFixed(2);
     let height = feetInt + inch;
-    // pokemonInfo['about']['height']['meter'] = meter;
-    // pokemonInfo['about']['height']['inch'] = height;
-    return [meter, height];
+    pokemonInfo['about']['height']['meter'] = meter;
+    pokemonInfo['about']['height']['inch'] = height;
 }
 
 ///////////////////////////////  P O K E M O N   W E I G H T  ///////////////////////////////
 
-function getPokemonWeight() {
-    let data = pokemonElementData['weight'];
+function getPokemonWeight(pokemon) {
+    let data = pokemon['weight'];
     let kilogramm = (data/10).toString(2);
     let lbs = (kilogramm*2,204623).toString(1);
-    // pokemonInfo['about']['weight']['kg'] = kilogramm;
-    // pokemonInfo['about']['weight']['lbs'] = lbs;
-    return [kilogramm, lbs];
+    pokemonInfo['about']['weight']['kg'] = kilogramm;
+    pokemonInfo['about']['weight']['lbs'] = lbs;
 }
 
 ///////////////////////////////  P O K E M O N   A B I L I T Y  ///////////////////////////////
 
-async function getPokemonAbilities() {
-    let abilityArray= [];
-    let abilities = (pokemonElementData['abilities'].length)-1;
-    for (let i = 0; i < abilities; i++) {
-        let url = pokemonElementData['abilities'][i]['ability']['url'];
+async function getPokemonAbilities(pokemon) {
+    let abilityArray = [];
+    pokemonData['about']['abilities'] = [];
+    for (let i = 0; i < pokemon['abilities'].length; i++) {
+        abilityArray = [];
+        abilityArray.push(pokemon['abilities'][i]['ability']['name']);
+        let url = pokemon['abilities'][i]['ability']['url'];
         let resp = await fetch(url);
-        let response = await resp.json();
-        for (let j = 0; j < response['names'].length; j++) {
-            if (response['names'][j]['language']['name'] == lang) {
-                abilityArray.push(response['names'][j]['name']);
+        let ability = await resp.json();
+        for (let j = 0; j < ability['effect_entries'].length; j++)
+            if (ability['effect_entries'][j]['language']['name'] == lang) {
+                abilityArray.push(ability['effect_entries'][j]['effect']);
                 break;
             }
-        }
+        pokemonData['about']['abilities'].push(abilityArray);
     }
-    return abilityArray;
 }
 
 ///////////////////////////////  P O K E M O N   G R O W T H - R A T E  ///////////////////////////////
 
-async function getPokemonGrowthRate() {
-    let url = pokemonElementData['species']['url'];
-    let resp = await fetch(url);
-    let response = await resp.json();
-    return response['growth_rate']['name']; 
+async function getPokemonGrowthRate(species) {
+    // let url = pokemonElementData['species']['url'];
+    // let resp = await fetch(url);
+    // let response = await resp.json();
+    pokemonData['about']['growth_rate'] = [];
+    pokemonData['about']['growth_rate'].push(species['growth_rate']['name']); 
 }
 
 ///////////////////////////////  P O K E M O N   E G G - G R O U P S ///////////////////////////////
 
-async function getPokemonEggGroups() {
-    let array = [];
-    let url = pokemonElementData['species']['url'];
-    let resp = await fetch(url);
-    let response = await resp.json();
-    if(response['egg_groups'].length > 0) 
-        for (let i = 0; i < response['egg_groups'].length; i++) array.push(response['egg_groups'][i]['name']);
-    return array; 
+async function getPokemonEggGroups(species) {
+    // let array = [];
+    // let url = pokemonElementData['species']['url'];
+    // let resp = await fetch(url);
+    // let response = await resp.json();
+    pokemonData['about']['egg_groups'] = [];
+    if(species['egg_groups'].length > 0) 
+        for (let i = 0; i < species['egg_groups'].length; i++) pokemonData['about']['egg_groups'].push(species['egg_groups'][i]['name']);
 }
 
 ///////////////////////////////  P O K E M O N   S T A T S ///////////////////////////////
 
-function getStats() {
-    stats = [];
-    for (let i = 0; i < pokemonElementData[i].length; i++)
-        stats.push(pokemonElementData[i]['base_stat']);
-    return stats;
+function getStats(pokemon) {
+    let total = 0;
+    pokemonData['base_stats']['stats'] = [];
+    for (let i = 0; i < pokemon['stats'].length; i++) {
+        pokemonData['base_stats']['stats'].push(pokemon['stats'][i]['base_stat']);
+        total += pokemon['stats'][i]['base_stat'];
+    }
+    pokemonData['base_stats']['total'] = total;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 // TEMPLATE
@@ -262,16 +317,16 @@ function templatePokemonInfoTabs() {
 
 
 // CONTENT
-async function renderPokemonContent(i) {
-    document.getElementById(`pokemon-selected-header-pokemonNumber`).innerHTML = `#${getPokemonId(i, pagePokemonsElementData[i]['id'])}`;
-    document.getElementById(`pokemon-selected-image`).src = `${getPokemonImage(i)}`;
+function renderPokemonContent(i) {
+    document.getElementById(`pokemon-selected-header-pokemonNumber`).innerHTML = `#${allPokemons[i]['id']}`;
+    document.getElementById(`pokemon-selected-image`).src = `${getPokemonImage(allPokemons[i]['image'])}`;
     renderPokemonTypes(i, `pokemon-selected-header-type-container`);
-    await addBackgroundColor(i);
+    addBackgroundColor(i);
 }
 
 
-async function addBackgroundColor(i) {
-    document.getElementById(`pokemon-selected`).style.backgroundColor = `var(--${await getPokemonBackgroundColor(i)})`;
+function addBackgroundColor(i) {
+    document.getElementById(`pokemon-selected`).style.backgroundColor = `var(--${allPokemons[i]['background_color']})`;
 }
 
 
@@ -319,15 +374,5 @@ function unmarkLastSelectedPokemon() {
     if(selectedPokemonIndex != -1) document.getElementById(`pokemon-list-element-container-${selectedPokemonIndex}`).style = `none`;
 }
 
-
-async function getPokemonImageAll(i) {
-    let url = allPokemonsBasicData['results']['results'][i]['url'];
-    let resp = await fetch(url);
-    let pokemon = await resp.json();
-    if (pokemonpokemon['sprites']['other']['official-artwork']['front_default']) return `${pokemon['sprites']['other']['official-artwork']['front_default']}`;
-    else if (pokemon['sprites']['other']['home']['front_default']) return `${pokemon['sprites']['other']['home']['front_default']}`;
-    else if(pokemonpokemon['sprites']['other']['dream_world']['front_default']) return `${pokemon['sprites']['other']['dream_world']['front_default']}`;
-    else return `assets/img/no_pokemon_image.png`;
-}
 
 
