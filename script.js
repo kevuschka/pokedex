@@ -90,7 +90,7 @@ async function init() {
 }
 
 
-// LOCALSTORAGE
+///////////////////////////////  L O C A L S T O R A G E  ///////////////////////////////
 
 async function getLocalStorage() {
     lang = localStorage.getItem('lang') || 'en';
@@ -112,98 +112,61 @@ async function setLocalStorage() {
     localStorage.setItem('pokemonsPerPageMobile', pokemonsPerPageMobile);
 }
 
+///////////////////////////////  P O K E M O N   D A T A  ///////////////////////////////
 
-// async function getMaxPokemonNumber() {
-//     let url = 'https://pokeapi.co/api/v2/pokemon/';
-//     let resp = await fetch(url);
-//     let response = await resp.json();
-//     count = response['count'];
-// }
-
-
-// PAGE INDEX & POKEMONS PER PAGE
-
-function getPokemonsPerPageNumber() {
-    if(window.innerWidth > 800) {
-        if((currentPageIndex + pokemonsPerPage) > count) 
-            return pokemonsPerPage = count - currentPageIndex;
-        else return pokemonsPerPage;
-    } else  {
-        if((currentPageIndex + pokemonsPerPageMobile) > count) 
-            return pokemonsPerPageMobile = count - currentPageIndex;
-        else return pokemonsPerPageMobile;
-    }
+async function updateAllPokemonsData() {
+    if(allPokemons.length == 0) {
+        await getAllPokemonsData();
+        localStorage.setItem('allPokemons', JSON.stringify(allPokemons));
+        localStorage.setItem('currentDate', JSON.stringify(getDateAsArray()));
+    } else 
+        if(!dataIsFromLatestDate()) {
+            await getAllPokemonsData();
+            localStorage.setItem('currentDate', JSON.stringify(currentDate));
+            localStorage.setItem('allPokemons', JSON.stringify(allPokemons));
+        }
 }
 
 
-// function getTargetPageIndex() {
-//     if(window.innerWidth > 800) return (currentPageIndex + pokemonsPerPage);
-//     else return (currentPageIndex + pokemonsPerPageMobile);
-// }
-
-
-// POKEMON LIST DATA
-
-
-
-
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// LATEST DATA
+async function getAllPokemonsData() {
+    let url = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${await getCount()}`;
+    let response = await fetch(url);
+    let allPokemonList = await response.json();
+    console.log('originalList:', allPokemonList);
+    await renderPokemonsElementData(allPokemonList);
+    localStorage.setItem(`allPokemons`, JSON.stringify(allPokemons));
+} 
 
 
 async function getCount() {
     let url = `https://pokeapi.co/api/v2/pokemon`;
     let response = await fetch(url);
     let list = await response.json();
-    count = list['count'];
+    let anzahl = list['count'];
+    return anzahl;
 }
 
 
-async function updateAllPokemonsData() {
-    if(allPokemons.length == 0) {
-        await getAllPokemonsData();
-        localStorage.setItem('currentDate', JSON.stringify(getDateAsArray()));
-    } else 
-        if(!dataIsFromLatestDate()) {
-            localStorage.setItem('currentDate', JSON.stringify(currentDate));
-            await getAllPokemonsData();
-        }
-}
-
-
-async function getAllPokemonsData() {
-    getCount();
-    let allPokemonUrl = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${count}`;
-    let response = await fetch(allPokemonUrl);
-    let allPokemonList = await response.json();
-    console.log('originalList:', originalList);
-    await renderPokemonsElementData(allPokemonList);
-    localStorage.setItem(`allPokemons`, JSON.stringify(allPokemons));
-} 
-
-
-async function renderPokemonsElementData(basicData) {
+async function renderPokemonsElementData(basic) {
     allPokemons = [];
-    for (let i = 0; i < basicData['results'].length; i++) {
-        let url = basicData['results'][i]['url'];
+    for (let i = 0; i < basic['results'].length; i++) {
+        let url = basic['results'][i]['url'];
         let response = await fetch(url);
-        let pagePokemonsElementData = await response.json();
-        getPokemonName(basicData['results'][i]['name']);
-        getPokemonId(pagePokemonsElementData);
-        getPokemonImage(pagePokemonsElementData);
+        let pokemon = await response.json();
+        getPokemonName(basic['results'][i]['name']);
+        getPokemonId(pokemon);
+        getPokemonImage(pokemon);
         getPokemonTypes(pokemon);
-        getPokemonSpeciesData(pagePokemonsElementData);
-        getPokemonHeight(pagePokemonsElementData);
-        getPokemonWeight(pagePokemonsElementData);
-        await getPokemonAbilities(pagePokemonsElementData);
-        getStats(pagePokemonsElementData);
-
-        allPokemons.push();
+        await getPokemonSpeciesData(pokemon);
+        getPokemonHeight(pokemon);
+        getPokemonWeight(pokemon);
+        await getPokemonAbilities(pokemon);
+        getStats(pokemon);
+        await getPokemonTypeDamageData(pokemon);
+        allPokemons.push(pokemonData);
+        console.log(`allPokemons:`, allPokemons);
     }
 }
-
-
 
 
 async function getPokemonSpeciesData(pokemon) {
@@ -218,14 +181,12 @@ async function getPokemonSpeciesData(pokemon) {
     getPokemonGrowthRate(species);
     getPokemonEggGroups(species);
     await getPokemonEvolutionData(species);
-
-
 }
 
 
 async function getPokemonEvolutionData(species) {
-    if(species['evolution_chain'].length > 0) {
-        let url = response['evolution_chain']['url'];
+    if(species['evolution_chain'].length > 0 || species['evolution_chain']['url']) {
+        let url = species['evolution_chain']['url'];
         let response = await fetch(url);
         let evolution = await response.json();
         await renderPokemonEvolutionData(evolution['chain'])
@@ -236,47 +197,13 @@ async function getPokemonEvolutionData(species) {
 async function getPokemonTypeDamageData(pokemon) {
     pokemonData['base_stats']['type_defense']['damage_to'] = [];
     pokemonData['base_stats']['type_defense']['damage_from'] = [];
-    for (let i = 0; i < pokemon['types'].length; i++) {
-        let url = pokemon['types'][i]['type']['url'];
-        let response = await fetch(url);
-        let type = await response.json(); 
-        renderTypeDamageValues(type, pokemon['types'].length);
-    }
+    cleanDamageArrays(); 
+    await renderTypeDamageValues(pokemon);
+    getDamageValues();
 }
 
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+///////////////////////////////  L A T E S T   D A T E  ///////////////////////////////
 
-// async function getPokemonsElementsInfo(number) {
-//     pagePokemonsElementData = [];
-//     for (let i = 0; i < number; i++) {
-//         let url = pagePokemonsBasicData['results'][i]['url'];
-//         let resp = await fetch(url);
-//         pagePokemonsElementData.push(await resp.json());
-//     }
-// }  
-
-
-
-
-
-// async function getAllPokemonsBasicInfoPokemonData(originalList, i) {
-//     let url = originalList['results'][i]['url'];
-//     let resp = await fetch(url);
-//     let response = await resp.json();
-//     let speciesURL = response['species']['url'];
-//     let speciesResp = await fetch(speciesURL);
-//     let species = await speciesResp.json();
-//     allPokemonsBasicData['results']['results'].push(originalList['results'][i]);
-//     // allPokemonsBasicData['results']['names'].push(getAllNames(species));
-//     allPokemonsBasicData['results']['generations'].push({'gen':getAllGenerations(species)});
-// }
-
-
-
-
-
-
-// GET DATE
 function dataIsFromLatestDate() {
     let date = getDateAsArray();
     if(currentDate) {
@@ -314,23 +241,13 @@ function isLatestDay(date) {
     } else return true;
 }
 
+///////////////////////////////  C L E A N   V A L U E S   ///////////////////////////////
 
-// HELP FUNCTIONS
-function addClasslist(id, classe) {
-    document.getElementById(id).classList.add(classe);
+function cleanValues() {
+    sideWrapperIsOpen = false;
 }
 
-
-function removeClasslist(id, classe) {
-    document.getElementById(id).classList.remove(classe);
-}
-
-
-
-
-
-
-// ########## POKEMON ##########
+///////////////////////////////  R E N D E R   P A G E  ///////////////////////////////
 
 async function renderPokemonsPage(from, to) {
     let wrapper = document.getElementById(`pokemon-list-wrapper`);
@@ -352,23 +269,12 @@ function templatePokemonList() {
 // ########## RENDER POKEMON LIST CONTENT ##########
 
 async function renderPokemonsListContent(elementNumber, content) {
-    if(currentPage().includes('favorites.html')) {}
-    else if(currentPage().includes('index.html')) {}
-    let name;
-    let id;
-    for (let i = 0; i < elementNumber; i++) {
-        name = allPokemons[elementNumber]['name']['name'];
-        id = allPokemons[elementNumber]['id'];
-        content.innerHTML += templatePokemonsListElement(i, name, id);
-        renderPokemonTypes(i, `pokemon-list-element-type-container-${i}`);
-        let color = allPokemons[elementNumber]['background_color'];
-        addClasslist(`pokemon-list-element-container-${i}`, `${color}`);
-    }
-}
-
-
-function renderPokemonPageContent(elementsNumber, content) {
-
+    // if(currentPage().includes('favorites.html')) {}
+    // else if(currentPage().includes('index.html')) {}
+    content.innerHTML += templatePokemonsListElement(elementNumber);
+    renderPokemonTypes(elementNumber, `pokemon-list-element-type-container-${elementNumber}`);
+    let color = allPokemons[elementNumber]['background_color'];
+    addClasslist(`pokemon-list-element-container-${i}`, `${color}`);
 }
 
 
@@ -377,39 +283,24 @@ function currentPage() {
 }
 
 
-function templatePokemonsListElement(i, name, id) {
+function templatePokemonsListElement(i) {
     return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="renderPokemon(${i})" onmousedown="clickOnElement(${i})" onmouseup="clickOutElement(${i})">
                 <div class="pokemon-list-element flex column">
-                    <div class="pokemon-list-element-id-container flex absolute"><p>#${getPokemonId(i, id)}</p></div>
-                    <div class="pokemon-list-element-name-container"><p>${getPokemonName(name)}</p></div>
+                    <div class="pokemon-list-element-id-container flex absolute"><p>#${allPokemons[i]['id']}</p></div>
+                    <div class="pokemon-list-element-name-container"><p>${allPokemons[i]['name']['name']}</p></div>
                     <div class="pokemon-list-element-type-container flex" id="pokemon-list-element-type-container-${i}"></div>
-                    <img src="${getPokemonImage(i)}" class="pokemon-list-element-image absolute" id="pokemon-list-element-image-${i}">
+                    <img src="${allPokemons[i]['image']}" class="pokemon-list-element-image absolute" id="pokemon-list-element-image-${i}">
                 </div>
             </div>`;
 }
 
 
-
-
-
-
-
-
-
-
-
 function renderPokemonTypes(i, contentId) {
     let content = document.getElementById(contentId);
     content.innerHTML = '';
-    let array = getPokemonTypes(i);
-    for (let j = 0; j < array.length; j++) 
-        content.innerHTML += `<div class="pokemon-list-element-type flex"><p>${array[j]}</p></div>`;
+    for (let j = 0; j < allPokemons[i]['types'].length; j++) 
+        content.innerHTML += `<div class="pokemon-list-element-type flex"><p>${allPokemons[i]['types'][j]}</p></div>`;
 }
-
-
-
-
-
 
 
 function renderPageColor() {
@@ -462,6 +353,26 @@ function emptyAllPokemonsBasicData() {
 }
 
 
-function cleanValues() {
-    sideWrapperIsOpen = false;
+function getPokemonsPerPageNumber() {
+    if(window.innerWidth > 800) {
+        if((currentPageIndex + pokemonsPerPage) > count) 
+            return pokemonsPerPage = count - currentPageIndex;
+        else return pokemonsPerPage;
+    } else  {
+        if((currentPageIndex + pokemonsPerPageMobile) > count) 
+            return pokemonsPerPageMobile = count - currentPageIndex;
+        else return pokemonsPerPageMobile;
+    }
 }
+
+///////////////////////////////  H E L P   F U N C T I O N S  ///////////////////////////////
+
+function addClasslist(id, classe) {
+    document.getElementById(id).classList.add(classe);
+}
+
+
+function removeClasslist(id, classe) {
+    document.getElementById(id).classList.remove(classe);
+}
+

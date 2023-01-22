@@ -11,21 +11,29 @@ let damageFrom = [];
 let damageTo = [];
 
 
-async function renderTypeDamageValues(type, typesNumber) {
-    cleanDamageArrays(); 
-    getTypeDamageFromValues(type);
-    getTypeDamageToValues(type);
+async function renderTypeDamageValues(pokemon) {
+    for (let i = 0; i < pokemon['types'].length; i++) {
+        let url = pokemon['types'][i]['type']['url'];
+        let response = await fetch(url);
+        let type = await response.json(); 
+        getTypeDamageFromValues(type);
+        getTypeDamageToValues(type);
+    }
+    checkTypeDamageValues(pokemon['types'].length);
+}
+
+
+function checkTypeDamageValues(typesNumber) {
     if(typesNumber > 1) {
         renderTypeDamageFromValues();
         renderTypeDamageToValues(); 
     } else copyDamageValues();
-    getDamageValues();
 }
 
 
-function cleanDamageArrays() {
-    damageFrom = [];    /////////////////////// HERE
-    damageTo = [];      /////////////////////// HERE
+function cleanDamageArrays() { 
+    damageFrom = [];    
+    damageTo = [];   
     doubleDamageFrom = [];
     halfDamageFrom = [];
     noDamageFrom = [];
@@ -80,8 +88,8 @@ function renderDoubleDamageFrom() {
         for (let i = 0; i < doubleDamageFrom.length; i++) 
             if(isNotAlreadyAdded(doubleDamageFrom, i, damageFrom)) 
                 if(isNotInOwnArray(doubleDamageFrom, i, damageFrom)) 
-                    if(isNotInThatArray(doubleDamageFrom, i, halfDamageFrom))
-                        if(isNotInThatArray(doubleDamageFrom, i, noDamageFrom)) 
+                    if(isNotInThatArray(doubleDamageFrom, i, halfDamageFrom, damageFrom))
+                        if(isNotInThatArray(doubleDamageFrom, i, noDamageFrom, damageFrom)) 
                             damageFrom.push(doubleDamageFrom[i]);
 }
 
@@ -91,7 +99,7 @@ function renderHalfDamageFrom() {
         for (let i = 0; i < halfDamageFrom.length; i++) 
             if(isNotAlreadyAdded(halfDamageFrom, i, damageFrom)) 
                 if(isNotInOwnArray(halfDamageFrom, i, damageFrom)) 
-                    if(isNotInThatArray(halfDamageFrom, i, noDamageFrom)) 
+                    if(isNotInThatArray(halfDamageFrom, i, noDamageFrom, damageFrom)) 
                         damageFrom.push(halfDamageFrom[i]);
 }
 
@@ -110,8 +118,8 @@ function renderDoubleDamageTo() {
         for (let i = 0; i < doubleDamageTo.length; i++) 
             if(isNotAlreadyAdded(doubleDamageTo, i, damageTo)) 
                 if(isNotInOwnArray(doubleDamageTo, i, damageTo)) 
-                    if(isNotInThatArray(doubleDamageTo, i, halfDamageTo))
-                        if(isNotInThatArray(doubleDamageTo, i, noDamageTo)) 
+                    if(isNotInThatArray(doubleDamageTo, i, halfDamageTo, damageTo))
+                        if(isNotInThatArray(doubleDamageTo, i, noDamageTo, damageTo)) 
                             damageTo.push(doubleDamageTo[i]);
 }
 
@@ -121,7 +129,7 @@ function renderHalfDamageTo() {
         for (let i = 0; i < halfDamageTo.length; i++) 
             if(isNotAlreadyAdded(halfDamageTo, i, damageTo)) 
                 if(isNotInOwnArray(halfDamageTo, i, damageTo)) 
-                    if(isNotInThatArray(halfDamageTo, i, noDamageTo)) 
+                    if(isNotInThatArray(halfDamageTo, i, noDamageTo, damageTo)) 
                         damageTo.push(halfDamageTo[i]);
 }
 
@@ -148,18 +156,19 @@ function isNotInOwnArray(array, i, targetArray) {
     if(array.length > i+1) 
         for (let j = i+1; j < array.length; j++) 
             if(array[j][0].includes(array[i][0])) {
-                targetArray.push([array[i][0], `${array[j][1]*array[i][1]}`]);
+                if((array[i][1] == 0.5) && (array[j][1] == 0.5)) targetArray.push([array[i][0], 0.5]);
+                else targetArray.push([array[i][0], array[j][1]*array[i][1]]);
                 return false;
             }
     return true;
 }
 
 
-function isNotInThatArray(currentArray, currentIndex, targetArray) {
+function isNotInThatArray(currentArray, currentIndex, targetArray, resultArray) {
     if(targetArray.length > 0)
         for (let j = 0; j < targetArray.length; j++) 
             if(targetArray[j][0].includes(currentArray[currentIndex][0])) {
-                damageFrom.push([currentArray[currentIndex][0], `${targetArray[j][1]*currentArray[currentIndex][1]}`]);
+                resultArray.push([currentArray[currentIndex][0], targetArray[j][1]*currentArray[currentIndex][1]]);
                 return false;
             }
     return true;

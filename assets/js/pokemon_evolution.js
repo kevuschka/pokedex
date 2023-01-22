@@ -26,7 +26,7 @@ async function getPokemonEvolvesFrom(species) {
 
 async function renderPokemonEvolutionChain(species) {
     pokemonData['evolution'] = [];
-    if(species['evolution_chain'].length > 0) {
+    if(species['evolution_chain'].length > 0 || species['evolution_chain']['url']) {
         let evoUrl = response['evolution_chain']['url'];
         let evoResp = await fetch(evoUrl);
         let evolutionChain = await evoResp.json();
@@ -37,7 +37,7 @@ async function renderPokemonEvolutionChain(species) {
 
 async function renderPokemonEvolutionData(chain) {
     cleanEvo();
-    if(chain['species'].length > 0) {
+    if(chain['species'].length > 0 || chain['species']) {
         let urlLength = chain['species']['url'].length;
         let pokemonNumber = Number(chain['species']['url'].charAt(urlLength-2));
         evo['name'].push(chain['species']['name']);
@@ -50,7 +50,7 @@ async function renderPokemonEvolutionData(chain) {
 
 
 function renderPokemonEvoChainData(chain) {
-    if(chain['evolution_details'].length > 0) 
+    if(chain['evolution_details'].length > 0 || chain['evolution_details']) 
         for (let i = 0; i < chain['evolution_details'].length; i++) {
             let trigger = chain['evolution_details'][i]['trigger']['name'];
             let minLevel = chain['evolution_details'][i]['min_level'];
@@ -65,7 +65,7 @@ function renderPokemonEvoChainData(chain) {
 
 
 async function renderPokemonEvolvesToData(chain) {
-    if(chain['evolves_to'].length > 0)
+    if(chain['evolves_to'].length > 0 || chain['evolves_to'])
         for (let i = 0; i < chain['evolves_to'].length; i++) 
             await renderPokemonEvolutionData(chain['evolves_to'][i]);
 }
@@ -82,7 +82,7 @@ function cleanEvo() {
 
 
 async function returnPokemonImageAll(i) {
-    let url = `https://pokeapi.co/api/v2/pokemon/${i}/`;
+    let url = `https://pokeapi.co/api/v2/pokemon/${i+1}/`;
     let response = await fetch(url);
     let pokemon = await response.json();
     if (pokemon['sprites']['other']['official-artwork']['front_default']) return `${pokemon['sprites']['other']['official-artwork']['front_default']}`;

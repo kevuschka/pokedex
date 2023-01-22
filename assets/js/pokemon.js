@@ -67,7 +67,7 @@ function getPokemonName(basicData) {
     for (let j = 0; j < nameArray.length; j++) {
         betterArray[j] = `${nameArray[j].charAt(0).toUpperCase()}` + `${nameArray[j].slice(1)}`;
         finalName += `${betterArray[j]}`;
-        finalName += ' ';
+        if(nameArray.length > 1) finalName += ' ';
     }
     pokemonData['name']['name'] = finalName;
 }
@@ -149,7 +149,7 @@ function getPokemonSpecies(species) {
         if (species['genera'][i]['language']['name'] == lang) {
             // pokemonInfo['about']['species'] = `${response['genera'][i]['genus']}`;
             // break;
-            pokemonData['about']['species'].push(response['genera'][i]['genus']);
+            pokemonData['about']['species'].push(species['genera'][i]['genus']);
         } 
     }
 }
@@ -161,31 +161,35 @@ function getPokemonHabitat(species) {
     // let resp = await fetch(url);
     // let response = await resp.json();
     pokemonData['about']['habitat'] = [];
-    pokemonData['about']['habitat'].push(species['habitat']['name']);
+    let habitatName;
+    if(species['habitat']) {
+        habitatName = species['habitat']['name'];
+        pokemonData['about']['habitat'].push(`${habitatName.charAt(0).toUpperCase()}` + `${habitatName.slice(1)}`);
+    }
 }
 
 ///////////////////////////////  P O K E M O N   H E I G H T  ///////////////////////////////
 
 function getPokemonHeight(pokemon) {
     let data = pokemon['height'];
-    let meter = (data/10).toFixed(2);
-    let feet = (meter*3.28084).toFixed(2);
-    let feetInt = Number.parseInt(feet.toString());
+    let meter = (Number(data)/10).toFixed(2);
+    let feet = (Number(meter)*3.28084).toFixed(2);
+    let feetInt = Number(feet).toFixed(0);
     let feetDec = Number.parseFloat('0' + feet.toString().split((feet.toString().indexOf('.'))));
     let inch = (feetDec*12).toFixed(2);
-    let height = feetInt + inch;
-    pokemonInfo['about']['height']['meter'] = meter;
-    pokemonInfo['about']['height']['inch'] = height;
+    // let height = feetInt + inch;
+    pokemonData['about']['height']['meter'] = meter;
+    pokemonData['about']['height']['inch'] = `${feetInt}'${inch}"`;
 }
 
 ///////////////////////////////  P O K E M O N   W E I G H T  ///////////////////////////////
 
 function getPokemonWeight(pokemon) {
     let data = pokemon['weight'];
-    let kilogramm = (data/10).toString(2);
-    let lbs = (kilogramm*2,204623).toString(1);
-    pokemonInfo['about']['weight']['kg'] = kilogramm;
-    pokemonInfo['about']['weight']['lbs'] = lbs;
+    let kilogramm = (data/10).toFixed(2);
+    let lbs = (kilogramm*2.204623).toFixed(1);
+    pokemonData['about']['weight']['kg'] = kilogramm;
+    pokemonData['about']['weight']['lbs'] = lbs;
 }
 
 ///////////////////////////////  P O K E M O N   A B I L I T Y  ///////////////////////////////
@@ -195,7 +199,8 @@ async function getPokemonAbilities(pokemon) {
     pokemonData['about']['abilities'] = [];
     for (let i = 0; i < pokemon['abilities'].length; i++) {
         abilityArray = [];
-        abilityArray.push(pokemon['abilities'][i]['ability']['name']);
+        let abilityName = pokemon['abilities'][i]['ability']['name']
+        abilityArray.push(`${abilityName.charAt(0).toUpperCase()}` + `${abilityName.slice(1)}`);
         let url = pokemon['abilities'][i]['ability']['url'];
         let resp = await fetch(url);
         let ability = await resp.json();
@@ -227,7 +232,10 @@ async function getPokemonEggGroups(species) {
     // let response = await resp.json();
     pokemonData['about']['egg_groups'] = [];
     if(species['egg_groups'].length > 0) 
-        for (let i = 0; i < species['egg_groups'].length; i++) pokemonData['about']['egg_groups'].push(species['egg_groups'][i]['name']);
+        for (let i = 0; i < species['egg_groups'].length; i++) {
+            let groupName = species['egg_groups'][i]['name']
+            pokemonData['about']['egg_groups'].push(`${groupName.charAt(0).toUpperCase()}` + `${groupName.slice(1)}`);
+        }
 }
 
 ///////////////////////////////  P O K E M O N   S T A T S ///////////////////////////////
