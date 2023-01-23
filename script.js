@@ -71,7 +71,6 @@ let settingsOpen = 0;
 let currentDate;
 let count;
 let lang = 'en';
-let currentPokemon;
 
 
 async function init() {
@@ -80,13 +79,8 @@ async function init() {
     await setLocalStorage();
     await updateAllPokemonsData();
     cleanValues();
-    // await getMaxPokemonNumber();
-    // await getPagePokemonsBasicInfo(getPokemonsPerPageNumber());
-    // await getPokemonsElementsInfo(getPokemonsPerPageNumber());
-    // console.log('pokemon on page', pagePokemonsBasicData);
     renderHeader();
-    renderPokemonsPage(currentPageIndex, getPokemonsPerPageNumber());
-    
+    renderPokemonsPage(0, 40);
 }
 
 
@@ -142,27 +136,26 @@ async function getCount() {
     let url = `https://pokeapi.co/api/v2/pokemon`;
     let response = await fetch(url);
     let list = await response.json();
-    let anzahl = list['count'];
-    return anzahl;
+    count = list['count'];
+    return count;
 }
 
 
 async function renderPokemonsElementData(basic) {
     allPokemons = [];
     for (let i = 0; i < basic['results'].length; i++) {
+        cleanPokemonData();
         let url = basic['results'][i]['url'];
         let response = await fetch(url);
         let pokemon = await response.json();
         getPokemonName(basic['results'][i]['name']);
-        getPokemonId(pokemon);
+        pokemonData['id'] = pokemon['id'];
         getPokemonImage(pokemon);
         getPokemonTypes(pokemon);
         await getPokemonSpeciesData(pokemon);
-        getPokemonHeight(pokemon);
+        // getPokemonHeight(pokemon);
         getPokemonWeight(pokemon);
         await getPokemonAbilities(pokemon);
-        getStats(pokemon);
-        await getPokemonTypeDamageData(pokemon);
         allPokemons.push(pokemonData);
         console.log(`allPokemons:`, allPokemons);
     }
@@ -174,33 +167,13 @@ async function getPokemonSpeciesData(pokemon) {
     let response = await fetch(url);
     let species = await response.json();
     getAllNames(species);
-    getAllGenerations(species);
     getPokemonBackgroundColor(species);
     getPokemonSpecies(species);
     getPokemonHabitat(species);
     getPokemonGrowthRate(species);
     getPokemonEggGroups(species);
-    await getPokemonEvolutionData(species);
 }
 
-
-async function getPokemonEvolutionData(species) {
-    if(species['evolution_chain'].length > 0 || species['evolution_chain']['url']) {
-        let url = species['evolution_chain']['url'];
-        let response = await fetch(url);
-        let evolution = await response.json();
-        await renderPokemonEvolutionData(evolution['chain'])
-    }
-}
-
-
-async function getPokemonTypeDamageData(pokemon) {
-    pokemonData['base_stats']['type_defense']['damage_to'] = [];
-    pokemonData['base_stats']['type_defense']['damage_from'] = [];
-    cleanDamageArrays(); 
-    await renderTypeDamageValues(pokemon);
-    getDamageValues();
-}
 
 ///////////////////////////////  L A T E S T   D A T E  ///////////////////////////////
 
@@ -269,12 +242,10 @@ function templatePokemonList() {
 // ########## RENDER POKEMON LIST CONTENT ##########
 
 async function renderPokemonsListContent(elementNumber, content) {
-    // if(currentPage().includes('favorites.html')) {}
-    // else if(currentPage().includes('index.html')) {}
     content.innerHTML += templatePokemonsListElement(elementNumber);
     renderPokemonTypes(elementNumber, `pokemon-list-element-type-container-${elementNumber}`);
     let color = allPokemons[elementNumber]['background_color'];
-    addClasslist(`pokemon-list-element-container-${i}`, `${color}`);
+    addClasslist(`pokemon-list-element-container-${elementNumber}`, `${color}`);
 }
 
 
@@ -286,7 +257,7 @@ function currentPage() {
 function templatePokemonsListElement(i) {
     return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="renderPokemon(${i})" onmousedown="clickOnElement(${i})" onmouseup="clickOutElement(${i})">
                 <div class="pokemon-list-element flex column">
-                    <div class="pokemon-list-element-id-container flex absolute"><p>#${allPokemons[i]['id']}</p></div>
+                    <div class="pokemon-list-element-id-container flex absolute"><p>#${returnPokemonId(allPokemons[i]['id'])}</p></div>
                     <div class="pokemon-list-element-name-container"><p>${allPokemons[i]['name']['name']}</p></div>
                     <div class="pokemon-list-element-type-container flex" id="pokemon-list-element-type-container-${i}"></div>
                     <img src="${allPokemons[i]['image']}" class="pokemon-list-element-image absolute" id="pokemon-list-element-image-${i}">
@@ -376,3 +347,61 @@ function removeClasslist(id, classe) {
     document.getElementById(id).classList.remove(classe);
 }
 
+
+function returnNameFormatted(name) {
+    let nameArray = name.split('-');
+    let betterArray = [];
+    let finalName = '';
+    if(nameArray.length > 0)
+        for (let j = 0; j < nameArray.length; j++) {
+            betterArray[j] = `${nameArray[j].charAt(0).toUpperCase()}` + `${nameArray[j].slice(1)}`;
+            finalName += `${betterArray[j]}`;
+            if(nameArray.length > 1) finalName += ' ';
+        }
+    return finalName;
+}
+
+
+function cleanPokemonData() {
+    pokemonData = {
+        'name': 
+            {
+                'name': '',
+                'names': [],
+            },
+        'generations': [],
+        'id':'',
+        'image': '',
+        'types': [],
+        'background_color': '',
+        'about': 
+            {   
+                'species' :  [],
+                'habitat': [],
+                'height' : 
+                    {
+                        'meter': '',
+                        'inch': ''
+                    },
+                'weight' : 
+                    {
+                        'kg': '',
+                        'lbs': '',
+                    },
+                'abilities' : [],
+                'growth_rate': [],
+                'egg_groups': [],
+            },
+        'base_stats': 
+            {   
+                'stats': [],
+                'total': '',
+                'type_defense': 
+                    {
+                        'damage_to': [],
+                        'damage_from': [],
+                    },
+            },
+        'evolution':  [],
+    };
+}

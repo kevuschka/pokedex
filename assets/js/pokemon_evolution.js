@@ -9,43 +9,28 @@ let evo =
     };
 
 
-async function doesPokemonEvolvesFrom(species) {
-    if(species['evolves_from_species'].length > 0) return true;
-    else return false;
-}
-
-
-async function getPokemonEvolvesFrom(species) {
-    let array = [];
-    for (let i = 0; i < species['evolves_from_species'].length; i++) {
-        array.push(species['evolves_from_species']['name']);
-    }
-    return array;
-}
-
-
-async function renderPokemonEvolutionChain(species) {
+async function renderPokemonEvolutionChain(species, id) {
     pokemonData['evolution'] = [];
     if(species['evolution_chain'].length > 0 || species['evolution_chain']['url']) {
-        let evoUrl = response['evolution_chain']['url'];
-        let evoResp = await fetch(evoUrl);
-        let evolutionChain = await evoResp.json();
-        renderPokemonEvolutionData(evolutionChain['chain']);
+        let url = species['evolution_chain']['url'];
+        let response = await fetch(url);
+        let evolutionChain = await response.json();
+        await renderPokemonEvolutionData(evolutionChain['chain'], id);
     }
 }
 
 
-async function renderPokemonEvolutionData(chain) {
+async function renderPokemonEvolutionData(chain, id) {
     cleanEvo();
     if(chain['species'].length > 0 || chain['species']) {
-        let urlLength = chain['species']['url'].length;
-        let pokemonNumber = Number(chain['species']['url'].charAt(urlLength-2));
-        evo['name'].push(chain['species']['name']);
-        evo['image'].push(await returnPokemonImageAll(pokemonNumber));
+        // let urlLength = chain['species']['url'].length;
+        // let pokemonNumber = Number(chain['species']['url'].charAt(urlLength-2));
+        evo['name'].push(returnNameFormatted(chain['species']['name']));
+        evo['image'].push(await returnPokemonImageAll(id));
     }
     renderPokemonEvoChainData(chain);
     pokemonData['evolution'].push(evo);
-    renderPokemonEvolvesToData(chain);
+    await renderPokemonEvolvesToData(chain, id);
 }
 
 
@@ -57,17 +42,17 @@ function renderPokemonEvoChainData(chain) {
             evo['details'].push(
                 {
                     'level': minLevel,
-                    'trigger': trigger,
+                    'trigger': returnNameFormatted(trigger),
                 }
             )
         }
 }
 
 
-async function renderPokemonEvolvesToData(chain) {
+async function renderPokemonEvolvesToData(chain, id) {
     if(chain['evolves_to'].length > 0 || chain['evolves_to'])
         for (let i = 0; i < chain['evolves_to'].length; i++) 
-            await renderPokemonEvolutionData(chain['evolves_to'][i]);
+            await renderPokemonEvolutionData(chain['evolves_to'][i], id);
 }
 
 
@@ -82,7 +67,7 @@ function cleanEvo() {
 
 
 async function returnPokemonImageAll(i) {
-    let url = `https://pokeapi.co/api/v2/pokemon/${i+1}/`;
+    let url = `https://pokeapi.co/api/v2/pokemon/${i}/`;
     let response = await fetch(url);
     let pokemon = await response.json();
     if (pokemon['sprites']['other']['official-artwork']['front_default']) return `${pokemon['sprites']['other']['official-artwork']['front_default']}`;
