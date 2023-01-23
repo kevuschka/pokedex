@@ -19,7 +19,6 @@ async function renderPokemon(i) {
         unmarkLastSelectedPokemon(); 
         await renderPokemonContent();
     }
-    loadPokemonContent();
     selectedPokemonIndex = i;
     showSelectedPokemonWrapper(i);
     unselectAllTabs();

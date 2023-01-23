@@ -61,10 +61,13 @@ function templatePokemonInfoTabs() {
 
 
 function templatePokemonInfoABOUT() {
-
+    return `
+        <div></div>
+    
+    `;
 }
 
-function templatePokemonInfoBASESTATS() {}
+function templatePokemonInfoSTATS() {}
 
 function templatePokemonInfoEVOLUTION() {
 
@@ -96,11 +99,6 @@ function addBackgroundColor() {
     document.getElementById(`pokemon-selected`).style.backgroundColor = `var(--${currentPokemon[0]['background_color']})`;
 }
 
-
-function loadPokemonContent() {
-    
-
-}
 
 // SHOW & HIDE
 function showSelectedPokemonWrapper(i) {
