@@ -33,7 +33,7 @@ function templatePokemonHeaderAndImage() {
                         <div class="pokemon-selected-header-name-container flex" id="pokemon-selected-header-name-container"></div>
                         <div class="pokemon-selected-header-type-container flex" id="pokemon-selected-header-type-container"></div>
                     </div>
-                    <div class="pokemon-selected-header-pokemonNumber flex"><p id="pokemon-selected-header-pokemonNumber"></p></div>
+                    <div class="pokemon-selected-header-status flex"><p id="pokemon-selected-header-status"></p></div>
                 </div>
             </div>
             <img src="" class="pokemon-selected-image absolute" id="pokemon-selected-image">`;
@@ -83,6 +83,7 @@ async function renderPokemonContent() {
     headerNameContainer.innerHTML = `<p>${currentPokemon[0]['name']['name']}</p><p>#${returnPokemonId(currentPokemon[0]['id'])}</p>`;
     document.getElementById(`pokemon-selected-image`).src = `${currentPokemon[0]['image']}`;
     renderSelectedPokemonTypes(`pokemon-selected-header-type-container`);
+    renderSelectedPokemonStatur(`pokemon-selected-header-status`);
     addBackgroundColor();
 }
 
@@ -92,6 +93,15 @@ function renderSelectedPokemonTypes(contentId) {
     content.innerHTML = '';
     for (let j = 0; j < currentPokemon[0]['types'].length; j++) 
         content.innerHTML += `<div class="pokemon-list-element-type pokemon-selected-header-type flex"><p>${currentPokemon[0]['types'][j]}</p></div>`;
+}
+
+
+function renderSelectedPokemonStatur(contentId) {
+    let content = document.getElementById(contentId);
+    content.innerHTML = '';
+    if(currentPokemon['is_baby']) content.innerHTML = 'Baby';
+    else if(currentPokemon['is_legendary']) content.innerHTML = 'Legendary';
+    else if(currentPokemon['is_mythical']) content.innerHTML = 'Mythical';
 }
 
 
@@ -106,7 +116,6 @@ function showSelectedPokemonWrapper(i) {
         let height = document.getElementById(`pokemon-list-wrapper`).clientHeight;
         document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `${height}px`;
     }, 100);
-    document.getElementById(`pokemon-list-element-container-${i}`).style.border = `inset`;
     if(window.innerWidth > 999) document.getElementById(`pokemon-selected-wrapper`).style.width = `60%`;
     else document.getElementById(`pokemon-selected-wrapper`).style.width = `100%`;
     showSelectedPokemonInfo();

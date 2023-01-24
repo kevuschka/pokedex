@@ -419,6 +419,12 @@ html {
     padding: 2px 22px;
 }
 
+.pokemon-selected-header-status {
+    background-color: blue;
+    color: white;
+    border-radius: 32px;
+}
+
 .pokemon-selected-image {
     top: 91px;
     right: 17px;

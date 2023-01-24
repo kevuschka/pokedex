@@ -30,6 +30,10 @@ let pokemonData = {
     'image': '',
     'types': [],
     'background_color': '',
+    'is_baby': false,
+    'is_legendary': false,
+    'is_mythical': false,
+    'hatch_counter': '',
     'about': 
         {   
             'species' :  [],
@@ -59,6 +63,11 @@ let pokemonData = {
                 },
         },
     'evolution':  [],
+    'locations': [],
+    'base_happiness': [],
+    'capture_rate': [],
+    'base_exp': [], 
+    'moves': [],
 };
 
 
@@ -374,6 +383,10 @@ function cleanPokemonData() {
         'image': '',
         'types': [],
         'background_color': '',
+        'is_baby': false,
+        'is_legendary': false,
+        'is_mythical': false,
+        'hatch_counter': '',
         'about': 
             {   
                 'species' :  [],
@@ -403,5 +416,10 @@ function cleanPokemonData() {
                     },
             },
         'evolution':  [],
+        'locations': [],
+        'base_happiness': [],
+        'capture_rate': [],
+        'base_exp': [], 
+        'moves': [],
     };
 }

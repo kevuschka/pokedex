@@ -4,8 +4,19 @@ let stats = [];
 let current
 let currentPokemon = [];
 
+let nameVersionsData = {
+    'name': '',
+    'versions': [],   
+};
+
+let nameMethodsData = {
+    'name': '',
+    'methods': [],
+};
+
 
 async function renderPokemon(i) {
+    document.getElementById(`pokemon-list-element-container-${i}`).style.border = `inset`;
     await copyPokemonElementData(i);
     if(sideWrapperIsOpen) {
         removeClasslist(`pokemon-selected-overlay-wrapper`, `pad-top-50`);
@@ -66,9 +77,12 @@ async function getSelectedPokemonData(i) {
     let response = await fetch(url);
     let pokemon = await response.json();
     getPokemonHeight(pokemon);
+    getPokemonBaseExp(pokemon);
     await getSelectedPokemonSpeciesData(pokemon, allPokemons[i]['id']);
     getStats(pokemon);
     await getPokemonTypeDamageData(pokemon);
+    await getSelectedPokemonLocationData(pokemon);
+    getPokemonMoves(pokemon);
 }
 
 
@@ -76,9 +90,20 @@ async function getSelectedPokemonSpeciesData(pokemon, id) {
     let url = pokemon['species']['url'];
     let response = await fetch(url);
     let species = await response.json();
+    getPokemonOptionalStatus(species);
     getAllGenerations(species);
+    getPokemonBaseHappiness(species);
+    getPokemonCaptureRate(species);
+    getPokemonHatchCounter(species);
     await renderPokemonEvolutionChain(species, id);
 }
+
+///////////////////////////////  P O K E M O N   L O C A T I O N  ///////////////////////////////
+
+function getPokemonDescription() {
+
+}
+
 ///////////////////////////////  P O K E M O N   N A M E  ///////////////////////////////
 
 function getPokemonName(basicData) {
@@ -262,4 +287,142 @@ async function getPokemonTypeDamageData(pokemon) {
     cleanDamageArrays(); 
     await renderTypeDamageValues(pokemon);
     getDamageValues();
+}
+
+///////////////////////////////  P O K E M O N   B A S E - E X P  ///////////////////////////////
+
+function getPokemonBaseExp(pokemon) {
+    if(pokemon['base_experience'])
+        pokemonData['base_experience'] = pokemon['base_experience'];
+}
+
+///////////////////////////////  P O K E M O N   B A S E - H A P P I N E S S  ///////////////////////////////
+
+function getPokemonBaseHappiness(species) {
+    if(species['base_happiness'])
+        pokemonData['base_happiness'] = species['base_happiness'];
+}
+
+///////////////////////////////  P O K E M O N   C A P T U R E - R A T E  ///////////////////////////////
+
+function getPokemonCaptureRate(species) {
+    if(species['capture_rate'])
+        pokemonData['capture_rate'] = species['capture_rate'];
+}
+
+///////////////////////////////  P O K E M O N   B A B Y ,   L E G E N D A R Y ,   M Y T H I C A L  ///////////////////////////////
+
+function getPokemonOptionalStatus(species) {
+    if(species['is_baby'])
+        pokemonData['is_baby'] = true;
+    if(species['is_legendary'])
+        pokemonData['is_legendary'] = true;
+    if(species['is_mythical'])
+        pokemonData['is_mythical'] = true;
+}
+
+///////////////////////////////  P O K E M O N   H A T C H - C O U N T E R  ///////////////////////////////
+
+function getPokemonHatchCounter(species) {
+    if(species['hatch_counter']) 
+        pokemonData['hatch_counter'] = species['hatch_counter'];
+}
+
+///////////////////////////////  P O K E M O N   L O C A T I O N  ///////////////////////////////
+
+async function getSelectedPokemonLocationData(pokemon) {
+    let url = pokemon['location_area_encounters'];
+    let response = await fetch(url);
+    let locationAreas = await response.json();
+    pokemonData['locations'] = [];
+    getPokemonLocation(locationAreas);
+}
+
+
+function getPokemonLocation(locationAreas) {
+    let methodArray = [];
+    for (let i = 0; i < locationAreas.length; i++) {
+        cleanNameVersionsData();
+        nameVersionsData['name'] = returnNameFormatted(locationAreas[i]['location_area']['name']);
+        getPokemonLocationVersions(locationAreas, i, methodArray);
+        pokemonData['locations'].push(nameVersionsData);
+    }
+}
+
+
+function getPokemonLocationVersions(locationAreas, i, methodArray) {
+    for (let j = 0; j < locationAreas[i]['version_details'].length; j++) {
+        cleanNameMethodsData();
+        methodArray = [];
+        nameMethodsData['name'] = returnNameFormatted(locationAreas[i]['version_details'][j]['version']['name']);
+        getPokemonLocationMethods(locationAreas, i, j, methodArray);
+        if(methodArray.length > 0) nameMethodsData['methods'] = methodArray;
+        nameVersionsData['versions'].push(nameMethodsData);
+    }
+}
+
+
+function getPokemonLocationMethods(locationAreas, i, j, methodArray) {
+    for (let k = 0; k < locationAreas[i]['version_details'][j]['encounter_details'].length; k++) {
+        let method = locationAreas[i]['version_details'][j]['encounter_details'][k]['method']['name'];
+        if(thatMethodIsNew(methodArray, method))
+            methodArray.push(method);
+    }
+}
+
+
+function thatMethodIsNew(array, method) {
+    if(array.length > 0)
+        for (let i = 0; i < array.length; i++) {
+            if(array[i].includes(method)) return false;
+            else return true;
+        }
+    else return true;
+}
+
+///////////////////////////////  P O K E M O N   M O V E S  ///////////////////////////////
+
+function getPokemonMoves(pokemon) {
+    pokemonData['moves'] = [];
+    for (let i = 0; i < pokemon['moves'].length; i++) {
+        cleanNameVersionsData();
+        nameVersionsData['name'] = returnNameFormatted(pokemon['moves'][i]['move']['name']);
+        getPokemonMovesMethods(pokemon, i);
+        pokemonData['moves'].push(nameVersionsData);
+    }
+}
+
+
+function getPokemonMovesMethods(pokemon, i) {
+    for (let j = 0; j < pokemon['moves'][i]['version_group_details'].length; j++) {
+        cleanNameMethodsData();
+        let pokemonVersion = pokemon['moves'][i]['version_group_details'][j]['version_group']['name'];
+        nameMethodsData['name'] = returnNameFormatted(pokemonVersion);
+        let level = pokemon['moves'][i]['version_group_details'][j]['level_learned_at'];
+        let method = pokemon['moves'][i]['version_group_details'][j]['move_learn_method']['name'];
+        nameMethodsData['methods'].push(
+            { 
+                'method': returnNameFormatted(method),
+                'level': level,
+            });
+        nameVersionsData['versions'].push(nameMethodsData);
+    }
+}
+
+///////////////////////////////  P O K E M O N   C L E A N   D A T A  ///////////////////////////////
+
+function cleanNameVersionsData() {
+    nameVersionsData = {
+            'name': '',
+            'versions': [],
+        }
+}
+
+
+function cleanNameMethodsData() {
+    nameMethodsData = {
+            'name': '',
+            'methods': [],
+        }
+    
 }
