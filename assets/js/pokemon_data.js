@@ -90,6 +90,7 @@ async function getSelectedPokemonSpeciesData(pokemon, id) {
     let url = pokemon['species']['url'];
     let response = await fetch(url);
     let species = await response.json();
+    getPokemonDescription(species);
     getPokemonOptionalStatus(species);
     getAllGenerations(species);
     getPokemonBaseHappiness(species);
@@ -100,8 +101,17 @@ async function getSelectedPokemonSpeciesData(pokemon, id) {
 
 ///////////////////////////////  P O K E M O N   L O C A T I O N  ///////////////////////////////
 
-function getPokemonDescription() {
-
+function getPokemonDescription(species) {
+    pokemonData['description'] = '';
+    if(species['flavor_text_entries'])
+        for (let i = 0; i < species['flavor_text_entries'].length; i++)
+            if(species['flavor_text_entries'][i]['language']['name'] == 'en') {
+                let description = species['flavor_text_entries'][i]['flavor_text'];
+                description = description.replaceAll(/\n/g, ' ');
+                description = description.replaceAll(/\f/g, ' ');
+                pokemonData['description'] = description;
+                break;
+            }
 }
 
 ///////////////////////////////  P O K E M O N   N A M E  ///////////////////////////////

@@ -62,7 +62,32 @@ function templatePokemonInfoTabs() {
 
 function templatePokemonInfoABOUT() {
     return `
-        <div></div>
+        <div class="pokemon-selected-info-about-wrapper w-100 flex column">
+            <p class="pokemon-selected-info-about-description" id="pokemon-selected-info-about-description"></p>
+            <div class="pokemon-selected-info-about-pokedex-data-wrapper flex column">
+                <p>Pokédex Data</p>
+                <div class="pokemon-selected-info-about-pokedex-data-container flex">
+                    <div class="pokemon-selected-info-about-pokedex-data-titles flex column">
+                        <p>Species</p>
+                        <p>Height</p>
+                        <p>Weight</p>
+                        <p>Abilities</p>
+                        <p>Weaknesses</p>
+                    </div>
+                    <div class="pokemon-selected-info-about-pokedex-data-info" id="pokemon-selected-info-about-pokedex-data-info"></div>
+                </div>
+            </div>
+            <div class="pokemon-selected-info-about-breeding-wrapper flex column">
+                <p>Breeding</p>
+                <div class="pokemon-selected-info-about-breeding-container flex">
+                    <div class="pokemon-selected-info-about-breeding-titles flex column">
+                        <p>Egg Groups</p>
+                        <p>Growth Rate</p>
+                    </div>
+                    <div class="pokemon-selected-info-about-breeding-info flex column" id="pokemon-selected-info-about-breeding-info"></div>
+                </div>
+            </div>
+        </div>
     
     `;
 }
