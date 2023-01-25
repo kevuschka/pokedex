@@ -59,13 +59,19 @@ function templatePokemonInfoTabs() {
     wrapper.innerHTML += `<p class="pokemon-selected-info-tab flex cursor-p" id="tab_5" onclick="selectTab(5)">Locations</p>`;
 }
 
+function renderPokemonInfoAboutTemplate() {
+    let content = document.getElementById('pokemon-selected-info-data-wrapper');
+    content.innerHTML = templatePokemonInfoABOUT();
+    renderPokemonInfoAbout();
+}
+
 
 function templatePokemonInfoABOUT() {
     return `
         <div class="pokemon-selected-info-about-wrapper w-100 flex column">
             <p class="pokemon-selected-info-about-description" id="pokemon-selected-info-about-description"></p>
             <div class="pokemon-selected-info-about-pokedex-data-wrapper flex column">
-                <p>Pokédex Data</p>
+                <p class="title" id="title_1">Pokédex Data</p>
                 <div class="pokemon-selected-info-about-pokedex-data-container flex">
                     <div class="pokemon-selected-info-about-pokedex-data-titles flex column">
                         <p>Species</p>
@@ -74,11 +80,11 @@ function templatePokemonInfoABOUT() {
                         <p>Abilities</p>
                         <p>Weaknesses</p>
                     </div>
-                    <div class="pokemon-selected-info-about-pokedex-data-info" id="pokemon-selected-info-about-pokedex-data-info"></div>
+                    <div class="pokemon-selected-info-about-pokedex-data-info flex column" id="pokemon-selected-info-about-pokedex-data-info"></div>
                 </div>
             </div>
             <div class="pokemon-selected-info-about-breeding-wrapper flex column">
-                <p>Breeding</p>
+                <p class="title" id="title_2">Breeding</p>
                 <div class="pokemon-selected-info-about-breeding-container flex">
                     <div class="pokemon-selected-info-about-breeding-titles flex column">
                         <p>Egg Groups</p>
@@ -87,9 +93,51 @@ function templatePokemonInfoABOUT() {
                     <div class="pokemon-selected-info-about-breeding-info flex column" id="pokemon-selected-info-about-breeding-info"></div>
                 </div>
             </div>
-        </div>
-    
-    `;
+        </div>`;
+}
+
+
+function renderPokemonInfoAbout() {
+    let descriptionContent = document.getElementById('pokemon-selected-info-about-description');
+    descriptionContent.innerHTML = currentPokemon[0]['description'];
+    let pokedexDataContent = document.getElementById('pokemon-selected-info-about-pokedex-data-info');
+    renderPokemonAboutPokedexData(pokedexDataContent);
+    colorTitlesAbout();
+}
+
+
+function renderPokemonAboutPokedexData(content) {
+    content.innerHTML = '';
+    renderPokemonAboutPokedexSpeciesData(content);
+    content.innerHTML += `<p>${currentPokemon[0]['about']['height']['inch']} (${currentPokemon[0]['about']['height']['meter']}m)</p>`;
+    content.innerHTML += `<p>${currentPokemon[0]['about']['weight']['lbs']}lbs (${currentPokemon[0]['about']['weight']['kg']}kg)</p>`;
+    renderPokemonAboutPokedexAbilitiesData(content);
+    renderPokemonAboutPokedexWeaknessesData(content);
+}
+
+
+function renderPokemonAboutPokedexSpeciesData(content) {
+    content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-species flex" id="pokemon-selected-info-about-pokedex-data-species"></div>`;
+    let speciesContent = document.getElementById('pokemon-selected-info-about-pokedex-data-species');
+    for (let i = 0; i < currentPokemon[0]['about']['species'].length; i++) 
+        speciesContent.innerHTML += currentPokemon[0]['about']['species'][i];
+}
+
+
+function renderPokemonAboutPokedexAbilitiesData(content) {
+    content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-abilities flex" id="pokemon-selected-info-about-pokedex-data-abilities"></div>`;
+    let abilityContent = document.getElementById('pokemon-selected-info-about-pokedex-data-abilities');
+    for (let i = 0; i < currentPokemon[0]['about']['abilities'].length; i++) 
+        abilityContent.innerHTML += `<p>${currentPokemon[0]['about']['abilities'][i][0]}</p>`;
+}
+
+
+function renderPokemonAboutPokedexWeaknessesData(content) {
+    content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-weaknesses flex" id="pokemon-selected-info-about-pokedex-data-weaknesses"></div>`;
+    let weaknessesContent = document.getElementById('pokemon-selected-info-about-pokedex-data-weaknesses');
+    for (let i = 0; i < currentPokemon[0]['base_stats']['type_defense']['damage_from'].length; i++) 
+        if(currentPokemon[0]['base_stats']['type_defense']['damage_from'][i][1] >= 2)
+            weaknessesContent.innerHTML += `<img src="${currentPokemon[0]['base_stats']['type_defense']['damage_from'][i][2]}">`;
 }
 
 function templatePokemonInfoSTATS() {}
@@ -101,6 +149,13 @@ function templatePokemonInfoEVOLUTION() {
 function templatePokemonInfoMOVES() {}
 function templatePokemonInfoLOCATIONS() {}
 
+
+function colorTitlesAbout() {
+    document.getElementById('title_1').style.color = 'unset';
+    document.getElementById('title_1').style.color = `var(--${currentPokemon[0][`background_color`]})`;
+    document.getElementById('title_2').style.color = 'unset';
+    document.getElementById('title_2').style.color = `var(--${currentPokemon[0][`background_color`]})`;
+}
 
 // CONTENT
 async function renderPokemonContent() {

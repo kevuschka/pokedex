@@ -28,6 +28,7 @@ function checkTypeDamageValues(typesNumber) {
         renderTypeDamageFromValues();
         renderTypeDamageToValues(); 
     } else copyDamageValues();
+    renderDamageImages();
 }
 
 
@@ -203,4 +204,12 @@ function getDamageValues() {
         pokemonData['base_stats']['type_defense']['damage_to'].push(damageTo[i]);
     for (let j = 0; j < damageFrom.length; j++) 
         pokemonData['base_stats']['type_defense']['damage_from'].push(damageFrom[j]);
+}
+
+
+function renderDamageImages() {
+    for (let i = 0; i < damageTo.length; i++) 
+        damageTo[i].push(`assets/img/${damageTo[i][0]}.png`);
+    for (let j = 0; j < damageFrom.length; j++) 
+        damageFrom[j].push(`assets/img/${damageFrom[j][0]}.png`);
 }

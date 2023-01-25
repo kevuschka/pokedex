@@ -30,6 +30,7 @@ async function renderPokemon(i) {
         unmarkLastSelectedPokemon(); 
         await renderPokemonContent();
     }
+    renderPokemonInfoAboutTemplate();
     selectedPokemonIndex = i;
     showSelectedPokemonWrapper(i);
     unselectAllTabs();
@@ -40,6 +41,7 @@ async function renderPokemon(i) {
 
 async function copyPokemonElementData(i) {
     currentPokemon = [];
+    cleanPokemonData();
     await getSelectedPokemonData(i);
     copyPokemonBasicData(i)
     copyPokemonSpeciesData(i)
@@ -61,8 +63,8 @@ function copyPokemonBasicData(i) {
 function copyPokemonSpeciesData(i) {
     pokemonData['about']['species'] = allPokemons[i]['about']['species'];
     pokemonData['about']['habitat'] = allPokemons[i]['about']['habitat'];
-    pokemonData['about']['height']['meter'] = allPokemons[i]['about']['height']['meter'];
-    pokemonData['about']['height']['inch'] = allPokemons[i]['about']['height']['inch'];
+    // pokemonData['about']['height']['meter'] = allPokemons[i]['about']['height']['meter'];
+    // pokemonData['about']['height']['inch'] = allPokemons[i]['about']['height']['inch'];
     pokemonData['about']['weight']['kg'] = allPokemons[i]['about']['weight']['kg'];
     pokemonData['about']['weight']['lbs'] = allPokemons[i]['about']['weight']['lbs'];
     pokemonData['about']['abilities'] = allPokemons[i]['about']['abilities'];
@@ -72,7 +74,6 @@ function copyPokemonSpeciesData(i) {
 
 
 async function getSelectedPokemonData(i) {
-    cleanPokemonData();
     let url = `https://pokeapi.co/api/v2/pokemon/${allPokemons[i]['id']}`;
     let response = await fetch(url);
     let pokemon = await response.json();
@@ -99,7 +100,7 @@ async function getSelectedPokemonSpeciesData(pokemon, id) {
     await renderPokemonEvolutionChain(species, id);
 }
 
-///////////////////////////////  P O K E M O N   L O C A T I O N  ///////////////////////////////
+///////////////////////////////  P O K E M O N   D E S C R I P T I O N  ///////////////////////////////
 
 function getPokemonDescription(species) {
     pokemonData['description'] = '';

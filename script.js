@@ -42,7 +42,7 @@ let pokemonData = {
             'height' : 
                 {
                     'meter': '',
-                    'inch': ''
+                    'inch': '',
                 },
             'weight' : 
                 {
@@ -87,7 +87,8 @@ async function init() {
     await includeHTML();
     await getLocalStorage();
     await setLocalStorage();
-    await updateAllPokemonsData();
+    await loadAllPokemons();
+    // await updateAllPokemonsData();
     cleanValues();
     renderHeader();
     renderPokemonsPage(0, 40);
@@ -129,6 +130,14 @@ async function updateAllPokemonsData() {
             localStorage.setItem('currentDate', JSON.stringify(currentDate));
             localStorage.setItem('allPokemons', JSON.stringify(allPokemons));
         }
+}
+
+
+async function loadAllPokemons() {
+    if(allPokemons.length == 0) {
+        await getAllPokemonsData();
+        localStorage.setItem('allPokemons', JSON.stringify(allPokemons));
+    }
 }
 
 
@@ -396,7 +405,7 @@ function cleanPokemonData() {
                 'height' : 
                     {
                         'meter': '',
-                        'inch': ''
+                        'inch': '',
                     },
                 'weight' : 
                     {

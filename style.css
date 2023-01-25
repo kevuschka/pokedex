@@ -465,11 +465,56 @@ html {
     min-width: 112px;
 }
 
+
 /*//////////////////////////////  S E L E C T E D   P O K E M O N  -  D A T A  //////////////////////////////*/
 .pokemon-selected-info-data-wrapper {
     background-color: white;
+    padding: 22px;
+    font-size: 24px;
 }
 
+.pokemon-selected-info-about-wrapper {
+    gap: 22px;
+}
+
+.pokemon-selected-info-about-description {
+    color: rgba(0,0,0,0.3);
+}
+
+.pokemon-selected-info-about-pokedex-data-wrapper, 
+.pokemon-selected-info-about-pokedex-data-info,
+.pokemon-selected-info-about-pokedex-data-titles, 
+.pokemon-selected-info-about-breeding-wrapper {
+    gap: 12px;
+}
+
+.title {
+    font-size: 32px;
+}
+
+.pokemon-selected-info-about-pokedex-data-container {
+    gap: 75px;
+}
+
+/* .pokemon-selected-info-about-pokedex-data-titles {
+    gap: 12px;
+} */
+
+.pokemon-selected-info-about-pokedex-data-info {
+    color: rgba(0,0,0,0.3);
+}
+
+.pokemon-selected-info-about-pokedex-data-abilities {
+    gap: 22px;
+}
+
+/* .pokemon-selected-info-about-breeding-wrapper {
+    gap: 12px;
+} */
+
+.pokemon-selected-info-about-breeding-titles {
+    gap: 12px;
+}
 
 
 @media screen and (min-width: 1400px) {
