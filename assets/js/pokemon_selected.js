@@ -72,15 +72,15 @@ function templatePokemonInfoABOUT() {
             <p class="pokemon-selected-info-about-description" id="pokemon-selected-info-about-description"></p>
             <div class="pokemon-selected-info-about-pokedex-data-wrapper flex column">
                 <p class="title" id="title_1">Pokédex Data</p>
-                <div class="pokemon-selected-info-about-pokedex-data-container flex">
-                    <div class="pokemon-selected-info-about-pokedex-data-titles flex column">
-                        <p>Species</p>
-                        <p>Height</p>
-                        <p>Weight</p>
-                        <p>Abilities</p>
-                        <p>Weaknesses</p>
-                    </div>
-                    <div class="pokemon-selected-info-about-pokedex-data-info flex column w-100" id="pokemon-selected-info-about-pokedex-data-info"></div>
+                <div class="pokemon-selected-info-about-pokedex-data-container flex" id="pokemon-selected-info-about-pokedex-data-container">
+                    // <div class="pokemon-selected-info-about-pokedex-data-titles flex column">
+                    //     <p>Species</p>
+                    //     <p>Height</p>
+                    //     <p>Weight</p>
+                    //     <p>Abilities</p>
+                    //     <p>Weaknesses</p>
+                    // </div>
+                    // <div class="pokemon-selected-info-about-pokedex-data-info flex column w-100" id="pokemon-selected-info-about-pokedex-data-info"></div>
                 </div>
             </div>
             <div class="pokemon-selected-info-about-breeding-wrapper flex column">
@@ -100,45 +100,52 @@ function templatePokemonInfoABOUT() {
 function renderPokemonInfoAbout() {
     let descriptionContent = document.getElementById('pokemon-selected-info-about-description');
     descriptionContent.innerHTML = currentPokemon['description'];
-    let pokedexDataContent = document.getElementById('pokemon-selected-info-about-pokedex-data-info');
+    // let pokedexDataContent = document.getElementById('pokemon-selected-info-about-pokedex-data-info');
+    let pokedexDataContent = document.getElementById(`pokemon-selected-info-about-pokedex-data-container`);
     renderPokemonAboutPokedexData(pokedexDataContent);
     colorTitlesAboutSection();
 }
 
 
 function renderPokemonAboutPokedexData(content) {
-    content.innerHTML = '';
-    renderPokemonAboutPokedexSpeciesData(content);
-    content.innerHTML += `<p>${currentPokemon['about']['height']['inch']} (${currentPokemon['about']['height']['meter']}m)</p>`;
-    content.innerHTML += `<p>${currentPokemon['about']['weight']['lbs']}lbs (${currentPokemon['about']['weight']['kg']}kg)</p>`;
-    renderPokemonAboutPokedexAbilitiesData(content);
-    renderPokemonAboutPokedexWeaknessesData(content);
+    content.innerHTML = '<table><tbody id="pokedex-data-table"></tbody></table>';
+    let tblBody = document.getElementById('pokedex-data-table');
+    renderPokemonAboutPokedexSpeciesData(tblBody);
+    tblBody.innerHTML += `<tr><td>Height</td><td><p>${currentPokemon['about']['height']['inch']} (${currentPokemon['about']['height']['meter']}m)</p></td></tr>`;
+    tblBody.innerHTML += `<tr><td>Weight</td><td><p>${currentPokemon['about']['weight']['lbs']}lbs (${currentPokemon['about']['weight']['kg']}kg)</p></td></tr>`;
+    renderPokemonAboutPokedexAbilitiesData(tblBody);
+    renderPokemonAboutPokedexWeaknessesData(tblBody);
 }
 
 
+
 function renderPokemonAboutPokedexSpeciesData(content) {
-    content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-species flex" id="pokemon-selected-info-about-pokedex-data-species"></div>`;
-    let speciesContent = document.getElementById('pokemon-selected-info-about-pokedex-data-species');
+    // content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-species flex" id="pokemon-selected-info-about-pokedex-data-species"></div>`;
+    // let speciesContent = document.getElementById('pokemon-selected-info-about-pokedex-data-species');
     for (let i = 0; i < currentPokemon['about']['species'].length; i++) 
-        speciesContent.innerHTML += currentPokemon['about']['species'][i];
+        content.innerHTML += `<tr><td>Species<td>${currentPokemon['about']['species'][i]}</td></tr>`;
 }
 
 
 function renderPokemonAboutPokedexAbilitiesData(content) {
-    content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-abilities flex" id="pokemon-selected-info-about-pokedex-data-abilities"></div>`;
-    let abilityContent = document.getElementById('pokemon-selected-info-about-pokedex-data-abilities');
+    // content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-abilities flex" id="pokemon-selected-info-about-pokedex-data-abilities"></div>`;
+    // let abilityContent = document.getElementById('pokemon-selected-info-about-pokedex-data-abilities');
+    content.innerHTML += `<tr><td>Abilities</td><td id="pokedex-data-abilities-tr"></td></tr>`;
+    let tblRow = document.getElementById(`pokedex-data-abilities-tr`);
     for (let i = 0; i < currentPokemon['about']['abilities'].length; i++) 
-        abilityContent.innerHTML += `<p>${currentPokemon['about']['abilities'][i][0]}</p>`;
+        tblRow.innerHTML += `<p>${currentPokemon['about']['abilities'][i][0]}</p>`;
 }
 
 
 function renderPokemonAboutPokedexWeaknessesData(content) {
-    content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-weaknesses flex w-100" id="pokemon-selected-info-about-pokedex-data-weaknesses"></div>`;
-    let weaknessesContent = document.getElementById('pokemon-selected-info-about-pokedex-data-weaknesses');
+    // content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-weaknesses flex w-100" id="pokemon-selected-info-about-pokedex-data-weaknesses"></div>`;
+    // let weaknessesContent = document.getElementById('pokemon-selected-info-about-pokedex-data-weaknesses');
+    content.innerHTML += `<tr><td>Weaknesses</td><td id="pokedex-data-weaknesses-tr"></td></tr>`;
+    let tblRow = document.getElementById(`pokedex-data-weaknesses-tr`);
     let weaknesses = [];
     weaknesses = getWeaknessesAboutSection(currentPokemon['base_stats']['type_defense']['damage_from']);
     for (let i = 0; i < weaknesses.length; i++) {
-        weaknessesContent.innerHTML += `<img class="weakness-icons" id="weakness-icon-${i}" src="${weaknesses[i][2]}">`;
+        tblRow.innerHTML += `<img class="weakness-icons" id="weakness-icon-${i}" src="${weaknesses[i][2]}">`;
         addClasslist(`weakness-icon-${i}`, `${weaknesses[i][0]}`);
     }
 }
