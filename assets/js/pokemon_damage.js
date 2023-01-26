@@ -1,5 +1,3 @@
-///////////////////////////////  P O K E M O N   T Y P E   D A M A G E  ///////////////////////////////
-
 let doubleDamageFrom = [];
 let halfDamageFrom = [];
 let noDamageFrom = [];
@@ -11,27 +9,6 @@ let damageFrom = [];
 let damageTo = [];
 
 
-async function renderTypeDamageValues(pokemon) {
-    for (let i = 0; i < pokemon['types'].length; i++) {
-        let url = pokemon['types'][i]['type']['url'];
-        let response = await fetch(url);
-        let type = await response.json(); 
-        getTypeDamageFromValues(type);
-        getTypeDamageToValues(type);
-    }
-    checkTypeDamageValues(pokemon['types'].length);
-}
-
-
-function checkTypeDamageValues(typesNumber) {
-    if(typesNumber > 1) {
-        renderTypeDamageFromValues();
-        renderTypeDamageToValues(); 
-    } else copyDamageValues();
-    renderDamageImages();
-}
-
-
 function cleanDamageArrays() { 
     damageFrom = [];    
     damageTo = [];   
@@ -41,6 +18,18 @@ function cleanDamageArrays() {
     doubleDamageTo = [];
     halfDamageTo = [];
     noDamageTo = [];
+}
+
+
+async function renderTypeDamageValues(pokemon) {
+    for (let i = 0; i < pokemon['types'].length; i++) {
+        let url = pokemon['types'][i]['type']['url'];
+        let response = await fetch(url);
+        let type = await response.json(); 
+        getTypeDamageFromValues(type);
+        getTypeDamageToValues(type);
+    }
+    checkTypeDamageValues(pokemon['types'].length);
 }
 
 
@@ -67,6 +56,15 @@ function getTypeDamageToValues(type) {
     if(type['damage_relations']['no_damage_to'].length > 0) 
         for (let j = 0; j < type['damage_relations']['no_damage_to'].length; j++) 
             noDamageTo.push([type['damage_relations']['no_damage_to'][j]['name'], 0]);
+}
+
+
+function checkTypeDamageValues(typesNumber) {
+    if(typesNumber > 1) {
+        renderTypeDamageFromValues();
+        renderTypeDamageToValues(); 
+    } else copyDamageValues();
+    renderDamageImages();
 }
 
 
@@ -195,15 +193,6 @@ function  copyDamageValues() {
     if(noDamageTo.length > 0)
         for (let i = 0; i < noDamageTo.length; i++)
         damageTo.push(noDamageTo[i]);
-}
-
-
-
-function getDamageValues() {
-    for (let i = 0; i < damageTo.length; i++) 
-        pokemonData['base_stats']['type_defense']['damage_to'].push(damageTo[i]);
-    for (let j = 0; j < damageFrom.length; j++) 
-        pokemonData['base_stats']['type_defense']['damage_from'].push(damageFrom[j]);
 }
 
 

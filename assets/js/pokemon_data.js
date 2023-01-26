@@ -2,7 +2,7 @@ let selectedPokemonIndex = -1;
 let sideWrapperIsOpen = false;
 let stats = [];
 let current
-let currentPokemon = [];
+let currentPokemon = '';
 
 let nameVersionsData = {
     'name': '',
@@ -17,19 +17,17 @@ let nameMethodsData = {
 
 async function renderPokemon(i) {
     document.getElementById(`pokemon-list-element-container-${i}`).style.border = `inset`;
-    await copyPokemonElementData(i);
+    await getSelectedPokemonAboutData(i);
     if(sideWrapperIsOpen) {
         removeClasslist(`pokemon-selected-overlay-wrapper`, `pad-top-50`);
-        unmarkLastSelectedPokemon();
         setTimeout(() => {
             renderPokemonContent();
         }, 200);
-        
     } else {
         renderPokemonTemplate();
-        unmarkLastSelectedPokemon(); 
         await renderPokemonContent();
     }
+    unmarkLastSelectedPokemon(); 
     renderPokemonInfoAboutTemplate();
     selectedPokemonIndex = i;
     showSelectedPokemonWrapper(i);
@@ -39,61 +37,81 @@ async function renderPokemon(i) {
 
 ///////////////////////////////  C O P Y   P O K E M O N  ///////////////////////////////
 
-async function copyPokemonElementData(i) {
-    currentPokemon = [];
+///////////////////////////////  A B O U T   S E C T I O N
+
+async function getSelectedPokemonAboutData(i) {
+    currentPokemon = '';
     cleanPokemonData();
-    await getSelectedPokemonData(i);
-    copyPokemonBasicData(i)
-    copyPokemonSpeciesData(i)
-    currentPokemon.push(pokemonData);
+    copyPokemonAboutData(i);
+    await getSelectedPokemonAboutDatas();
+    currentPokemon = pokemonData;
     cleanPokemonData();
 }
 
 
-function copyPokemonBasicData(i) {
+function copyPokemonAboutData(i) {
     pokemonData['name']['name'] = allPokemons[i]['name']['name'];
     pokemonData['id'] = allPokemons[i]['id'];
     pokemonData['image'] = allPokemons[i]['image'];
     pokemonData['types'] = allPokemons[i]['types'];
     pokemonData['background_color'] = allPokemons[i]['background_color'];
-    pokemonData['name']['names'] = allPokemons[i]['name']['names'];
-}
-
-
-function copyPokemonSpeciesData(i) {
     pokemonData['about']['species'] = allPokemons[i]['about']['species'];
-    pokemonData['about']['habitat'] = allPokemons[i]['about']['habitat'];
-    // pokemonData['about']['height']['meter'] = allPokemons[i]['about']['height']['meter'];
-    // pokemonData['about']['height']['inch'] = allPokemons[i]['about']['height']['inch'];
-    pokemonData['about']['weight']['kg'] = allPokemons[i]['about']['weight']['kg'];
-    pokemonData['about']['weight']['lbs'] = allPokemons[i]['about']['weight']['lbs'];
     pokemonData['about']['abilities'] = allPokemons[i]['about']['abilities'];
     pokemonData['about']['growth_rate'] = allPokemons[i]['about']['growth_rate'];
     pokemonData['about']['egg_groups'] = allPokemons[i]['about']['egg_groups'];
 }
 
 
-async function getSelectedPokemonData(i) {
-    let url = `https://pokeapi.co/api/v2/pokemon/${allPokemons[i]['id']}`;
+async function getSelectedPokemonAboutDatas() {
+    let url = `https://pokeapi.co/api/v2/pokemon/${pokemonData['id']}`;
     let response = await fetch(url);
     let pokemon = await response.json();
     getPokemonHeight(pokemon);
-    getPokemonBaseExp(pokemon);
-    await getSelectedPokemonSpeciesData(pokemon, allPokemons[i]['id']);
-    getStats(pokemon);
+    getPokemonWeight(pokemon);
+    await getSelectedPokemonAboutSpeciesData(pokemon);
     await getPokemonTypeDamageData(pokemon);
-    await getSelectedPokemonLocationData(pokemon);
-    getPokemonMoves(pokemon);
 }
 
 
-async function getSelectedPokemonSpeciesData(pokemon, id) {
+async function getSelectedPokemonAboutSpeciesData(pokemon) {
     let url = pokemon['species']['url'];
     let response = await fetch(url);
     let species = await response.json();
     getPokemonDescription(species);
     getPokemonOptionalStatus(species);
     getAllGenerations(species);
+}
+
+///////////////////////////////  T H E   O T H E R   S E C T I O N S
+
+async function getSelectedPokemonOtherSectionsData(i) {
+    copyPokemonData(i);
+    await getSelectedPokemonOtherSectionsDatas(i);
+}
+
+
+function copyPokemonOtherSectionsData(i) {
+    currentPokemon['name']['names'] = allPokemons[i]['name']['names'];
+    currentPokemon['about']['habitat'] = allPokemons[i]['about']['habitat'];
+}
+
+
+async function getSelectedPokemonOtherSectionsDatas(i) {
+    let url = `https://pokeapi.co/api/v2/pokemon/${currentPokemon['id']}`;
+    let response = await fetch(url);
+    let pokemon = await response.json();
+    getPokemonBaseExp(pokemon);
+    getStats(pokemon);
+    await getSelectedPokemonLocationData(pokemon);
+    getPokemonMoves(pokemon);
+    await getSelectedPokemonOtherSectionsSpeciesData(pokemon, currentPokemon['id']);
+}
+
+
+async function getSelectedPokemonOtherSectionsSpeciesData(pokemon, id) {
+    let url = pokemon['species']['url'];
+    let response = await fetch(url);
+    let species = await response.json();
     getPokemonBaseHappiness(species);
     getPokemonCaptureRate(species);
     getPokemonHatchCounter(species);
@@ -237,7 +255,7 @@ async function getPokemonAbilities(pokemon) {
     for (let i = 0; i < pokemon['abilities'].length; i++) {
         abilityArray = [];
         let abilityName = pokemon['abilities'][i]['ability']['name']
-        abilityArray.push(`${abilityName.charAt(0).toUpperCase()}` + `${abilityName.slice(1)}`);
+        abilityArray.push(returnNameformattedMinus(abilityName));
         let url = pokemon['abilities'][i]['ability']['url'];
         let resp = await fetch(url);
         let ability = await resp.json();
@@ -271,12 +289,12 @@ async function getPokemonEggGroups(species) {
 
 function getStats(pokemon) {
     let total = 0;
-    pokemonData['base_stats']['stats'] = [];
+    currentPokemon['base_stats']['stats'] = [];
     for (let i = 0; i < pokemon['stats'].length; i++) {
-        pokemonData['base_stats']['stats'].push(pokemon['stats'][i]['base_stat']);
+        currentPokemon['base_stats']['stats'].push(pokemon['stats'][i]['base_stat']);
         total += pokemon['stats'][i]['base_stat'];
     }
-    pokemonData['base_stats']['total'] = total;
+    currentPokemon['base_stats']['total'] = total;
 }
 
 ///////////////////////////////  P O K E M O N   E V O L U T I O N  ///////////////////////////////
@@ -300,25 +318,32 @@ async function getPokemonTypeDamageData(pokemon) {
     getDamageValues();
 }
 
+
+function getDamageValues() {
+    for (let i = 0; i < damageTo.length; i++) 
+        pokemonData['base_stats']['type_defense']['damage_to'].push(damageTo[i]);
+    for (let j = 0; j < damageFrom.length; j++) 
+        pokemonData['base_stats']['type_defense']['damage_from'].push(damageFrom[j]);
+}
 ///////////////////////////////  P O K E M O N   B A S E - E X P  ///////////////////////////////
 
 function getPokemonBaseExp(pokemon) {
     if(pokemon['base_experience'])
-        pokemonData['base_experience'] = pokemon['base_experience'];
+        currentPokemon['base_experience'] = pokemon['base_experience'];
 }
 
 ///////////////////////////////  P O K E M O N   B A S E - H A P P I N E S S  ///////////////////////////////
 
 function getPokemonBaseHappiness(species) {
     if(species['base_happiness'])
-        pokemonData['base_happiness'] = species['base_happiness'];
+        currentPokemon['base_happiness'] = species['base_happiness'];
 }
 
 ///////////////////////////////  P O K E M O N   C A P T U R E - R A T E  ///////////////////////////////
 
 function getPokemonCaptureRate(species) {
     if(species['capture_rate'])
-        pokemonData['capture_rate'] = species['capture_rate'];
+        currentPokemon['capture_rate'] = species['capture_rate'];
 }
 
 ///////////////////////////////  P O K E M O N   B A B Y ,   L E G E N D A R Y ,   M Y T H I C A L  ///////////////////////////////
@@ -336,7 +361,7 @@ function getPokemonOptionalStatus(species) {
 
 function getPokemonHatchCounter(species) {
     if(species['hatch_counter']) 
-        pokemonData['hatch_counter'] = species['hatch_counter'];
+        currentPokemon['hatch_counter'] = species['hatch_counter'];
 }
 
 ///////////////////////////////  P O K E M O N   L O C A T I O N  ///////////////////////////////
@@ -345,7 +370,7 @@ async function getSelectedPokemonLocationData(pokemon) {
     let url = pokemon['location_area_encounters'];
     let response = await fetch(url);
     let locationAreas = await response.json();
-    pokemonData['locations'] = [];
+    currentPokemon['locations'] = [];
     getPokemonLocation(locationAreas);
 }
 
@@ -356,7 +381,7 @@ function getPokemonLocation(locationAreas) {
         cleanNameVersionsData();
         nameVersionsData['name'] = returnNameFormatted(locationAreas[i]['location_area']['name']);
         getPokemonLocationVersions(locationAreas, i, methodArray);
-        pokemonData['locations'].push(nameVersionsData);
+        currentPokemon['locations'].push(nameVersionsData);
     }
 }
 
@@ -394,12 +419,12 @@ function thatMethodIsNew(array, method) {
 ///////////////////////////////  P O K E M O N   M O V E S  ///////////////////////////////
 
 function getPokemonMoves(pokemon) {
-    pokemonData['moves'] = [];
+    currentPokemon['moves'] = [];
     for (let i = 0; i < pokemon['moves'].length; i++) {
         cleanNameVersionsData();
         nameVersionsData['name'] = returnNameFormatted(pokemon['moves'][i]['move']['name']);
         getPokemonMovesMethods(pokemon, i);
-        pokemonData['moves'].push(nameVersionsData);
+        currentPokemon['moves'].push(nameVersionsData);
     }
 }
 

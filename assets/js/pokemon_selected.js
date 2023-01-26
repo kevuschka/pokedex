@@ -80,7 +80,7 @@ function templatePokemonInfoABOUT() {
                         <p>Abilities</p>
                         <p>Weaknesses</p>
                     </div>
-                    <div class="pokemon-selected-info-about-pokedex-data-info flex column" id="pokemon-selected-info-about-pokedex-data-info"></div>
+                    <div class="pokemon-selected-info-about-pokedex-data-info flex column w-100" id="pokemon-selected-info-about-pokedex-data-info"></div>
                 </div>
             </div>
             <div class="pokemon-selected-info-about-breeding-wrapper flex column">
@@ -99,18 +99,18 @@ function templatePokemonInfoABOUT() {
 
 function renderPokemonInfoAbout() {
     let descriptionContent = document.getElementById('pokemon-selected-info-about-description');
-    descriptionContent.innerHTML = currentPokemon[0]['description'];
+    descriptionContent.innerHTML = currentPokemon['description'];
     let pokedexDataContent = document.getElementById('pokemon-selected-info-about-pokedex-data-info');
     renderPokemonAboutPokedexData(pokedexDataContent);
-    colorTitlesAbout();
+    colorTitlesAboutSection();
 }
 
 
 function renderPokemonAboutPokedexData(content) {
     content.innerHTML = '';
     renderPokemonAboutPokedexSpeciesData(content);
-    content.innerHTML += `<p>${currentPokemon[0]['about']['height']['inch']} (${currentPokemon[0]['about']['height']['meter']}m)</p>`;
-    content.innerHTML += `<p>${currentPokemon[0]['about']['weight']['lbs']}lbs (${currentPokemon[0]['about']['weight']['kg']}kg)</p>`;
+    content.innerHTML += `<p>${currentPokemon['about']['height']['inch']} (${currentPokemon['about']['height']['meter']}m)</p>`;
+    content.innerHTML += `<p>${currentPokemon['about']['weight']['lbs']}lbs (${currentPokemon['about']['weight']['kg']}kg)</p>`;
     renderPokemonAboutPokedexAbilitiesData(content);
     renderPokemonAboutPokedexWeaknessesData(content);
 }
@@ -119,25 +119,28 @@ function renderPokemonAboutPokedexData(content) {
 function renderPokemonAboutPokedexSpeciesData(content) {
     content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-species flex" id="pokemon-selected-info-about-pokedex-data-species"></div>`;
     let speciesContent = document.getElementById('pokemon-selected-info-about-pokedex-data-species');
-    for (let i = 0; i < currentPokemon[0]['about']['species'].length; i++) 
-        speciesContent.innerHTML += currentPokemon[0]['about']['species'][i];
+    for (let i = 0; i < currentPokemon['about']['species'].length; i++) 
+        speciesContent.innerHTML += currentPokemon['about']['species'][i];
 }
 
 
 function renderPokemonAboutPokedexAbilitiesData(content) {
     content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-abilities flex" id="pokemon-selected-info-about-pokedex-data-abilities"></div>`;
     let abilityContent = document.getElementById('pokemon-selected-info-about-pokedex-data-abilities');
-    for (let i = 0; i < currentPokemon[0]['about']['abilities'].length; i++) 
-        abilityContent.innerHTML += `<p>${currentPokemon[0]['about']['abilities'][i][0]}</p>`;
+    for (let i = 0; i < currentPokemon['about']['abilities'].length; i++) 
+        abilityContent.innerHTML += `<p>${currentPokemon['about']['abilities'][i][0]}</p>`;
 }
 
 
 function renderPokemonAboutPokedexWeaknessesData(content) {
-    content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-weaknesses flex" id="pokemon-selected-info-about-pokedex-data-weaknesses"></div>`;
+    content.innerHTML += `<div class="pokemon-selected-info-about-pokedex-data-weaknesses flex w-100" id="pokemon-selected-info-about-pokedex-data-weaknesses"></div>`;
     let weaknessesContent = document.getElementById('pokemon-selected-info-about-pokedex-data-weaknesses');
-    for (let i = 0; i < currentPokemon[0]['base_stats']['type_defense']['damage_from'].length; i++) 
-        if(currentPokemon[0]['base_stats']['type_defense']['damage_from'][i][1] >= 2)
-            weaknessesContent.innerHTML += `<img src="${currentPokemon[0]['base_stats']['type_defense']['damage_from'][i][2]}">`;
+    let weaknesses = [];
+    weaknesses = getWeaknessesAboutSection(currentPokemon['base_stats']['type_defense']['damage_from']);
+    for (let i = 0; i < weaknesses.length; i++) {
+        weaknessesContent.innerHTML += `<img class="weakness-icons" id="weakness-icon-${i}" src="${weaknesses[i][2]}">`;
+        addClasslist(`weakness-icon-${i}`, `${weaknesses[i][0]}`);
+    }
 }
 
 function templatePokemonInfoSTATS() {}
@@ -150,18 +153,44 @@ function templatePokemonInfoMOVES() {}
 function templatePokemonInfoLOCATIONS() {}
 
 
-function colorTitlesAbout() {
+function colorTitlesAboutSection() {
     document.getElementById('title_1').style.color = 'unset';
-    document.getElementById('title_1').style.color = `var(--${currentPokemon[0][`background_color`]})`;
+    document.getElementById('title_1').style.color = `var(--${currentPokemon[`background_color`]})`;
     document.getElementById('title_2').style.color = 'unset';
-    document.getElementById('title_2').style.color = `var(--${currentPokemon[0][`background_color`]})`;
+    document.getElementById('title_2').style.color = `var(--${currentPokemon[`background_color`]})`;
 }
+
+
+function getWeaknessesAboutSection(original) {
+    let array = [];
+    if(doubleDamagesAvailable(original)) {
+        for (let i = 0; i < original.length; i++) 
+            if(original[i][1] >= 2)
+                array.push(original[i]);
+    } else {
+        for (let i = 0; i < original.length; i++) 
+            if(original[i][1] >= 1)
+                array.push(original[i]);
+    }
+    return array;
+}
+
+
+function doubleDamagesAvailable(array) {
+    let number = 0;
+    for (let i = 0; i < array.length; i++) 
+        if(array[i][1] >= 2)
+            number++;
+    if(number > 0) return true;
+    else return false;
+}
+
 
 // CONTENT
 async function renderPokemonContent() {
     let headerNameContainer = document.getElementById(`pokemon-selected-header-name-container`);
-    headerNameContainer.innerHTML = `<p>${currentPokemon[0]['name']['name']}</p><p>#${returnPokemonId(currentPokemon[0]['id'])}</p>`;
-    document.getElementById(`pokemon-selected-image`).src = `${currentPokemon[0]['image']}`;
+    headerNameContainer.innerHTML = `<p>${currentPokemon['name']['name']}</p><p>#${returnPokemonId(currentPokemon['id'])}</p>`;
+    document.getElementById(`pokemon-selected-image`).src = `${currentPokemon['image']}`;
     renderSelectedPokemonTypes(`pokemon-selected-header-type-container`);
     renderSelectedPokemonStatur(`pokemon-selected-header-status`);
     addBackgroundColor();
@@ -171,8 +200,8 @@ async function renderPokemonContent() {
 function renderSelectedPokemonTypes(contentId) {
     let content = document.getElementById(contentId);
     content.innerHTML = '';
-    for (let j = 0; j < currentPokemon[0]['types'].length; j++) 
-        content.innerHTML += `<div class="pokemon-list-element-type pokemon-selected-header-type flex"><p>${currentPokemon[0]['types'][j]}</p></div>`;
+    for (let j = 0; j < currentPokemon['types'].length; j++) 
+        content.innerHTML += `<div class="pokemon-list-element-type pokemon-selected-header-type flex"><p>${currentPokemon['types'][j]}</p></div>`;
 }
 
 
@@ -186,7 +215,7 @@ function renderSelectedPokemonStatur(contentId) {
 
 
 function addBackgroundColor() {
-    document.getElementById(`pokemon-selected`).style.backgroundColor = `var(--${currentPokemon[0]['background_color']})`;
+    document.getElementById(`pokemon-selected`).style.backgroundColor = `var(--${currentPokemon['background_color']})`;
 }
 
 
@@ -195,7 +224,7 @@ function showSelectedPokemonWrapper(i) {
     setTimeout(() => {
         let height = document.getElementById(`pokemon-list-wrapper`).clientHeight;
         document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `${height}px`;
-    }, 100);
+    }, 130);
     if(window.innerWidth > 999) document.getElementById(`pokemon-selected-wrapper`).style.width = `60%`;
     else document.getElementById(`pokemon-selected-wrapper`).style.width = `100%`;
     showSelectedPokemonInfo();
@@ -219,9 +248,8 @@ function hideSelectedPokemonWrapper() {
         removeClasslist(`pokemon-selected`, `tranX-0`);
     }, 130);
     setTimeout(() => {
-        removeClasslist(`pokemon-selected-overlay-wrapper`, `pad-top-50`);
     document.getElementById(`pokemon-selected-wrapper`).style.width = `0`;
-    document.getElementById(`pokemon-selected-wrapper`).style.height = `0`;
+    document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `0`;
     }, 260);
     sideWrapperIsOpen = false;
     unmarkLastSelectedPokemon();
@@ -238,7 +266,7 @@ function selectTab(i) {
     unselectAllTabs();
     removeClasslist(`tab_${i}`, `unselected-tab`);
     addClasslist(`tab_${i}`, `selected-tab`);
-    document.getElementById(`tab_${i}`).style.borderBottom = `2px solid var(--${currentPokemon[0]['background_color']})`;
+    document.getElementById(`tab_${i}`).style.borderBottom = `2px solid var(--${currentPokemon['background_color']})`;
 }
 
 

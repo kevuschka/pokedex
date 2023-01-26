@@ -66,74 +66,6 @@ html {
 
 /*background-image: linear-gradient(red, yellow); */
 
-:root {
-    --red: #fd7777;
-    --blue: #76bdfe;
-    --lightgreen: #48d0af;
-    --green: #48d0b0;
-    --yellow: #fae155;
-    --purple:  rgb(133, 103, 209);
-    --brown: #e5c499;
-    --white: rgb(240, 240, 240);
-    --pink: #e4a1d9;
-    --gray: #919191;
-    --black: black;
-}
-
-.red {
-    background-color: var(--red);
-    /* background-image: linear-gradient(var(--red) 55%, #ad4141); */
-}
-
-.blue {
-    background-color: var(--blue);
-    /* background-image: linear-gradient(var(--blue) 55%, #5991c5); */
-}
-
-.yellow {
-    background-color: var(--yellow);
-    /* background-image: linear-gradient(var(--yellow) 55%, #c9b546); */
-}
-
-.purple {
-    background-color: var(--purple);
-    /* background-image: linear-gradient(var(--purple) 55%, rgb(124, 97, 194)); */
-}
-
-.green {
-    background-color: var(--green);
-    /* background-image: linear-gradient(var(--green) 55%, #43c2a4); */
-}
-
-.brown {
-    background-color: var(--brown);
-    /* background-image: linear-gradient(var(--brown) 55%, #d7a25d); */
-}
-
-.white {
-    background-color: var(--white);
-    /* background-image: linear-gradient(var(--white) 55%, rgb(177, 177, 177)); */
-}
-
-.pink {
-    background-color: var(--pink);
-}
-
-.gray {
-    background-color: var(--gray);
-}
-
-.black {
-    background-color: var(--black);
-}
-
-.lightgray {
-    color: rgb(155, 155, 155);
-}
-
-.bg-darkmode {
-    background-color: rgba(0,0,0,0.5);
-}
 
 .bg-normal {
     /* background-color: rgba(0, 0, 0, 0.1); */
@@ -482,7 +414,7 @@ html {
 }
 
 .pokemon-selected-info-about-pokedex-data-wrapper, 
-.pokemon-selected-info-about-pokedex-data-info,
+/* .pokemon-selected-info-about-pokedex-data-info, */
 .pokemon-selected-info-about-pokedex-data-titles, 
 .pokemon-selected-info-about-breeding-wrapper {
     gap: 12px;
@@ -501,11 +433,12 @@ html {
 } */
 
 .pokemon-selected-info-about-pokedex-data-info {
+    justify-content: space-evenly;
     color: rgba(0,0,0,0.3);
 }
 
 .pokemon-selected-info-about-pokedex-data-abilities {
-    gap: 22px;
+    gap: 16px;
 }
 
 /* .pokemon-selected-info-about-breeding-wrapper {
@@ -514,6 +447,18 @@ html {
 
 .pokemon-selected-info-about-breeding-titles {
     gap: 12px;
+}
+
+.pokemon-selected-info-about-pokedex-data-weaknesses {
+    gap: 8px;
+}
+
+
+.weakness-icons {
+    padding: 5px;
+    border-radius: 6px;
+    width: 35px;
+    height: 100%;
 }
 
 

@@ -172,8 +172,6 @@ async function renderPokemonsElementData(basic) {
         getPokemonImage(pokemon);
         getPokemonTypes(pokemon);
         await getPokemonSpeciesData(pokemon);
-        // getPokemonHeight(pokemon);
-        getPokemonWeight(pokemon);
         await getPokemonAbilities(pokemon);
         allPokemons.push(pokemonData);
         console.log(`allPokemons:`, allPokemons);
@@ -191,6 +189,7 @@ async function getPokemonSpeciesData(pokemon) {
     getPokemonHabitat(species);
     getPokemonGrowthRate(species);
     getPokemonEggGroups(species);
+    getAllGenerations(species);
 }
 
 
@@ -376,6 +375,20 @@ function returnNameFormatted(name) {
             betterArray[j] = `${nameArray[j].charAt(0).toUpperCase()}` + `${nameArray[j].slice(1)}`;
             finalName += `${betterArray[j]}`;
             if(nameArray.length > 1) finalName += ' ';
+        }
+    return finalName;
+}
+
+
+function returnNameformattedMinus(name) {
+    let nameArray = name.split('-');
+    let betterArray = [];
+    let finalName = '';
+    if(nameArray.length > 0)
+        for (let j = 0; j < nameArray.length; j++) {
+            betterArray[j] = `${nameArray[j].charAt(0).toUpperCase()}` + `${nameArray[j].slice(1)}`;
+            finalName += `${betterArray[j]}`;
+            if(nameArray.length > (j+1)) finalName += '-';
         }
     return finalName;
 }
