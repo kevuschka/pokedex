@@ -145,7 +145,7 @@ function renderPokemonAboutPokedexWeaknessesData(content) {
     let weaknesses = [];
     weaknesses = getWeaknessesAboutSection(currentPokemon['base_stats']['type_defense']['damage_from']);
     for (let i = 0; i < weaknesses.length; i++) {
-        tblRow.innerHTML += `<img class="weakness-icons" id="weakness-icon-${i}" src="${weaknesses[i][2]}">`;
+        tblRow.innerHTML += `<img class="weakness-icons" id="weakness-icon-${i}" src="${weaknesses[i][2]}" alt="${weaknesses[i][0]}" title="${weaknesses[i][0]}">`;
         addClasslist(`weakness-icon-${i}`, `${weaknesses[i][0]}`);
     }
 }
@@ -159,7 +159,7 @@ function templatePokemonInfoEVOLUTION() {
 function templatePokemonInfoMOVES() {}
 function templatePokemonInfoLOCATIONS() {}
 
-
+//   querySelecterALL stattdessen ???????????????
 function colorTitlesAboutSection() {
     document.getElementById('title_1').style.color = 'unset';
     document.getElementById('title_1').style.color = `var(--${currentPokemon[`background_color`]})`;
