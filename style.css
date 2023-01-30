@@ -405,54 +405,35 @@ html {
     font-size: 24px;
 }
 
+/*//////////////////////////////  A B O U T */
 .pokemon-selected-info-about-wrapper {
-    gap: 22px;
-}
-
-.pokemon-selected-info-about-pokedex-data-wrapper, 
-.pokemon-selected-info-about-pokedex-data-titles, 
-.pokemon-selected-info-about-breeding-wrapper {
     gap: 12px;
 }
 
-.title {
+.pokemon-selected-info-about-pokedex-data-wrapper, 
+.pokemon-selected-info-about-breeding-wrapper {
+    gap: 10px;
+}
+
+.subTitle {
     font-size: 32px;
 }
 
-
-.pokemon-selected-info-about-pokedex-data-container {
-    gap: 75px;
-}
-
-.pokemon-selected-info-about-pokedex-data-container >  table {
-    width: 100%;
-}
-
-.pokemon-selected-info-about-pokedex-data-container >  table > tbody  td {
+.about-table > tbody td {
     padding-bottom: 12px;
 }
 
-.pokemon-selected-info-about-pokedex-data-info {
-    justify-content: space-evenly;
+.pad-0 {
+    padding: 0px !important;
 }
 
 .pokemon-selected-info-about-pokedex-data-abilities {
     gap: 16px;
 }
 
-.pokemon-selected-info-about-breeding-titles {
-    gap: 12px;
-}
-
 .pokemon-selected-info-about-pokedex-data-weaknesses {
     gap: 8px;
 }
-
-.table-titles {
-    font-size: 18px;
-    color: rgba(0,0,0,0.3);
-}
-
 
 .weakness-icons {
     padding: 5px;
@@ -460,6 +441,34 @@ html {
     width: 35px;
     height: 100%;
 }
+
+
+/*//////////////////////////////  B A S E   S T A T S */
+.pokemon-selected-info-stats-wrapper {
+    gap: 12px;
+}
+
+.stats-bar-regular {
+    background-color: rgba(0, 0, 0, 0.05);
+    height: 5px;
+}
+
+.stats-bar-valued {
+    height: 5px;
+}
+
+.stats-table-values {
+    width: 48px !important;
+}
+
+.table-titles {
+    font-size: 18px;
+    color: rgba(0,0,0,0.3);
+    min-width: 130px;
+    width: 160px;
+}
+
+
 
 
 @media screen and (min-width: 1400px) {

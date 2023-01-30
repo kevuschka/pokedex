@@ -28,16 +28,12 @@ async function renderPokemon(i) {
         await renderPokemonContent();
     }
     unmarkLastSelectedPokemon(); 
-    renderPokemonInfoAboutTemplate();
+    selectTab(1);
     selectedPokemonIndex = i;
     showSelectedPokemonWrapper(i);
-    unselectAllTabs();
-    selectTab(1);
+    getSelectedPokemonOtherSectionsData(i);
 }
 
-///////////////////////////////  C O P Y   P O K E M O N  ///////////////////////////////
-
-///////////////////////////////  A B O U T   S E C T I O N
 
 async function getSelectedPokemonAboutData(i) {
     currentPokemon = '';
@@ -59,6 +55,7 @@ function copyPokemonAboutData(i) {
     pokemonData['about']['abilities'] = allPokemons[i]['about']['abilities'];
     pokemonData['about']['growth_rate'] = allPokemons[i]['about']['growth_rate'];
     pokemonData['about']['egg_groups'] = allPokemons[i]['about']['egg_groups'];
+    pokemonData['hatch_counter'] = allPokemons[i]['hatch_counter'];
 }
 
 
@@ -85,7 +82,7 @@ async function getSelectedPokemonAboutSpeciesData(pokemon) {
 ///////////////////////////////  T H E   O T H E R   S E C T I O N S
 
 async function getSelectedPokemonOtherSectionsData(i) {
-    copyPokemonData(i);
+    copyPokemonOtherSectionsData(i);
     await getSelectedPokemonOtherSectionsDatas(i);
 }
 
@@ -114,7 +111,6 @@ async function getSelectedPokemonOtherSectionsSpeciesData(pokemon, id) {
     let species = await response.json();
     getPokemonBaseHappiness(species);
     getPokemonCaptureRate(species);
-    getPokemonHatchCounter(species);
     await renderPokemonEvolutionChain(species, id);
 }
 
@@ -179,8 +175,8 @@ function returnPokemonId(id) {
 
 function getPokemonImage(pokemon) {
     if (pokemon['sprites']['other']['official-artwork']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['official-artwork']['front_default']}`;
+    else if (pokemon['sprites']['other']['dream_world']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['dream_world']['front_default']}`;
     else if (pokemon['sprites']['other']['home']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['home']['front_default']}`;
-    else if(pokemon['sprites']['other']['dream_world']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['dream_world']['front_default']}`;
     else pokemonData['image'] = `assets/img/no_pokemon_image.png`;
 }
 
@@ -329,7 +325,7 @@ function getDamageValues() {
 
 function getPokemonBaseExp(pokemon) {
     if(pokemon['base_experience'])
-        currentPokemon['base_experience'] = pokemon['base_experience'];
+        currentPokemon['base_exp'] = pokemon['base_experience'];
 }
 
 ///////////////////////////////  P O K E M O N   B A S E - H A P P I N E S S  ///////////////////////////////
@@ -361,7 +357,7 @@ function getPokemonOptionalStatus(species) {
 
 function getPokemonHatchCounter(species) {
     if(species['hatch_counter']) 
-        currentPokemon['hatch_counter'] = species['hatch_counter'];
+        pokemonData['hatch_counter'] = species['hatch_counter'];
 }
 
 ///////////////////////////////  P O K E M O N   L O C A T I O N  ///////////////////////////////

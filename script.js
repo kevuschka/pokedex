@@ -67,7 +67,7 @@ let pokemonData = {
     'locations': [],
     'base_happiness': [],
     'capture_rate': [],
-    'base_exp': [], 
+    'base_exp': '', 
     'moves': [],
 };
 
@@ -189,6 +189,7 @@ async function getPokemonSpeciesData(pokemon) {
     getPokemonHabitat(species);
     getPokemonGrowthRate(species);
     getPokemonEggGroups(species);
+    getPokemonHatchCounter(species);
     getAllGenerations(species);
 }
 
@@ -443,7 +444,7 @@ function cleanPokemonData() {
         'locations': [],
         'base_happiness': [],
         'capture_rate': [],
-        'base_exp': [], 
+        'base_exp': '', 
         'moves': [],
     };
 }
