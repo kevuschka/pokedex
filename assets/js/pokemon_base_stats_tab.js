@@ -46,7 +46,7 @@ function templateBaseStatsRows(i, titlesArray) {
     return `<tr>
                 <td class="table-titles">${titlesArray[i]}</td>
                 <td class="stats-table-values">${currentPokemon['base_stats']['stats'][i]}</td>
-                <td><div class="stats-bar-regular w-100 flex"><div class="stats-bar-valued" id="bar_${i}" width="0%"></div></div></td>
+                <td><div class="stats-bar-regular w-100 flex"><div class="stats-bar-valued" id="bar_${i}"></div></div></td>
             </tr>`;
 }
 
@@ -113,7 +113,7 @@ function renderPokemonBaseStatsTypeDefenseIcons(i) {
 function templatePokemonInfoTypeDefenseDamageFirstRow(i, j) {
     return `
         <div class="damage-icon-container flex column">
-            <img class="damage-icon" id="damage-icon-first-${i}-${j}" src="assets/img/${defense[j]}.png" title="${defense[j]}">
+            <img class="damage-icon" id="damage-icon-first-${i}-${j}" src="assets/img/${defense[j]}.png" title="${returnNameFormatted(defense[j])}">
             ${returnTypeDefenseDamageValues(defense[j], i)}
         </div>`;
 }
@@ -122,7 +122,7 @@ function templatePokemonInfoTypeDefenseDamageFirstRow(i, j) {
 function templatePokemonInfoTypeDefenseDamageSecondRow(i, j) {
     return `
         <div class="damage-icon-container flex column">
-            <img class="damage-icon" id="damage-icon-second-${i}-${j}" src="assets/img/${defense[j]}.png" title="${defense[j]}">
+            <img class="damage-icon" id="damage-icon-second-${i}-${j}" src="assets/img/${defense[j]}.png" title="${returnNameFormatted(defense[j])}">
             ${returnTypeDefenseDamageValues(defense[j], i)}
         </div>`;
 }

@@ -59,6 +59,10 @@ html {
     position: fixed;
 }
 
+.smooth-trans {
+    transition: all 125ms ease-in-out;
+}
+
 /* header icon color lightgray: #d9d9d9 
    searchbar background color : #525252
 */
@@ -87,7 +91,7 @@ html {
 }
 
 .opa-on {
-    opacity: 1;
+    opacity: 1 !important;
 }
 
 .tranY-0 {
@@ -113,6 +117,45 @@ html {
     width: 100%;
     overflow: hidden;
 }
+
+
+/*//////////////////////////////  L O A D   P O P U P  //////////////////////////////*/
+
+.loadPopup-full {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    z-index: 2;
+    color: black;
+}
+
+.loadPopup-image {
+    object-fit: scale-down;
+}
+
+.loadPopup-image-overlay {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image : linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.5) 0%);
+} 
+
+.loadPopup-subtitle-container {
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    font-size: 32px;
+}
+
+.loading-circle {
+    width: 26px;
+    height: 26px;
+} 
 
 /*//////////////////////////////  P A G E   H E A D E R  //////////////////////////////*/
 
@@ -474,6 +517,7 @@ html {
 
 .subSubTitle {
     font-size: 20px;
+    color: rgba(0,0,0,0.3);
 }
 
 .pokemon-info-type-defense-damage-container {

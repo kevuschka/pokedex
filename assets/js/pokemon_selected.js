@@ -53,10 +53,10 @@ function templatePokemonInfoWrapper() {
 function templatePokemonInfoTabs() {
     let wrapper = document.getElementById(`pokemon-selected-info-tab-container`);
     wrapper.innerHTML = `<p class="pokemon-selected-info-tab flex cursor-p" id="tab_1" onclick="selectTab(1)">About</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab flex sp-tab cursor-p" id="tab_2" onclick="selectTab(2)">Base Stats</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab flex cursor-p" id="tab_3" onclick="selectTab(3)">Evolution</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab flex cursor-p" id="tab_4" onclick="selectTab(4)">Moves</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab flex cursor-p" id="tab_5" onclick="selectTab(5)">Locations</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab c-white flex sp-tab cursor-p" id="tab_2" onclick="selectTab(2)">Base Stats</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab c-white flex cursor-p" id="tab_3" onclick="selectTab(3)">Evolution</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab c-white flex cursor-p" id="tab_4" onclick="selectTab(4)">Moves</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab c-white flex cursor-p" id="tab_5" onclick="selectTab(5)">Locations</p>`;
 }
 
 ///////////////////////////////  R E N D E R   E V O L U T I O N  ///////////////////////////////
@@ -164,7 +164,7 @@ function selectTab(i) {
 function selectPokemonTab(i) {
     if(i == 1) renderPokemonInfoAboutTemplate();
     if(i == 2) renderPokemonInfoStatsTemplate();
-    if(i == 3){}
+    if(i == 3) renderPokemonInfoEvolutionTemplate();
     if(i == 4){}
     coloringSubtitles();
 }

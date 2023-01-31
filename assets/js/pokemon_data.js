@@ -76,22 +76,21 @@ async function getSelectedPokemonAboutSpeciesData(pokemon) {
     let species = await response.json();
     getPokemonDescription(species);
     getPokemonOptionalStatus(species);
-    getAllGenerations(species);
 }
 
 ///////////////////////////////  T H E   O T H E R   S E C T I O N S
 
 async function getSelectedPokemonOtherSectionsData(i) {
-    copyPokemonOtherSectionsData(i);
-    await getSelectedPokemonOtherSectionsDatas(i);
-}
-
-
-function copyPokemonOtherSectionsData(i) {
     currentPokemon['name']['names'] = allPokemons[i]['name']['names'];
     currentPokemon['about']['habitat'] = allPokemons[i]['about']['habitat'];
+    await getSelectedPokemonOtherSectionsDatas(i);
+    makeOtherSectionTabsVisible();
 }
 
+
+function makeOtherSectionTabsVisible() {
+    document.querySelectorAll('.c-white').forEach(el => el.classList.remove('c-white'));
+}
 
 async function getSelectedPokemonOtherSectionsDatas(i) {
     let url = `https://pokeapi.co/api/v2/pokemon/${currentPokemon['id']}`;
@@ -111,6 +110,8 @@ async function getSelectedPokemonOtherSectionsSpeciesData(pokemon, id) {
     let species = await response.json();
     getPokemonBaseHappiness(species);
     getPokemonCaptureRate(species);
+    getAllGenerations(species);
+    getPokemonHabitat(species);
     await renderPokemonEvolutionChain(species, id);
 }
 
@@ -154,8 +155,8 @@ function getAllNames(species) {
  * @returns an array with generations of a pokemon species
  */
 function getAllGenerations(species) {
-    pokemonData['generations'] = [];
-    pokemonData['generations'].push(species['generation']['name']);
+    currentPokemon['generations'] = [];
+    currentPokemon['generations'].push(species['generation']['name']);
 }
 
 ///////////////////////////////  P O K E M O N   I D  ///////////////////////////////
@@ -212,11 +213,11 @@ function getPokemonSpecies(species) {
 ///////////////////////////////  P O K E M O N   H A B I T A T  ///////////////////////////////
 
 function getPokemonHabitat(species) {
-    pokemonData['about']['habitat'] = [];
+    currentPokemon['about']['habitat'] = [];
     let habitatName;
     if(species['habitat']) {
         habitatName = species['habitat']['name'];
-        pokemonData['about']['habitat'].push(`${habitatName.charAt(0).toUpperCase()}` + `${habitatName.slice(1)}`);
+        currentPokemon['about']['habitat'].push(`${habitatName.charAt(0).toUpperCase()}` + `${habitatName.slice(1)}`);
     }
 }
 
@@ -295,14 +296,14 @@ function getStats(pokemon) {
 
 ///////////////////////////////  P O K E M O N   E V O L U T I O N  ///////////////////////////////
 
-async function getPokemonEvolutionData(species) {
-    if(species['evolution_chain'].length > 0 || species['evolution_chain']['url']) {
-        let url = species['evolution_chain']['url'];
-        let response = await fetch(url);
-        let evolution = await response.json();
-        await renderPokemonEvolutionData(evolution['chain'])
-    }
-}
+// async function getPokemonEvolutionData(species) {
+//     if(species['evolution_chain'].length > 0 || species['evolution_chain']['url']) {
+//         let url = species['evolution_chain']['url'];
+//         let response = await fetch(url);
+//         let evolution = await response.json();
+//         await renderPokemonEvolutionData(evolution['chain'])
+//     }
+// }
 
 ///////////////////////////////  P O K E M O N   D A M A G E  ///////////////////////////////
 

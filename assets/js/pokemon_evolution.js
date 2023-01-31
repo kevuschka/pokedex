@@ -29,7 +29,7 @@ async function renderPokemonEvolutionData(chain, id) {
         evo['image'].push(await returnPokemonImageAll(id));
     }
     renderPokemonEvoChainData(chain);
-    pokemonData['evolution'].push(evo);
+    currentPokemon['evolution'].push(evo);
     await renderPokemonEvolvesToData(chain, id);
 }
 

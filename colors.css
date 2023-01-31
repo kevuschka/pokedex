@@ -134,3 +134,7 @@
 .dark {
     background-color: rgb(0, 0, 0);
 }
+
+.c-white {
+    color: white;
+}

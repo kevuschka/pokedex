@@ -87,6 +87,7 @@ async function init() {
     await includeHTML();
     await getLocalStorage();
     await setLocalStorage();
+    renderLoadPopup();
     await loadAllPokemons();
     // await updateAllPokemonsData();
     cleanValues();
@@ -94,6 +95,48 @@ async function init() {
     renderPokemonsPage(0, 40);
 }
 
+
+function renderLoadPopup() {
+    let content = document.getElementById('popups');
+    content.innerHTML = templateLoadPopup();
+    openLoadPopup();
+}
+
+
+function templateLoadPopup() {
+    return `<div class="loadPopup-full absolute flex smooth-trans d-none" id="loadPopup-full">
+                <div class="loadPopup-container flex column smooth-trans" id="loadPopup-container">
+                    <div class="loadPopup-logo-container relative">
+                        <img class="loadPopup-image" src="assets/img/pokedex_logo.png" alt="pokemon-logo">
+                        <div class="loadPopup-image-overlay absolute smooth-trans" id="loadPopup-image-overlay"></div>
+                    </div>
+                    <div class="loadPopup-subtitle-container flex smooth-trans" id="loadPopup-subtitle-container">
+                        <p>Loading...</p>
+                        <img class="loading-circle smooth-trans" id="loading-circle" src="assets/img/loading.png" alt="loading-circle">
+                    </div>
+                </div>
+            </div>`;
+}
+
+
+let myInterval;
+let loadImageVisibility = 0;
+let fadeImageVisibility = 10;
+let loadCircleDegree = 0;
+
+
+function openLoadPopup() {
+    if(allPokemons.length == 0) {
+        document.getElementById('popups').style.minHeight = '100vh';
+        removeClasslist('loadPopup-full', 'd-none');
+    }
+}
+
+
+function closeLoadPopup() {
+    document.getElementById('popups').style.minHeight = '';
+    addClasslist('loadPopup-full', 'd-none');
+}
 
 ///////////////////////////////  L O C A L S T O R A G E  ///////////////////////////////
 
@@ -137,6 +180,7 @@ async function loadAllPokemons() {
     if(allPokemons.length == 0) {
         await getAllPokemonsData();
         localStorage.setItem('allPokemons', JSON.stringify(allPokemons));
+        closeLoadPopup();
     }
 }
 
@@ -175,6 +219,11 @@ async function renderPokemonsElementData(basic) {
         await getPokemonAbilities(pokemon);
         allPokemons.push(pokemonData);
         console.log(`allPokemons:`, allPokemons);
+        loadImageVisibility = ((i/basic['results'].length) * 100).toFixed(1);
+        fadeImageVisibility += loadImageVisibility+10;
+        document.getElementById('loadPopup-image-overlay').style.backgroundImage = `linear-gradient(90deg, transparent ${loadImageVisibility}%, white 0%)`;
+        loadCircleDegree += 10;
+        document.getElementById('loading-circle').style.transform = `rotate(${loadCircleDegree}deg)`;
     }
 }
 
@@ -186,11 +235,9 @@ async function getPokemonSpeciesData(pokemon) {
     getAllNames(species);
     getPokemonBackgroundColor(species);
     getPokemonSpecies(species);
-    getPokemonHabitat(species);
     getPokemonGrowthRate(species);
     getPokemonEggGroups(species);
     getPokemonHatchCounter(species);
-    getAllGenerations(species);
 }
 
 
