@@ -51,7 +51,7 @@
     background-color: var(--pink);
 }
 
-.gray, .ice {
+.gray {
     background-color: var(--gray);
 }
 
@@ -72,23 +72,27 @@
 }
 
 .flying {
-    background-color: rgb(101, 161, 250);
+    background-color: rgb(55, 186, 247);
 }
 
 .grass {
-    background-color: green;
+    background-color: rgb(14, 148, 14);
+}
+
+.ice {
+    background-color: rgb(226, 226, 226);
 }
 
 .rock {
-    background-color: rgb(124, 63, 35);
+    background-color: rgb(160, 130, 91);
 }
 
 .ground {
-    background-color: rgb(54, 26, 0);
+    background-color: rgb(136, 67, 2);
 }
 
 .bug {
-    background-color: rgb(66, 52, 52);
+    background-color: rgb(4, 80, 38);
 }
 
 .fighting {
@@ -100,19 +104,19 @@
 }
 
 .fairy {
-    background-color: rgb(145, 8, 138);
+    background-color: rgb(221, 59, 213);
 }
 
 .poison {
-    background-color: rgb(179, 255, 1);
+    background-color: rgb(148, 236, 5);
 }
 
 .ghost {
-    background-color: rgb(192, 192, 192);
+    background-color: rgb(230, 230, 230);
 }
 
 .dragon {
-    background-color: rgb(94, 1, 1);
+    background-color: rgb(238, 210, 174);
 }
 
 .water {
@@ -121,4 +125,12 @@
 
 .psychic {
     background-color: purple;
+}
+
+.normal {
+    background-color: rgb(187, 236, 224);
+}
+
+.dark {
+    background-color: rgb(0, 0, 0);
 }

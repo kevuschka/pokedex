@@ -31,7 +31,7 @@ async function renderPokemon(i) {
     selectTab(1);
     selectedPokemonIndex = i;
     showSelectedPokemonWrapper(i);
-    getSelectedPokemonOtherSectionsData(i);
+    await getSelectedPokemonOtherSectionsData(i);
 }
 
 

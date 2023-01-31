@@ -59,89 +59,21 @@ function templatePokemonInfoTabs() {
     wrapper.innerHTML += `<p class="pokemon-selected-info-tab flex cursor-p" id="tab_5" onclick="selectTab(5)">Locations</p>`;
 }
 
-///////////////////////////////  R E N D E R   A B O U T  ///////////////////////////////
+///////////////////////////////  R E N D E R   E V O L U T I O N  ///////////////////////////////
 // ...
 
-function renderPokemonInfoStatsTemplate() {
-    let content = document.getElementById('pokemon-selected-info-data-wrapper');
-    content.innerHTML = templatePokemonInfoSTATS();
-    renderPokemonInfoStats();
-}
-
-
-function templatePokemonInfoSTATS() {
-    return `<div class="pokemon-selected-info-stats-wrapper flex column w-100">
-                <div class="pokemon-selected-info-stats-values-container" id="pokemon-selected-info-stats-values-container"></div>
-                <div class="pokemon-selected-info-type-defense-container flex column w-100">
-                    <p class="subTitle">Type Defense</p>
-                    <div class="pokemon-selected-info-type-defense-content flex column" id="pokemon-selected-info-type-defense-content"></div>
-                </div>
-            </div>`;
-}
-
-
-function renderPokemonInfoStats() {
-    let baseStats = document.getElementById('pokemon-selected-info-stats-values-container');
-    baseStats.innerHTML = '<table class="about-table w-100"><tbody id="base-stats-table"></tbody></table>';
-    let tblBody = document.getElementById('base-stats-table');
-    renderPokemonInfoBaseStatsBars(tblBody);
-}
-
-
-function renderPokemonInfoBaseStatsBars(content) {
-    let titlesArray = ['HP', 'Attack', 'Defense', 'Sp. Atk.', 'Sp. Def.', 'Speed'];
-    for (let i = 0; i < currentPokemon['base_stats']['stats'].length; i++) {
-        content.innerHTML += templateBaseStatsRows(i, titlesArray);
-        renderBars(i);
-    }
-    content.innerHTML += templateBaseStatsRowsTotal();
-    renderBarTotal();
-}
-
-
-function templateBaseStatsRows(i, titlesArray) {
-    return `<tr>
-                <td class="table-titles">${titlesArray[i]}</td>
-                <td class="stats-table-values">${currentPokemon['base_stats']['stats'][i]}</td>
-                <td><div class="stats-bar-regular w-100 flex"><div class="stats-bar-valued" id="bar_${i}"></div></div></td>
-            </tr>`;
-}
-
-
-function renderBars(i) {
-    document.getElementById(`bar_${i}`).style.width = `${(currentPokemon['base_stats']['stats'][i]/255)*100}%`;
-    document.getElementById(`bar_${i}`).style.backgroundColor = `var(--${currentPokemon['background_color']})`;
-}
-
-
-function templateBaseStatsRowsTotal() {
-    return `<tr>
-                <td class="table-titles pad-0">Total</td>
-                <td class="stats-table-values pad-0">${currentPokemon['base_stats']['total']}</td>
-                <td class="pad-0"><div class="stats-bar-regular w-100 flex"><div class="stats-bar-valued" id="bar_6"></div></div></td>
-            </tr>`;
-}
-
-
-function renderBarTotal() {
-    document.getElementById(`bar_6`).style.width = `${(currentPokemon['base_stats']['total']/1300)*100}%`;
-    document.getElementById(`bar_6`).style.backgroundColor = `var(--${currentPokemon['background_color']})`;
-}
-
-
-////////////////////////////////////////////////////////
 function templatePokemonInfoEVOLUTION() {
 
 }
 
+
+
+/////////////////////////////////////////
 function templatePokemonInfoMOVES() {}
 function templatePokemonInfoLOCATIONS() {}
 
 
-function coloringSubtitles() {
-    document.querySelectorAll('.subTitle').forEach(el => el.style.color = 'unset');
-    document.querySelectorAll('.subTitle').forEach(el => el.style.color = `var(--${currentPokemon[`background_color`]})`);
-}
+
 
 
 // CONTENT
@@ -150,7 +82,7 @@ async function renderPokemonContent() {
     headerNameContainer.innerHTML = `<p>${currentPokemon['name']['name']}</p><p>#${returnPokemonId(currentPokemon['id'])}</p>`;
     document.getElementById(`pokemon-selected-image`).src = `${currentPokemon['image']}`;
     renderSelectedPokemonTypes(`pokemon-selected-header-type-container`);
-    renderSelectedPokemonStatur(`pokemon-selected-header-status`);
+    renderSelectedPokemonStatus(`pokemon-selected-header-status`);
     addBackgroundColor();
 }
 
@@ -163,7 +95,7 @@ function renderSelectedPokemonTypes(contentId) {
 }
 
 
-function renderSelectedPokemonStatur(contentId) {
+function renderSelectedPokemonStatus(contentId) {
     let content = document.getElementById(contentId);
     content.innerHTML = '';
     if(currentPokemon['is_baby']) content.innerHTML = '<p>Baby</p>';
@@ -236,6 +168,13 @@ function selectPokemonTab(i) {
     if(i == 4){}
     coloringSubtitles();
 }
+
+
+function coloringSubtitles() {
+    document.querySelectorAll('.subTitle').forEach(el => el.style.color = 'unset');
+    document.querySelectorAll('.subTitle').forEach(el => el.style.color = `var(--${currentPokemon[`background_color`]})`);
+}
+
 
 function unselectAllTabs() {
     for (let i = 1; i <= 5; i++) {
