@@ -142,7 +142,7 @@ html {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image : linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.5) 0%);
+    background-image : linear-gradient(90deg, transparent 0%, white 0%);
 } 
 
 .loadPopup-subtitle-container {
