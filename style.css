@@ -128,9 +128,10 @@ html {
     height: 100vh;
     justify-content: center;
     align-items: center;
-    background-color: white;
+    background-color: rgb(1, 5, 53);
     z-index: 2;
-    color: black;
+    color: white;
+    transition: all 400ms ease-in-out;
 }
 
 .loadPopup-image {
@@ -142,7 +143,7 @@ html {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image : linear-gradient(90deg, transparent 0%, white 0%);
+    background-image : linear-gradient(90deg, transparent 0%, rgb(1, 5, 53) 0%);
 } 
 
 .loadPopup-subtitle-container {

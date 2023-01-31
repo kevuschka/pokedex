@@ -93,6 +93,7 @@ async function init() {
     cleanValues();
     renderHeader();
     renderPokemonsPage(0, 40);
+    closeLoadPopup();
 }
 
 
@@ -104,7 +105,7 @@ function renderLoadPopup() {
 
 
 function templateLoadPopup() {
-    return `<div class="loadPopup-full absolute flex smooth-trans d-none" id="loadPopup-full">
+    return `<div class="loadPopup-full absolute flex d-none" id="loadPopup-full">
                 <div class="loadPopup-container flex column smooth-trans" id="loadPopup-container">
                     <div class="loadPopup-logo-container relative">
                         <img class="loadPopup-image" src="assets/img/pokedex_logo.png" alt="pokemon-logo">
@@ -112,7 +113,7 @@ function templateLoadPopup() {
                     </div>
                     <div class="loadPopup-subtitle-container flex smooth-trans" id="loadPopup-subtitle-container">
                         <p>Loading...</p>
-                        <img class="loading-circle smooth-trans" id="loading-circle" src="assets/img/loading.png" alt="loading-circle">
+                        <img class="loading-circle smooth-trans" id="loading-circle" src="assets/img/loading1.png" alt="loading-circle">
                     </div>
                 </div>
             </div>`;
@@ -129,13 +130,30 @@ function openLoadPopup() {
     if(allPokemons.length == 0) {
         document.getElementById('popups').style.minHeight = '100vh';
         removeClasslist('loadPopup-full', 'd-none');
+    } else {
+        document.getElementById('popups').style.minHeight = '100vh';
+        addClasslist('loadPopup-full', 'opa-off');
+        removeClasslist('loadPopup-full', 'd-none');
+        document.getElementById('loadPopup-image-overlay').style.backgroundImage = `linear-gradient(90deg, transparent 100%, rgb(1, 5, 53) 0%)`;
+        setTimeout(() => {
+            addClasslist('loadPopup-full', 'opa-off');
+        }, 400);
+        setTimeout(() => {
+            closeLoadPopup();
+        }, 1000);
     }
 }
 
 
 function closeLoadPopup() {
-    document.getElementById('popups').style.minHeight = '';
-    addClasslist('loadPopup-full', 'd-none');
+    addClasslist('loadPopup-full', 'opa-off');
+    setTimeout(() => {
+        document.getElementById('popups').style.minHeight = '';
+    }, 410);
+    setTimeout(() => {
+        removeClasslist('loadPopup-full', 'opa-off');
+        addClasslist('loadPopup-full', 'd-none');
+    }, 1000);
 }
 
 ///////////////////////////////  L O C A L S T O R A G E  ///////////////////////////////
@@ -180,7 +198,6 @@ async function loadAllPokemons() {
     if(allPokemons.length == 0) {
         await getAllPokemonsData();
         localStorage.setItem('allPokemons', JSON.stringify(allPokemons));
-        closeLoadPopup();
     }
 }
 
@@ -221,7 +238,7 @@ async function renderPokemonsElementData(basic) {
         console.log(`allPokemons:`, allPokemons);
         loadImageVisibility = ((i/basic['results'].length) * 100).toFixed(1);
         fadeImageVisibility += loadImageVisibility+10;
-        document.getElementById('loadPopup-image-overlay').style.backgroundImage = `linear-gradient(90deg, transparent ${loadImageVisibility}%, white 0%)`;
+        document.getElementById('loadPopup-image-overlay').style.backgroundImage = `linear-gradient(90deg, transparent ${loadImageVisibility}%, rgb(1, 5, 53) 0%)`;
         loadCircleDegree += 10;
         document.getElementById('loading-circle').style.transform = `rotate(${loadCircleDegree}deg)`;
     }
