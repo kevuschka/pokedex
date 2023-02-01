@@ -87,7 +87,6 @@ html {
 
 .opa-off {
     opacity: 0;
-    /* backdrop-filter: ; */
 }
 
 .opa-on {
@@ -131,7 +130,7 @@ html {
     background-color: rgb(1, 5, 53);
     z-index: 2;
     color: white;
-    transition: all 400ms ease-in-out;
+    transition: all 400ms ease-out;
 }
 
 .loadPopup-image {
@@ -422,7 +421,6 @@ html {
 }
 
 .pokemon-selected-info-tab-container {
-    justify-content: space-evenly;
     align-items: center;
     padding: 22px 22px 0;
     flex-wrap: nowrap;
@@ -505,13 +503,6 @@ html {
     width: 48px !important;
 }
 
-.table-titles {
-    font-size: 18px;
-    color: rgba(0,0,0,0.3);
-    min-width: 130px;
-    width: 160px;
-}
-
 .pokemon-selected-info-type-defense-container {
     gap: 12px
 }
@@ -522,7 +513,7 @@ html {
 }
 
 .pokemon-info-type-defense-damage-container {
-    gap: 30px;
+    gap: 8px;
     padding-top: 10px;
 }
 
@@ -551,7 +542,52 @@ html {
     padding-top: 5px;
 }
 
+/*//////////////////////////////  E V O L U T I O N */
 
+.pokemon-selected-info-chain-container {
+    gap: 32px;
+}
+
+.pokemon-selected-info-chain {
+    justify-content: space-between;
+}
+
+.pokemon-selected-info-chain-pokemon {
+    align-items: center;
+    opacity: 0.9;
+    transition: all 125ms ease-in-out;
+}
+
+.pokemon-selected-info-chain-pokemon:hover {
+    opacity: 1;
+    
+}
+
+.pokemon-selected-info-chain-pokemon-image {
+    width: 100px;
+    transition: all 125ms ease-in-out;
+}
+
+.pokemon-selected-info-chain-pokemon-image:hover {
+    transform: scale(1.02);
+}
+
+.pokemon-selected-info-chain-arrow {
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+}
+
+.pokemon-selected-info-chain-arrow > img {
+    width: 40px;
+}
+
+.table-titles {
+    font-size: 18px;
+    color: rgba(0,0,0,0.3);
+    min-width: 130px;
+    width: 160px;
+}
 
 @media screen and (min-width: 1400px) {
     .header-wrapper {

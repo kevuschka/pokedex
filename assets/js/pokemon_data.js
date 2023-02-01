@@ -17,21 +17,29 @@ let nameMethodsData = {
 
 async function renderPokemon(i) {
     document.getElementById(`pokemon-list-element-container-${i}`).style.border = `inset`;
+    showSelectedPokemonWrapper(i);
+    scrollUpPokemonInfoOverlay();
     await getSelectedPokemonAboutData(i);
     if(sideWrapperIsOpen) {
-        removeClasslist(`pokemon-selected-overlay-wrapper`, `pad-top-50`);
-        setTimeout(() => {
-            renderPokemonContent();
-        }, 200);
+        // setTimeout(() => {
+        //     renderPokemonContent();
+        // }, 200);
+        await renderPokemonContent();
     } else {
         renderPokemonTemplate();
         await renderPokemonContent();
     }
+    showSelectedPokemonInfo();
     unmarkLastSelectedPokemon(); 
     selectTab(1);
     selectedPokemonIndex = i;
-    showSelectedPokemonWrapper(i);
+    // showSelectedPokemonWrapper(i);
     await getSelectedPokemonOtherSectionsData(i);
+}
+
+
+function scrollUpPokemonInfoOverlay() {
+    if(sideWrapperIsOpen) removeClasslist(`pokemon-selected-overlay-wrapper`, `pad-top-50`);
 }
 
 
@@ -46,7 +54,7 @@ async function getSelectedPokemonAboutData(i) {
 
 
 function copyPokemonAboutData(i) {
-    pokemonData['name']['name'] = allPokemons[i]['name']['name'];
+    pokemonData['name']['en'] = allPokemons[i]['name']['en'];
     pokemonData['id'] = allPokemons[i]['id'];
     pokemonData['image'] = allPokemons[i]['image'];
     pokemonData['types'] = allPokemons[i]['types'];
@@ -65,6 +73,7 @@ async function getSelectedPokemonAboutDatas() {
     let pokemon = await response.json();
     getPokemonHeight(pokemon);
     getPokemonWeight(pokemon);
+    await getPokemonAbilities(pokemon);
     await getSelectedPokemonAboutSpeciesData(pokemon);
     await getPokemonTypeDamageData(pokemon);
 }
@@ -76,12 +85,16 @@ async function getSelectedPokemonAboutSpeciesData(pokemon) {
     let species = await response.json();
     getPokemonDescription(species);
     getPokemonOptionalStatus(species);
+    getPokemonSpecies(species);
+    getPokemonGrowthRate(species);
+    getPokemonEggGroups(species);
+    getPokemonHatchCounter(species);
 }
 
 ///////////////////////////////  T H E   O T H E R   S E C T I O N S
 
 async function getSelectedPokemonOtherSectionsData(i) {
-    currentPokemon['name']['names'] = allPokemons[i]['name']['names'];
+    currentPokemon['name']['de'] = allPokemons[i]['name']['de'];
     currentPokemon['about']['habitat'] = allPokemons[i]['about']['habitat'];
     await getSelectedPokemonOtherSectionsDatas(i);
     makeOtherSectionTabsVisible();
@@ -100,11 +113,11 @@ async function getSelectedPokemonOtherSectionsDatas(i) {
     getStats(pokemon);
     await getSelectedPokemonLocationData(pokemon);
     getPokemonMoves(pokemon);
-    await getSelectedPokemonOtherSectionsSpeciesData(pokemon, currentPokemon['id']);
+    await getSelectedPokemonOtherSectionsSpeciesData(pokemon);
 }
 
 
-async function getSelectedPokemonOtherSectionsSpeciesData(pokemon, id) {
+async function getSelectedPokemonOtherSectionsSpeciesData(pokemon) {
     let url = pokemon['species']['url'];
     let response = await fetch(url);
     let species = await response.json();
@@ -112,7 +125,7 @@ async function getSelectedPokemonOtherSectionsSpeciesData(pokemon, id) {
     getPokemonCaptureRate(species);
     getAllGenerations(species);
     getPokemonHabitat(species);
-    await renderPokemonEvolutionChain(species, id);
+    await renderPokemonEvolutionChain(species);
 }
 
 ///////////////////////////////  P O K E M O N   D E S C R I P T I O N  ///////////////////////////////
@@ -133,7 +146,7 @@ function getPokemonDescription(species) {
 ///////////////////////////////  P O K E M O N   N A M E  ///////////////////////////////
 
 function getPokemonName(basicData) {
-    pokemonData['name']['name'] = returnNameFormatted(basicData);
+    pokemonData['name']['en'] = returnNameFormatted(basicData);
 }
 
 ///////////////////////////////  A L L   P O K E M O N   N A M E S  ///////////////////////////////
@@ -143,9 +156,12 @@ function getPokemonName(basicData) {
  * @returns an array with names of a pokemon (in different language)
  */
 function getAllNames(species) {
-    pokemonData['name']['names'] = [];
+    pokemonData['name']['de'] = '';
     for (let i = 0; i < species['names'].length; i++)
-        pokemonData['name']['names'].push(species['names'][i]['name']);
+        if(species['names'][i]['language']['name'] == 'de') {
+            pokemonData['name']['de'] = species['names'][i]['name'];
+            break;
+        }
 }
 
 ///////////////////////////////  P O K E M O N   G E N E R A T I O N S  ///////////////////////////////
@@ -204,6 +220,7 @@ function getPokemonSpecies(species) {
     pokemonData['about']['species'] = [];
     for (let i = 0; i < species['genera'].length; i++) {
         if (species['genera'][i]['language']['name'] == lang) {
+            // pokemonData['about']['species'].push(species['genera'][i]['genus']);
             pokemonData['about']['species'].push(species['genera'][i]['genus']);
             break;
         } 
@@ -270,6 +287,7 @@ async function getPokemonAbilities(pokemon) {
 async function getPokemonGrowthRate(species) {
     pokemonData['about']['growth_rate'] = [];
     if(species['growth_rate'])
+        // pokemonData['about']['growth_rate'].push(returnNameFormatted(species['growth_rate']['name']));
         pokemonData['about']['growth_rate'].push(returnNameFormatted(species['growth_rate']['name']));
 }
 
@@ -279,6 +297,7 @@ async function getPokemonEggGroups(species) {
     pokemonData['about']['egg_groups'] = [];
     if(species['egg_groups'].length > 0) 
         for (let i = 0; i < species['egg_groups'].length; i++)
+            // pokemonData['about']['egg_groups'].push(returnNameFormatted(species['egg_groups'][i]['name']));
             pokemonData['about']['egg_groups'].push(returnNameFormatted(species['egg_groups'][i]['name']));
 }
 
@@ -358,6 +377,7 @@ function getPokemonOptionalStatus(species) {
 
 function getPokemonHatchCounter(species) {
     if(species['hatch_counter']) 
+        // pokemonData['hatch_counter'] = species['hatch_counter'];
         pokemonData['hatch_counter'] = species['hatch_counter'];
 }
 

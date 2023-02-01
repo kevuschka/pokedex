@@ -9,67 +9,10 @@ let pagePokemonsElementData = [];
 
 
 
-let allPokemonsBasicData = {
-    'count': '',
-    'results': {
-        'results': [],
-        'names': [],
-        'generations': [],
-    }
-};
+let allPokemonsBasicData;
 
 let allPokemons = [];
-let pokemonData = {
-    'name': 
-        {
-            'name': '',
-            'names': [],
-        },
-    'description': '',
-    'generations': [],
-    'id':'',
-    'image': '',
-    'types': [],
-    'background_color': '',
-    'is_baby': false,
-    'is_legendary': false,
-    'is_mythical': false,
-    'hatch_counter': '',
-    'about': 
-        {   
-            'species' :  [],
-            'habitat': [],
-            'height' : 
-                {
-                    'meter': '',
-                    'inch': '',
-                },
-            'weight' : 
-                {
-                    'kg': '',
-                    'lbs': '',
-                },
-            'abilities' : [],
-            'growth_rate': [],
-            'egg_groups': [],
-        },
-    'base_stats': 
-        {   
-            'stats': [],
-            'total': '',
-            'type_defense': 
-                {
-                    'damage_to': [],
-                    'damage_from': [],
-                },
-        },
-    'evolution':  [],
-    'locations': [],
-    'base_happiness': [],
-    'capture_rate': [],
-    'base_exp': '', 
-    'moves': [],
-};
+let pokemonData;
 
 
 let favPokemons = [];
@@ -82,13 +25,18 @@ let currentDate;
 let count;
 let lang = 'en';
 
+let dataLoaded = false;
+
 
 async function init() {
     await includeHTML();
     await getLocalStorage();
     await setLocalStorage();
     renderLoadPopup();
-    await loadAllPokemons();
+    if(allPokemons.length == 0) {
+        await loadAllPokemons();
+        dataLoaded = true;
+    }
     // await updateAllPokemonsData();
     cleanValues();
     renderHeader();
@@ -96,65 +44,6 @@ async function init() {
     closeLoadPopup();
 }
 
-
-function renderLoadPopup() {
-    let content = document.getElementById('popups');
-    content.innerHTML = templateLoadPopup();
-    openLoadPopup();
-}
-
-
-function templateLoadPopup() {
-    return `<div class="loadPopup-full absolute flex d-none" id="loadPopup-full">
-                <div class="loadPopup-container flex column smooth-trans" id="loadPopup-container">
-                    <div class="loadPopup-logo-container relative">
-                        <img class="loadPopup-image" src="assets/img/pokedex_logo.png" alt="pokemon-logo">
-                        <div class="loadPopup-image-overlay absolute smooth-trans" id="loadPopup-image-overlay"></div>
-                    </div>
-                    <div class="loadPopup-subtitle-container flex smooth-trans" id="loadPopup-subtitle-container">
-                        <p>Loading...</p>
-                        <img class="loading-circle smooth-trans" id="loading-circle" src="assets/img/loading1.png" alt="loading-circle">
-                    </div>
-                </div>
-            </div>`;
-}
-
-
-let myInterval;
-let loadImageVisibility = 0;
-let fadeImageVisibility = 10;
-let loadCircleDegree = 0;
-
-
-function openLoadPopup() {
-    if(allPokemons.length == 0) {
-        document.getElementById('popups').style.minHeight = '100vh';
-        removeClasslist('loadPopup-full', 'd-none');
-    } else {
-        document.getElementById('popups').style.minHeight = '100vh';
-        addClasslist('loadPopup-full', 'opa-off');
-        removeClasslist('loadPopup-full', 'd-none');
-        document.getElementById('loadPopup-image-overlay').style.backgroundImage = `linear-gradient(90deg, transparent 100%, rgb(1, 5, 53) 0%)`;
-        setTimeout(() => {
-            addClasslist('loadPopup-full', 'opa-off');
-        }, 400);
-        setTimeout(() => {
-            closeLoadPopup();
-        }, 1000);
-    }
-}
-
-
-function closeLoadPopup() {
-    addClasslist('loadPopup-full', 'opa-off');
-    setTimeout(() => {
-        document.getElementById('popups').style.minHeight = '';
-    }, 410);
-    setTimeout(() => {
-        removeClasslist('loadPopup-full', 'opa-off');
-        addClasslist('loadPopup-full', 'd-none');
-    }, 1000);
-}
 
 ///////////////////////////////  L O C A L S T O R A G E  ///////////////////////////////
 
@@ -223,6 +112,7 @@ async function getCount() {
 
 async function renderPokemonsElementData(basic) {
     allPokemons = [];
+    loadCircleDegree = 0;
     for (let i = 0; i < basic['results'].length; i++) {
         cleanPokemonData();
         let url = basic['results'][i]['url'];
@@ -233,12 +123,10 @@ async function renderPokemonsElementData(basic) {
         getPokemonImage(pokemon);
         getPokemonTypes(pokemon);
         await getPokemonSpeciesData(pokemon);
-        await getPokemonAbilities(pokemon);
+        // await getPokemonAbilities(pokemon);
         allPokemons.push(pokemonData);
-        console.log(`allPokemons:`, allPokemons);
-        loadImageVisibility = ((i/basic['results'].length) * 100).toFixed(1);
-        fadeImageVisibility += loadImageVisibility+10;
-        document.getElementById('loadPopup-image-overlay').style.backgroundImage = `linear-gradient(90deg, transparent ${loadImageVisibility}%, rgb(1, 5, 53) 0%)`;
+        // console.log(`allPokemons:`, allPokemons);
+        document.getElementById('loadPopup-image-overlay').style.backgroundImage = `linear-gradient(90deg, transparent ${((i/basic['results'].length) * 100).toFixed(1)}%, rgb(1, 5, 53) 0%)`;
         loadCircleDegree += 10;
         document.getElementById('loading-circle').style.transform = `rotate(${loadCircleDegree}deg)`;
     }
@@ -251,10 +139,10 @@ async function getPokemonSpeciesData(pokemon) {
     let species = await response.json();
     getAllNames(species);
     getPokemonBackgroundColor(species);
-    getPokemonSpecies(species);
-    getPokemonGrowthRate(species);
-    getPokemonEggGroups(species);
-    getPokemonHatchCounter(species);
+    // getPokemonSpecies(species);
+    // getPokemonGrowthRate(species);
+    // getPokemonEggGroups(species);
+    // getPokemonHatchCounter(species);
 }
 
 
@@ -341,7 +229,7 @@ function templatePokemonsListElement(i) {
     return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="renderPokemon(${i})" onmousedown="clickOnElement(${i})" onmouseup="clickOutElement(${i})">
                 <div class="pokemon-list-element flex column">
                     <div class="pokemon-list-element-id-container flex absolute"><p>#${returnPokemonId(allPokemons[i]['id'])}</p></div>
-                    <div class="pokemon-list-element-name-container"><p>${allPokemons[i]['name']['name']}</p></div>
+                    <div class="pokemon-list-element-name-container"><p>${allPokemons[i]['name']['en']}</p></div>
                     <div class="pokemon-list-element-type-container flex" id="pokemon-list-element-type-container-${i}"></div>
                     <img src="${allPokemons[i]['image']}" class="pokemon-list-element-image absolute" id="pokemon-list-element-image-${i}">
                 </div>
@@ -439,7 +327,7 @@ function returnNameFormatted(name) {
         for (let j = 0; j < nameArray.length; j++) {
             betterArray[j] = `${nameArray[j].charAt(0).toUpperCase()}` + `${nameArray[j].slice(1)}`;
             finalName += `${betterArray[j]}`;
-            if(nameArray.length > 1) finalName += ' ';
+            if(nameArray.length > (j+1)) finalName += ' ';
         }
     return finalName;
 }
@@ -463,8 +351,8 @@ function cleanPokemonData() {
     pokemonData = {
         'name': 
             {
-                'name': '',
-                'names': [],
+                'en': '',
+                'de': '',
             },
         'description': '',
         'generations': [],

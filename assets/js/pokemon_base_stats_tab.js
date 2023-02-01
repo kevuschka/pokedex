@@ -17,7 +17,7 @@ function renderPokemonInfoStatsTemplate() {
 
 function templatePokemonInfoSTATS() {
     return `<div class="pokemon-selected-info-stats-wrapper flex column w-100">
-                <div class="pokemon-selected-info-stats-values-container" id="pokemon-selected-info-stats-values-container"></div>
+                <div class="pokemon-selected-info-stats-values-container flex column w-100" id="pokemon-selected-info-stats-values-container"></div>
                 <div class="pokemon-selected-info-type-defense-container flex column w-100" id="pokemon-selected-info-type-defense-container"></div>
             </div>`;
 }
@@ -74,9 +74,9 @@ function renderBarTotal() {
 
 function templatePokemonInfoStatsTypeDefense() {
     return `<p class="subTitle">Type Defense</p>
-            <p class="subSubTitle">The effectiveness of each type on ${returnNameFormatted(currentPokemon['name']['name'])}.</p>
+            <p class="subSubTitle">The effectiveness of each type on ${returnNameFormatted(currentPokemon['name']['en'])}.</p>
             <div id="pokemon-info-type-defense-damage-from-container"></div>
-            <p class="subSubTitle">The effectiveness on each type from ${returnNameFormatted(currentPokemon['name']['name'])}.</p>
+            <p class="subSubTitle">The effectiveness on each type from ${returnNameFormatted(currentPokemon['name']['en'])}.</p>
             <div id="pokemon-info-type-defense-damage-to-container"></div>`;
 }
 

@@ -62,10 +62,6 @@ function templatePokemonInfoTabs() {
 ///////////////////////////////  R E N D E R   E V O L U T I O N  ///////////////////////////////
 // ...
 
-function templatePokemonInfoEVOLUTION() {
-
-}
-
 
 
 /////////////////////////////////////////
@@ -79,7 +75,7 @@ function templatePokemonInfoLOCATIONS() {}
 // CONTENT
 async function renderPokemonContent() {
     let headerNameContainer = document.getElementById(`pokemon-selected-header-name-container`);
-    headerNameContainer.innerHTML = `<p>${currentPokemon['name']['name']}</p><p>#${returnPokemonId(currentPokemon['id'])}</p>`;
+    headerNameContainer.innerHTML = `<p>${currentPokemon['name']['en']}</p><p>#${returnPokemonId(currentPokemon['id'])}</p>`;
     document.getElementById(`pokemon-selected-image`).src = `${currentPokemon['image']}`;
     renderSelectedPokemonTypes(`pokemon-selected-header-type-container`);
     renderSelectedPokemonStatus(`pokemon-selected-header-status`);
@@ -114,10 +110,9 @@ function showSelectedPokemonWrapper(i) {
     setTimeout(() => {
         let height = document.getElementById(`pokemon-list-wrapper`).clientHeight;
         document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `${height}px`;
-    }, 130);
+    }, 135);
     if(window.innerWidth > 999) document.getElementById(`pokemon-selected-wrapper`).style.width = `60%`;
     else document.getElementById(`pokemon-selected-wrapper`).style.width = `100%`;
-    showSelectedPokemonInfo();
 }
 
 
@@ -165,7 +160,7 @@ function selectPokemonTab(i) {
     if(i == 1) renderPokemonInfoAboutTemplate();
     if(i == 2) renderPokemonInfoStatsTemplate();
     if(i == 3) renderPokemonInfoEvolutionTemplate();
-    if(i == 4){}
+    if(i == 4) {}
     coloringSubtitles();
 }
 
