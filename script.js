@@ -31,7 +31,7 @@ async function init() {
     await getLocalStorage();
     setLocalStorage();
     renderLoadPopup();
-    await loadAllPokemonsBasicData();
+    await createSavedPokemonsArray();
     cleanValues();
     renderHeader();
     renderPokemonsPage(0, 40);
@@ -47,8 +47,6 @@ async function getLocalStorage() {
     sound = JSON.parse(localStorage.getItem('sound')) || 1;
     pokemonsPerPage = JSON.parse(localStorage.getItem('pokemonsPerPage')) || 40;
     pokemonsPerPageMobile = JSON.parse(localStorage.getItem('pokemonsPerPageMobile')) || 40;
-    currentDate = await JSON.parse(localStorage.getItem('currentDate')) || '';
-    allPokemons = await JSON.parse(localStorage.getItem(`allPokemons`)) || []; 
     favPokemons = await JSON.parse(localStorage.getItem(`favPokemons`)) || [];
     savedPokemons = await JSON.parse(localStorage.getItem(`savedPokemons`)) || [];
 }
@@ -60,28 +58,10 @@ function setLocalStorage() {
     localStorage.setItem('pokemonsPerPage', pokemonsPerPage);
     localStorage.setItem('pokemonsPerPageMobile', pokemonsPerPageMobile);
     localStorage.setItem('savedPokemons', JSON.stringify(savedPokemons));
+    localStorage.setItem('favPokemons', JSON.stringify(favPokemons));
 }
 
 ///////////////////////////////  P O K E M O N   D A T A  ///////////////////////////////
-
-async function loadAllPokemonsBasicData() {
-    if(allPokemons.length == 0) {
-        await getAllPokemonsBasicData();
-        localStorage.setItem('allPokemons', JSON.stringify(allPokemons));
-        dataLoaded = true;
-    }
-}
-
-
-async function getAllPokemonsBasicData() {
-    let url = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${await getCount()}`;
-    let response = await fetch(url);
-    let allPokemonList = await response.json();
-    console.log('originalList:', allPokemonList);
-    await renderAllPokemonsBasicData(allPokemonList);
-    localStorage.setItem(`allPokemons`, JSON.stringify(allPokemons));
-} 
-
 
 async function getCount() {
     let url = `https://pokeapi.co/api/v2/pokemon`;
@@ -92,46 +72,34 @@ async function getCount() {
 }
 
 
-async function renderAllPokemonsBasicData(basic) {
-    allPokemons = [];
-    loadCircleDegree = 0;
-    createSavedPokemonsArray(basic);
-    for (let i = 0; i < basic['results'].length; i++) {
-        cleanPokemonData();
-        getPokemonName(basic['results'][i]['name']);
-        getPokemonsBasicData(i);
-        allPokemons.push(pokemonData);
-        loadCircleDegree += 5;
-        changeLoadScreen(basic, i , loadCircleDegree);
-    }
-}
-
-
-function createSavedPokemonsArray(basic) {
+async function createSavedPokemonsArray() {
+    let url = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${await getCount()}`;
+    let response = await fetch(url);
+    let allPokemonList = await response.json();
+    console.log('originalList:', allPokemonList);
     if(savedPokemons.length == 0) {
-        for (let i = 0; i < basic['results'].length; i++) {
+        for (let i = 0; i < allPokemonList['results'].length; i++) {
             savedPokemons.push({});
         }
         localStorage.setItem('savedPokemons', JSON.stringify(savedPokemons));
     }
+    dataLoaded = true;
 } 
 
 
-function getPokemonsBasicData(i) {
-    getAllNames(i);
-    pokemonData['id'] = allPokemonsBasicData[i]['id'];
-    getPokemonBackgroundColor(i);
-    getPokemonImage(i);
-    getPokemonTypes(i);
-    getAllNames(i);
+function addToSavedPokemons(i, pokemon) {
+    savedPokemons[i] = pokemon;
+    localStorage.setItem('savedPokemons', JSON.stringify(savedPokemons));
 }
 
 
-function changeLoadScreen(basic, i , degree) {
-    document.getElementById('loadPopup-image-overlay').style.backgroundImage = `linear-gradient(90deg, transparent ${((i/basic['results'].length) * 100).toFixed(0)}%, rgb(1, 5, 53) 0%)`;
-    document.getElementById('loading-circle').style.transform = `rotate(${degree}deg)`;
+function availableInPokemonsArray(i) {
+    if(savedPokemons[i].length > 1) {
+        currentPokemon = savedPokemons[i];
+        return true;
+    } 
+    else return false;
 }
-
 
 ///////////////////////////////  L A T E S T   D A T E  ///////////////////////////////
 
@@ -202,7 +170,7 @@ function templatePokemonList() {
 async function renderPokemonsListContent(elementNumber, content) {
     content.innerHTML += templatePokemonsListElement(elementNumber);
     renderPokemonTypes(elementNumber, `pokemon-list-element-type-container-${elementNumber}`);
-    let color = allPokemons[elementNumber]['background_color'];
+    let color = allPokemonsBasicData[elementNumber]['background_color'];
     addClasslist(`pokemon-list-element-container-${elementNumber}`, `${color}`);
 }
 
@@ -215,10 +183,10 @@ function currentPage() {
 function templatePokemonsListElement(i) {
     return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="renderPokemon(${i})" onmousedown="clickOnElement(${i})" onmouseup="clickOutElement(${i})">
                 <div class="pokemon-list-element flex column">
-                    <div class="pokemon-list-element-id-container flex absolute"><p>#${returnPokemonId(allPokemons[i]['id'])}</p></div>
-                    <div class="pokemon-list-element-name-container"><p>${allPokemons[i]['name']['en']}</p></div>
+                    <div class="pokemon-list-element-id-container flex absolute"><p>#${returnPokemonId(allPokemonsBasicData[i]['id'])}</p></div>
+                    <div class="pokemon-list-element-name-container"><p>${allPokemonsBasicData[i]['name']['en']}</p></div>
                     <div class="pokemon-list-element-type-container flex" id="pokemon-list-element-type-container-${i}"></div>
-                    <img src="${allPokemons[i]['image']}" class="pokemon-list-element-image absolute" id="pokemon-list-element-image-${i}">
+                    <img src="${allPokemonsBasicData[i]['image']}" class="pokemon-list-element-image absolute" id="pokemon-list-element-image-${i}">
                 </div>
             </div>`;
 }
@@ -227,8 +195,8 @@ function templatePokemonsListElement(i) {
 function renderPokemonTypes(i, contentId) {
     let content = document.getElementById(contentId);
     content.innerHTML = '';
-    for (let j = 0; j < allPokemons[i]['types'].length; j++) 
-        content.innerHTML += `<div class="pokemon-list-element-type flex"><p>${allPokemons[i]['types'][j]}</p></div>`;
+    for (let j = 0; j < allPokemonsBasicData[i]['types'].length; j++) 
+        content.innerHTML += `<div class="pokemon-list-element-type flex"><p>${allPokemonsBasicData[i]['types'][j]}</p></div>`;
 }
 
 

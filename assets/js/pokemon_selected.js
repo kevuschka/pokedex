@@ -160,7 +160,8 @@ function selectPokemonTab(i) {
     if(i == 1) renderPokemonInfoAboutTemplate();
     if(i == 2) renderPokemonInfoStatsTemplate();
     if(i == 3) renderPokemonInfoEvolutionTemplate();
-    if(i == 4) {}
+    if(i == 4) renderPokemonInfoMovesTemplate();
+    if(i == 5) {}
     coloringSubtitles();
 }
 

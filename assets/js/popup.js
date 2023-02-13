@@ -79,7 +79,7 @@ function closeLoadPopupLater() {
     }, 1800);
     setTimeout(() => {
         removeClasslist('loadPopup-full', 'opa-off');
+        clearInterval(myInterval);
         addClasslist('loadPopup-full', 'd-none');
     }, 1800);
-    clearInterval(myInterval);
 }

@@ -3,7 +3,7 @@ let sideWrapperIsOpen = false;
 let stats = [];
 let current
 let currentPokemon = '';
-
+let pokemonNotSaved = true;
 let nameVersionsData = {
     'name': '',
     'versions': [],   
@@ -16,10 +16,12 @@ let nameMethodsData = {
 
 
 async function renderPokemon(i) {
+    currentPokemon = '';
     document.getElementById(`pokemon-list-element-container-${i}`).style.border = `inset`;
     showSelectedPokemonWrapper(i);
     scrollUpPokemonInfoOverlay();
-    await getSelectedPokemonAboutData(i);
+    if(availableInPokemonsArray(i)) pokemonNotSaved = false;
+    if(pokemonNotSaved) await getSelectedPokemonAboutData(i);
     if(sideWrapperIsOpen) {
         await renderPokemonContent();
     } else {
@@ -30,7 +32,11 @@ async function renderPokemon(i) {
     unmarkLastSelectedPokemon(); 
     selectTab(1);
     selectedPokemonIndex = i;
-    await getSelectedPokemonOtherSectionsData(i);
+    if(pokemonNotSaved) {
+        await getSelectedPokemonOtherSectionsData(i);
+        addToSavedPokemons(i, currentPokemon);
+        pokemonNotSaved = true;
+    }
 }
 
 
@@ -43,23 +49,23 @@ async function getSelectedPokemonAboutData(i) {
     currentPokemon = '';
     cleanPokemonData();
     copyPokemonAboutData(i);
-    await getSelectedPokemonAboutDatas();
+    await getSelectedPokemonAboutDatas(i);
     currentPokemon = pokemonData;
     cleanPokemonData();
 }
 
 
 function copyPokemonAboutData(i) {
-    pokemonData['name']['en'] = allPokemons[i]['name']['en'];
-    pokemonData['id'] = allPokemons[i]['id'];
-    pokemonData['image'] = allPokemons[i]['image'];
-    pokemonData['types'] = allPokemons[i]['types'];
-    pokemonData['background_color'] = allPokemons[i]['background_color'];
+    pokemonData['name']['en'] = allPokemonsBasicData[i]['name']['en'];
+    pokemonData['id'] = allPokemonsBasicData[i]['id'];
+    pokemonData['image'] = allPokemonsBasicData[i]['image'];
+    pokemonData['types'] = allPokemonsBasicData[i]['types'];
+    pokemonData['background_color'] = allPokemonsBasicData[i]['background_color'];
 }
 
 
-async function getSelectedPokemonAboutDatas() {
-    let url = `https://pokeapi.co/api/v2/pokemon/${pokemonData['id']}`;
+async function getSelectedPokemonAboutDatas(i) {
+    let url = `https://pokeapi.co/api/v2/pokemon/${allPokemonsBasicData[i]['id']}`;
     let response = await fetch(url);
     let pokemon = await response.json();
     getPokemonHeight(pokemon);
@@ -85,8 +91,7 @@ async function getSelectedPokemonAboutSpeciesData(pokemon) {
 ///////////////////////////////  T H E   O T H E R   S E C T I O N S
 
 async function getSelectedPokemonOtherSectionsData(i) {
-    currentPokemon['name']['de'] = allPokemons[i]['name']['de'];
-    currentPokemon['about']['habitat'] = allPokemons[i]['about']['habitat'];
+    currentPokemon['name']['de'] = allPokemonsBasicData[i]['name']['de'];
     await getSelectedPokemonOtherSectionsDatas(i);
     makeOtherSectionTabsVisible();
 }
@@ -137,19 +142,9 @@ function getPokemonDescription(species) {
 ///////////////////////////////  P O K E M O N   N A M E  ///////////////////////////////
 
 function getPokemonName(basicData) {
-    pokemonData['name']['en'] = returnNameFormatted(basicData);
+    return returnNameFormatted(basicData);
 }
 
-///////////////////////////////  A L L   P O K E M O N   N A M E S  ///////////////////////////////
-/**
- * That function loads the names of a pokemon in different languages.
- * @param {object} species - species is the species JSON array of that pokemon to get the names data in 'names'
- * @returns an array with names of a pokemon (in different language)
- */
-function getAllNames(i) {
-    if(pokemonData['name']['en'].toLowerCase() == allPokemonsBasicData[i]['name']['en'].toLowerCase())
-        pokemonData['name'] = allPokemonsBasicData[i]['name'];
-}
 
 ///////////////////////////////  P O K E M O N   G E N E R A T I O N S  ///////////////////////////////
 /**
@@ -175,30 +170,13 @@ function returnPokemonId(id) {
     } else return  id; 
 }
 
-///////////////////////////////  P O K E M O N   I M A G E  ///////////////////////////////
-
-function getPokemonImage(i) {
-    pokemonData['image'] = allPokemonsBasicData[i]['image'];
-}
-
-///////////////////////////////  P O K E M O N   T Y P E S  ///////////////////////////////
-
-function getPokemonTypes(i) {
-    pokemonData['types'] = allPokemonsBasicData[i]['types'];
-}
-
-///////////////////////////////  P O K E M O N   B A C K G R O U N D - C O L O R  ///////////////////////////////
-
-function getPokemonBackgroundColor(i) {
-    pokemonData['background_color'] = allPokemonsBasicData[i]['background_color'];
-}
 
 ///////////////////////////////  P O K E M O N   S P E C I E S  ///////////////////////////////
 
 function getPokemonSpecies(species) {
     pokemonData['about']['species'] = [];
     for (let i = 0; i < species['genera'].length; i++) {
-        if (species['genera'][i]['language']['name'] == lang) {
+        if (species['genera'][i]['language']['name'] == 'en') {
             pokemonData['about']['species'].push(species['genera'][i]['genus']);
             break;
         } 
@@ -252,7 +230,7 @@ async function getPokemonAbilities(pokemon) {
         let resp = await fetch(url);
         let ability = await resp.json();
         for (let j = 0; j < ability['effect_entries'].length; j++)
-            if (ability['effect_entries'][j]['language']['name'] == lang) {
+            if (ability['effect_entries'][j]['language']['name'] == 'en') {
                 abilityArray.push(ability['effect_entries'][j]['effect']);
                 break;
             }
