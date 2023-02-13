@@ -155,13 +155,15 @@ function getPokemonName(basicData) {
  * @param {object} species - species is the species JSON array of that pokemon to get the names data in 'names'
  * @returns an array with names of a pokemon (in different language)
  */
-function getAllNames(species) {
-    pokemonData['name']['de'] = '';
-    for (let i = 0; i < species['names'].length; i++)
-        if(species['names'][i]['language']['name'] == 'de') {
-            pokemonData['name']['de'] = species['names'][i]['name'];
-            break;
-        }
+function getAllNames(i) {
+    // pokemonData['name']['de'] = '';
+    // for (let i = 0; i < species['names'].length; i++)
+    //     if(species['names'][i]['language']['name'] == 'de') {
+    //         pokemonData['name']['de'] = species['names'][i]['name'];
+    //         break;
+    //     }
+    if(pokemonData['name']['en'].toLowerCase() == allPokemonsBasicData[i]['name']['en'].toLowerCase())
+        pokemonData['name'] = allPokemonsBasicData[i]['name'];
 }
 
 ///////////////////////////////  P O K E M O N   G E N E R A T I O N S  ///////////////////////////////
@@ -190,28 +192,30 @@ function returnPokemonId(id) {
 
 ///////////////////////////////  P O K E M O N   I M A G E  ///////////////////////////////
 
-function getPokemonImage(pokemon) {
-    if (pokemon['sprites']['other']['official-artwork']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['official-artwork']['front_default']}`;
-    else if (pokemon['sprites']['other']['dream_world']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['dream_world']['front_default']}`;
-    else if (pokemon['sprites']['other']['home']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['home']['front_default']}`;
-    else pokemonData['image'] = `assets/img/no_pokemon_image.png`;
+function getPokemonImage(i) {
+    // if (pokemon['sprites']['other']['official-artwork']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['official-artwork']['front_default']}`;
+    // else if (pokemon['sprites']['other']['dream_world']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['dream_world']['front_default']}`;
+    // else if (pokemon['sprites']['other']['home']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['home']['front_default']}`;
+    // else pokemonData['image'] = `assets/img/no_pokemon_image.png`;
+    pokemonData['image'] = allPokemonsBasicData[i]['image'];
 }
 
 ///////////////////////////////  P O K E M O N   T Y P E S  ///////////////////////////////
 
-function getPokemonTypes(pokemon) {
-    pokemonData['types'] = [];
-    for (let j = 0; j < pokemon['types'].length; j++) {
-        let type = pokemon['types'][j]['type']['name'];
-        let typeName = `${type.charAt(0).toUpperCase()}` + `${type.slice(1)}`;
-        pokemonData['types'].push(typeName);
-    }
+function getPokemonTypes(i) {
+    // pokemonData['types'] = [];
+    // for (let j = 0; j < pokemon['types'].length; j++) {
+    //     let type = pokemon['types'][j]['type']['name'];
+    //     let typeName = `${type.charAt(0).toUpperCase()}` + `${type.slice(1)}`;
+    //     pokemonData['types'].push(typeName);
+    // }
+    pokemonData['types'] = allPokemonsBasicData[i]['types'];
 }
 
 ///////////////////////////////  P O K E M O N   B A C K G R O U N D - C O L O R  ///////////////////////////////
 
-function getPokemonBackgroundColor(species) {
-    pokemonData['background_color'] = species['color']['name'];
+function getPokemonBackgroundColor(i) {
+    pokemonData['background_color'] = allPokemonsBasicData[i]['background_color'];
 }
 
 ///////////////////////////////  P O K E M O N   S P E C I E S  ///////////////////////////////

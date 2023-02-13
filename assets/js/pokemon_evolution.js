@@ -40,10 +40,13 @@ function renderPokemonEvoChainData(chain) {
         for (let i = 0; i < chain['evolution_details'].length; i++) {
             let trigger = chain['evolution_details'][i]['trigger']['name'];
             let minLevel = chain['evolution_details'][i]['min_level'];
+            let item = 'null';
+            if (chain['evolution_details'][i]['item'] != null) item = chain['evolution_details'][i]['item']['name'];
             evo['details'] =
                 {
                     'level': minLevel,
                     'trigger': returnNameFormatted(trigger),
+                    'item': returnNameFormatted(item),
                 };
         }
 }

@@ -165,7 +165,7 @@ function unmuteMusic() {
     cleanMusicIcon();
     if(darkmode) removeClasslist(`header-music-mute-dark`, `d-none`);
     else removeClasslist(`header-music-mute`, `d-none`);
-    bgMusic.volume = 0.06;
+    bgMusic.volume = 0.1;
     bgMusic.loop = true;
     bgMusic.play(); 
     bgSound = 1;

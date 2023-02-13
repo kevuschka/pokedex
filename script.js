@@ -9,7 +9,6 @@ let pagePokemonsElementData = [];
 
 
 
-let allPokemonsBasicData;
 
 let allPokemons = [];
 let pokemonData;
@@ -109,27 +108,35 @@ async function getCount() {
     return count;
 }
 
-
 async function renderPokemonsElementData(basic) {
     allPokemons = [];
     loadCircleDegree = 0;
+    
     for (let i = 0; i < basic['results'].length; i++) {
         cleanPokemonData();
         let url = basic['results'][i]['url'];
         let response = await fetch(url);
         let pokemon = await response.json();
         getPokemonName(basic['results'][i]['name']);
-        pokemonData['id'] = pokemon['id'];
-        getPokemonImage(pokemon);
-        getPokemonTypes(pokemon);
-        await getPokemonSpeciesData(pokemon);
+        getAllNames(i);
+        pokemonData['id'] = allPokemonsBasicData[i]['id'];
+        getPokemonBackgroundColor(i);
+        getPokemonImage(i);
+        getPokemonTypes(i);
+        getAllNames(i);
+        //await getPokemonSpeciesData(pokemon);
         // await getPokemonAbilities(pokemon);
         allPokemons.push(pokemonData);
-        // console.log(`allPokemons:`, allPokemons);
-        document.getElementById('loadPopup-image-overlay').style.backgroundImage = `linear-gradient(90deg, transparent ${((i/basic['results'].length) * 100).toFixed(1)}%, rgb(1, 5, 53) 0%)`;
-        loadCircleDegree += 10;
-        document.getElementById('loading-circle').style.transform = `rotate(${loadCircleDegree}deg)`;
+        console.log(`allPokemons:`, allPokemons);
+        loadCircleDegree += 5;
+        changeLoadScreen(basic, i , loadCircleDegree);
     }
+}
+
+
+function changeLoadScreen(basic, i , degree) {
+    document.getElementById('loadPopup-image-overlay').style.backgroundImage = `linear-gradient(90deg, transparent ${((i/basic['results'].length) * 100).toFixed(0)}%, rgb(1, 5, 53) 0%)`;
+    document.getElementById('loading-circle').style.transform = `rotate(${degree}deg)`;
 }
 
 
@@ -137,8 +144,8 @@ async function getPokemonSpeciesData(pokemon) {
     let url = pokemon['species']['url'];
     let response = await fetch(url);
     let species = await response.json();
-    getAllNames(species);
-    getPokemonBackgroundColor(species);
+    // getAllNames(species);
+    // getPokemonBackgroundColor(species); 
     // getPokemonSpecies(species);
     // getPokemonGrowthRate(species);
     // getPokemonEggGroups(species);
@@ -268,6 +275,7 @@ function clickOutElement(i) {
 function selectSound() {
     select.pause();
     select.currentTime = 0;
+    select.volume = 0.5;
     if(sound) select.play();
 }
 
@@ -278,34 +286,34 @@ function noSelectSound() {
     }
 }
 
-function hoverElementOut(i) {
-    noSelectSound();
-}
+// function hoverElementOut(i) {
+//     noSelectSound();
+// }
 
 
-function emptyAllPokemonsBasicData() {
-    return {
-                'count': '',
-                'results': {
-                    'results': [],
-                    'names': [],
-                    'generations': [],
-                },
-            };
-}
+// function emptyAllPokemonsBasicData() {
+//     return {
+//                 'count': '',
+//                 'results': {
+//                     'results': [],
+//                     'names': [],
+//                     'generations': [],
+//                 },
+//             };
+// }
 
 
-function getPokemonsPerPageNumber() {
-    if(window.innerWidth > 800) {
-        if((currentPageIndex + pokemonsPerPage) > count) 
-            return pokemonsPerPage = count - currentPageIndex;
-        else return pokemonsPerPage;
-    } else  {
-        if((currentPageIndex + pokemonsPerPageMobile) > count) 
-            return pokemonsPerPageMobile = count - currentPageIndex;
-        else return pokemonsPerPageMobile;
-    }
-}
+// function getPokemonsPerPageNumber() {
+//     if(window.innerWidth > 800) {
+//         if((currentPageIndex + pokemonsPerPage) > count) 
+//             return pokemonsPerPage = count - currentPageIndex;
+//         else return pokemonsPerPage;
+//     } else  {
+//         if((currentPageIndex + pokemonsPerPageMobile) > count) 
+//             return pokemonsPerPageMobile = count - currentPageIndex;
+//         else return pokemonsPerPageMobile;
+//     }
+// }
 
 ///////////////////////////////  H E L P   F U N C T I O N S  ///////////////////////////////
 

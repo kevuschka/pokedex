@@ -61,7 +61,23 @@ function templatePokemonInfoEvolutionChainSingle(i) {
 function renderPokemonEvolutionArrowDescription(i, chains) {
     let arrowDescription = document.getElementById(`pokemon-selected-info-chain-arrow-description-${i}`);
     if(currentPokemon['evolution'][i+1]['details']['trigger'] == 'Level Up')
-        arrowDescription.innerHTML = `<p>(${currentPokemon['evolution'][i+1]['details']['trigger']} at lvl. ${currentPokemon['evolution'][i+1]['details']['level']})</p>`;
+        arrowDescription.innerHTML = `<p>(${currentPokemon['evolution'][i+1]['details']['trigger']} ${returnLevelUp(i)})</p>`;
+    else if(currentPokemon['evolution'][i+1]['details']['trigger'] == 'Use Item')
+        arrowDescription.innerHTML = `<p>(${currentPokemon['evolution'][i+1]['details']['trigger']}${returnItem(i)})</p>`;
     else arrowDescription.innerHTML = `<p>(${currentPokemon['evolution'][i+1]['details']['trigger']})</p>`;
     
+}
+
+
+function returnLevelUp(i) {
+    if(currentPokemon['evolution'][i+1]['details']['level'] != null)
+        return `at lvl. ${currentPokemon['evolution'][i+1]['details']['level']}`;
+    else return 'at: no info..';
+}
+
+
+function returnItem(i) {
+    if(currentPokemon['evolution'][i+1]['details']['item'] != null)
+        return `: ${currentPokemon['evolution'][i+1]['details']['item']}`;
+    else return ': no info..';
 }
