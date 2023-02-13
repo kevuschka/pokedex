@@ -21,9 +21,6 @@ async function renderPokemon(i) {
     scrollUpPokemonInfoOverlay();
     await getSelectedPokemonAboutData(i);
     if(sideWrapperIsOpen) {
-        // setTimeout(() => {
-        //     renderPokemonContent();
-        // }, 200);
         await renderPokemonContent();
     } else {
         renderPokemonTemplate();
@@ -33,7 +30,6 @@ async function renderPokemon(i) {
     unmarkLastSelectedPokemon(); 
     selectTab(1);
     selectedPokemonIndex = i;
-    // showSelectedPokemonWrapper(i);
     await getSelectedPokemonOtherSectionsData(i);
 }
 
@@ -59,11 +55,6 @@ function copyPokemonAboutData(i) {
     pokemonData['image'] = allPokemons[i]['image'];
     pokemonData['types'] = allPokemons[i]['types'];
     pokemonData['background_color'] = allPokemons[i]['background_color'];
-    pokemonData['about']['species'] = allPokemons[i]['about']['species'];
-    pokemonData['about']['abilities'] = allPokemons[i]['about']['abilities'];
-    pokemonData['about']['growth_rate'] = allPokemons[i]['about']['growth_rate'];
-    pokemonData['about']['egg_groups'] = allPokemons[i]['about']['egg_groups'];
-    pokemonData['hatch_counter'] = allPokemons[i]['hatch_counter'];
 }
 
 
@@ -156,12 +147,6 @@ function getPokemonName(basicData) {
  * @returns an array with names of a pokemon (in different language)
  */
 function getAllNames(i) {
-    // pokemonData['name']['de'] = '';
-    // for (let i = 0; i < species['names'].length; i++)
-    //     if(species['names'][i]['language']['name'] == 'de') {
-    //         pokemonData['name']['de'] = species['names'][i]['name'];
-    //         break;
-    //     }
     if(pokemonData['name']['en'].toLowerCase() == allPokemonsBasicData[i]['name']['en'].toLowerCase())
         pokemonData['name'] = allPokemonsBasicData[i]['name'];
 }
@@ -193,22 +178,12 @@ function returnPokemonId(id) {
 ///////////////////////////////  P O K E M O N   I M A G E  ///////////////////////////////
 
 function getPokemonImage(i) {
-    // if (pokemon['sprites']['other']['official-artwork']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['official-artwork']['front_default']}`;
-    // else if (pokemon['sprites']['other']['dream_world']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['dream_world']['front_default']}`;
-    // else if (pokemon['sprites']['other']['home']['front_default']) pokemonData['image'] = `${pokemon['sprites']['other']['home']['front_default']}`;
-    // else pokemonData['image'] = `assets/img/no_pokemon_image.png`;
     pokemonData['image'] = allPokemonsBasicData[i]['image'];
 }
 
 ///////////////////////////////  P O K E M O N   T Y P E S  ///////////////////////////////
 
 function getPokemonTypes(i) {
-    // pokemonData['types'] = [];
-    // for (let j = 0; j < pokemon['types'].length; j++) {
-    //     let type = pokemon['types'][j]['type']['name'];
-    //     let typeName = `${type.charAt(0).toUpperCase()}` + `${type.slice(1)}`;
-    //     pokemonData['types'].push(typeName);
-    // }
     pokemonData['types'] = allPokemonsBasicData[i]['types'];
 }
 
@@ -224,7 +199,6 @@ function getPokemonSpecies(species) {
     pokemonData['about']['species'] = [];
     for (let i = 0; i < species['genera'].length; i++) {
         if (species['genera'][i]['language']['name'] == lang) {
-            // pokemonData['about']['species'].push(species['genera'][i]['genus']);
             pokemonData['about']['species'].push(species['genera'][i]['genus']);
             break;
         } 
@@ -291,7 +265,6 @@ async function getPokemonAbilities(pokemon) {
 async function getPokemonGrowthRate(species) {
     pokemonData['about']['growth_rate'] = [];
     if(species['growth_rate'])
-        // pokemonData['about']['growth_rate'].push(returnNameFormatted(species['growth_rate']['name']));
         pokemonData['about']['growth_rate'].push(returnNameFormatted(species['growth_rate']['name']));
 }
 
@@ -301,7 +274,6 @@ async function getPokemonEggGroups(species) {
     pokemonData['about']['egg_groups'] = [];
     if(species['egg_groups'].length > 0) 
         for (let i = 0; i < species['egg_groups'].length; i++)
-            // pokemonData['about']['egg_groups'].push(returnNameFormatted(species['egg_groups'][i]['name']));
             pokemonData['about']['egg_groups'].push(returnNameFormatted(species['egg_groups'][i]['name']));
 }
 
@@ -316,17 +288,6 @@ function getStats(pokemon) {
     }
     currentPokemon['base_stats']['total'] = total;
 }
-
-///////////////////////////////  P O K E M O N   E V O L U T I O N  ///////////////////////////////
-
-// async function getPokemonEvolutionData(species) {
-//     if(species['evolution_chain'].length > 0 || species['evolution_chain']['url']) {
-//         let url = species['evolution_chain']['url'];
-//         let response = await fetch(url);
-//         let evolution = await response.json();
-//         await renderPokemonEvolutionData(evolution['chain'])
-//     }
-// }
 
 ///////////////////////////////  P O K E M O N   D A M A G E  ///////////////////////////////
 

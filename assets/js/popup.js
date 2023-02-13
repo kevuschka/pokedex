@@ -1,6 +1,5 @@
 let myInterval;
 
-
 function renderLoadPopup() {
     let content = document.getElementById('popups');
     content.innerHTML = templateLoadPopup();
@@ -25,11 +24,11 @@ function templateLoadPopup() {
 
 
 function openLoadPopup() {
-    if(allPokemons.length == 0) {
-        document.getElementById('popups').style.minHeight = '100vh';
-        removeClasslist('loadPopup-full', 'd-none');
-        removeClasslist('loadPopup-subtitle-container', 'd-none');
-    } else {
+    // if(allPokemons.length == 0) {
+    //     document.getElementById('popups').style.minHeight = '100vh';
+    //     removeClasslist('loadPopup-full', 'd-none');
+    //     removeClasslist('loadPopup-subtitle-container', 'd-none');
+    // } else {
         document.getElementById('popups').style.minHeight = '100vh';
         addClasslist('loadPopup-full', 'opa-off');
         removeClasslist('loadPopup-full', 'd-none');
@@ -37,15 +36,16 @@ function openLoadPopup() {
         setTimeout(() => {
             removeClasslist('loadPopup-full', 'opa-off');
         }, 300);
-    }
+    //}
 }
 
 
 function closeLoadPopup() {
-    if(dataLoaded) {
-        dataLoaded = false;
-        closeLoadPopupNow()
-    } else closeLoadPopupLater();
+    // if(dataLoaded) {
+    //     dataLoaded = false;
+    //     closeLoadPopupNow()
+    // } else 
+    closeLoadPopupLater();
 }
 
 

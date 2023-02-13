@@ -7,9 +7,6 @@ let pokemonsPerPageMobile;
 let pagePokemonsBasicData = []; 
 let pagePokemonsElementData = [];
 
-
-
-
 let allPokemons = [];
 let pokemonData;
 
@@ -26,17 +23,15 @@ let lang = 'en';
 
 let dataLoaded = false;
 
+let savedPokemons = [];
+
 
 async function init() {
     await includeHTML();
     await getLocalStorage();
-    await setLocalStorage();
+    setLocalStorage();
     renderLoadPopup();
-    if(allPokemons.length == 0) {
-        await loadAllPokemons();
-        dataLoaded = true;
-    }
-    // await updateAllPokemonsData();
+    await loadAllPokemonsBasicData();
     cleanValues();
     renderHeader();
     renderPokemonsPage(0, 40);
@@ -50,52 +45,40 @@ async function getLocalStorage() {
     lang = localStorage.getItem('lang') || 'en';
     darkmode = JSON.parse(localStorage.getItem('darkmode')) || 0;
     sound = JSON.parse(localStorage.getItem('sound')) || 1;
-    // currentPageNumber = JSON.parse(localStorage.getItem('currentPageNumber')) || 0;
     pokemonsPerPage = JSON.parse(localStorage.getItem('pokemonsPerPage')) || 40;
     pokemonsPerPageMobile = JSON.parse(localStorage.getItem('pokemonsPerPageMobile')) || 40;
     currentDate = await JSON.parse(localStorage.getItem('currentDate')) || '';
     allPokemons = await JSON.parse(localStorage.getItem(`allPokemons`)) || []; 
     favPokemons = await JSON.parse(localStorage.getItem(`favPokemons`)) || [];
+    savedPokemons = await JSON.parse(localStorage.getItem(`savedPokemons`)) || [];
 }
 
 
-async function setLocalStorage() {
+function setLocalStorage() {
     localStorage.setItem('darkmode', darkmode);
     localStorage.setItem('sound', sound);
     localStorage.setItem('pokemonsPerPage', pokemonsPerPage);
     localStorage.setItem('pokemonsPerPageMobile', pokemonsPerPageMobile);
+    localStorage.setItem('savedPokemons', JSON.stringify(savedPokemons));
 }
 
 ///////////////////////////////  P O K E M O N   D A T A  ///////////////////////////////
 
-async function updateAllPokemonsData() {
+async function loadAllPokemonsBasicData() {
     if(allPokemons.length == 0) {
-        await getAllPokemonsData();
+        await getAllPokemonsBasicData();
         localStorage.setItem('allPokemons', JSON.stringify(allPokemons));
-        localStorage.setItem('currentDate', JSON.stringify(getDateAsArray()));
-    } else 
-        if(!dataIsFromLatestDate()) {
-            await getAllPokemonsData();
-            localStorage.setItem('currentDate', JSON.stringify(currentDate));
-            localStorage.setItem('allPokemons', JSON.stringify(allPokemons));
-        }
-}
-
-
-async function loadAllPokemons() {
-    if(allPokemons.length == 0) {
-        await getAllPokemonsData();
-        localStorage.setItem('allPokemons', JSON.stringify(allPokemons));
+        dataLoaded = true;
     }
 }
 
 
-async function getAllPokemonsData() {
+async function getAllPokemonsBasicData() {
     let url = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${await getCount()}`;
     let response = await fetch(url);
     let allPokemonList = await response.json();
     console.log('originalList:', allPokemonList);
-    await renderPokemonsElementData(allPokemonList);
+    await renderAllPokemonsBasicData(allPokemonList);
     localStorage.setItem(`allPokemons`, JSON.stringify(allPokemons));
 } 
 
@@ -108,48 +91,45 @@ async function getCount() {
     return count;
 }
 
-async function renderPokemonsElementData(basic) {
+
+async function renderAllPokemonsBasicData(basic) {
     allPokemons = [];
     loadCircleDegree = 0;
-    
+    createSavedPokemonsArray(basic);
     for (let i = 0; i < basic['results'].length; i++) {
         cleanPokemonData();
-        let url = basic['results'][i]['url'];
-        let response = await fetch(url);
-        let pokemon = await response.json();
         getPokemonName(basic['results'][i]['name']);
-        getAllNames(i);
-        pokemonData['id'] = allPokemonsBasicData[i]['id'];
-        getPokemonBackgroundColor(i);
-        getPokemonImage(i);
-        getPokemonTypes(i);
-        getAllNames(i);
-        //await getPokemonSpeciesData(pokemon);
-        // await getPokemonAbilities(pokemon);
+        getPokemonsBasicData(i);
         allPokemons.push(pokemonData);
-        console.log(`allPokemons:`, allPokemons);
         loadCircleDegree += 5;
         changeLoadScreen(basic, i , loadCircleDegree);
     }
 }
 
 
-function changeLoadScreen(basic, i , degree) {
-    document.getElementById('loadPopup-image-overlay').style.backgroundImage = `linear-gradient(90deg, transparent ${((i/basic['results'].length) * 100).toFixed(0)}%, rgb(1, 5, 53) 0%)`;
-    document.getElementById('loading-circle').style.transform = `rotate(${degree}deg)`;
+function createSavedPokemonsArray(basic) {
+    if(savedPokemons.length == 0) {
+        for (let i = 0; i < basic['results'].length; i++) {
+            savedPokemons.push({});
+        }
+        localStorage.setItem('savedPokemons', JSON.stringify(savedPokemons));
+    }
+} 
+
+
+function getPokemonsBasicData(i) {
+    getAllNames(i);
+    pokemonData['id'] = allPokemonsBasicData[i]['id'];
+    getPokemonBackgroundColor(i);
+    getPokemonImage(i);
+    getPokemonTypes(i);
+    getAllNames(i);
 }
 
 
-async function getPokemonSpeciesData(pokemon) {
-    let url = pokemon['species']['url'];
-    let response = await fetch(url);
-    let species = await response.json();
-    // getAllNames(species);
-    // getPokemonBackgroundColor(species); 
-    // getPokemonSpecies(species);
-    // getPokemonGrowthRate(species);
-    // getPokemonEggGroups(species);
-    // getPokemonHatchCounter(species);
+function changeLoadScreen(basic, i , degree) {
+    document.getElementById('loadPopup-image-overlay').style.backgroundImage = `linear-gradient(90deg, transparent ${((i/basic['results'].length) * 100).toFixed(0)}%, rgb(1, 5, 53) 0%)`;
+    document.getElementById('loading-circle').style.transform = `rotate(${degree}deg)`;
 }
 
 
@@ -285,35 +265,6 @@ function noSelectSound() {
         select.currentTime = 0;
     }
 }
-
-// function hoverElementOut(i) {
-//     noSelectSound();
-// }
-
-
-// function emptyAllPokemonsBasicData() {
-//     return {
-//                 'count': '',
-//                 'results': {
-//                     'results': [],
-//                     'names': [],
-//                     'generations': [],
-//                 },
-//             };
-// }
-
-
-// function getPokemonsPerPageNumber() {
-//     if(window.innerWidth > 800) {
-//         if((currentPageIndex + pokemonsPerPage) > count) 
-//             return pokemonsPerPage = count - currentPageIndex;
-//         else return pokemonsPerPage;
-//     } else  {
-//         if((currentPageIndex + pokemonsPerPageMobile) > count) 
-//             return pokemonsPerPageMobile = count - currentPageIndex;
-//         else return pokemonsPerPageMobile;
-//     }
-// }
 
 ///////////////////////////////  H E L P   F U N C T I O N S  ///////////////////////////////
 
