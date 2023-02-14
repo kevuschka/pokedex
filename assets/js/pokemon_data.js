@@ -362,7 +362,7 @@ function getPokemonLocationMethods(locationAreas, i, j, methodArray) {
     for (let k = 0; k < locationAreas[i]['version_details'][j]['encounter_details'].length; k++) {
         let method = locationAreas[i]['version_details'][j]['encounter_details'][k]['method']['name'];
         if(thatMethodIsNew(methodArray, method))
-            methodArray.push(method);
+            methodArray.push(returnNameFormatted(method));
     }
 }
 
