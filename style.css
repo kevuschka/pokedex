@@ -589,12 +589,16 @@ html {
     width: 160px;
 }
 
-/* ////////////  W 3   S C H O O L S - C O L L A P S I N G   M E N U  //////////// */
-.pokemon-selected-info-moves-container {
+.table-subtitles {
+    font-size: 14px;
+    color: rgba(0,0,0,0.3);
+}
+
+.pokemon-selected-info-container {
     gap: 14px;
 }
 
-.move-element-btn {
+.collapse-element-btn {
     padding: 5px 24px;
     justify-content: space-between;
     align-items: center;
@@ -608,31 +612,48 @@ html {
     border-bottom-right-radius: 0;
 }
 
-.move-element-btn > img {
+.collapse-element-btn > img {
     width: 16px;
     height: 16px;
     transition: all 125ms ease-in-out;
 }
 
-.move-element-content {
-    overflow-y: hidden;
+.collapse-element-content {
+    overflow-y: auto;
+    max-height: 400px;
     background-color: rgba(0,0,0,0.05);
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
 
-.move-element-content-padding {
+.collapse-element-content-padding {
     padding: 5px 24px;
 }
 
-tbody > tr > td {
+/* thead {
+    color: rgba(0,0,0,0.3);
+    font-size: 18px;
+} */
+
+.collapse-table-content > tr > td {
     font-size: 20px;
 }
 
-tbody > tr:nth-child(1) > td {
-    color: rgba(0,0,0,0.3);
-    font-size: 18px;
+.no-locations-sign {
+    justify-content: center;
+    color: rgba(0,0,0,0.1);
 }
+
+.no-locations-sign > p {
+    padding: 5px 24px;
+    border-radius: 10px;
+    background-color: rgba(0,0,0,0.03);
+}
+
+.pokemon-selected-info-locations-container {
+    gap: 10px;
+}
+
 
 
 @media screen and (min-width: 1400px) {

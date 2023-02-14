@@ -158,10 +158,10 @@ function selectTab(i) {
 
 function selectPokemonTab(i) {
     if(i == 1) renderPokemonInfoAboutTemplate();
-    if(i == 2) renderPokemonInfoStatsTemplate();
-    if(i == 3) renderPokemonInfoEvolutionTemplate();
-    if(i == 4) renderPokemonInfoMovesTemplate();
-    if(i == 5) {}
+    else if(i == 2) renderPokemonInfoStatsTemplate();
+    else if(i == 3) renderPokemonInfoEvolutionTemplate();
+    else if(i == 4) renderPokemonInfoTemplate(currentPokemon['moves'], selectMovesTab());
+    else renderPokemonInfoTemplate(currentPokemon['locations'], selectLocationsTab());
     coloringSubtitles();
 }
 
