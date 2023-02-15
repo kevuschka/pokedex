@@ -26,8 +26,8 @@ function templatePokemonHeaderAndImage() {
                 <div class="pokemon-selected-header flex column w-100 h-100">
                     <div class="pokemon-selected-header-function-icons w-100 flex">
                         <img src="assets/img/back_arrow_white.png" class="pokemon-selected-header-arrow cursor-p" onclick="hideSelectedPokemonWrapper()"> 
-                        <img src="assets/img/liked.png" class="pokemon-selected-header-like cursor-p d-none" id="pokemon-selected-header-liked"> 
-                        <img src="assets/img/unliked.png" class="pokemon-selected-header-like cursor-p" id="pokemon-selected-header-unliked">
+                        <img src="assets/img/liked.png" class="pokemon-selected-header-like cursor-p" id="pokemon-selected-header-liked" onclick="addOrRemoveFromFavs()"> 
+                        <img src="assets/img/unliked.png" class="pokemon-selected-header-like cursor-p" id="pokemon-selected-header-unliked" onclick="addOrRemoveFromFavs()">
                     </div>
                     <div class="pokemon-selected-header-name-and-type flex column">
                         <div class="pokemon-selected-header-name-container flex" id="pokemon-selected-header-name-container"></div>
@@ -59,17 +59,25 @@ function templatePokemonInfoTabs() {
     wrapper.innerHTML += `<p class="pokemon-selected-info-tab c-white flex cursor-p" id="tab_5" onclick="selectTab(5)">Locations</p>`;
 }
 
-///////////////////////////////  R E N D E R   E V O L U T I O N  ///////////////////////////////
-// ...
+
+function loadStarIconIfPokemonInFavs() {
+    if(currentPokemonIsInFavs()) {
+        addClasslist('pokemon-selected-header-unliked', 'd-none');
+        removeClasslist('pokemon-selected-header-liked', 'd-none');
+    } else {
+        addClasslist('pokemon-selected-header-liked', 'd-none');
+        removeClasslist('pokemon-selected-header-unliked', 'd-none');
+    }
+}
 
 
-
-/////////////////////////////////////////
-function templatePokemonInfoMOVES() {}
-function templatePokemonInfoLOCATIONS() {}
-
-
-
+function currentPokemonIsInFavs() {
+    if(favPokemons.length > 0)
+        for (let i = 0; i < favPokemons.length; i++)
+            if(favPokemons[i]['name']['en'].includes(currentPokemon['name']['en']))
+                return true;
+    else false;
+}
 
 
 // CONTENT
@@ -106,7 +114,7 @@ function addBackgroundColor() {
 
 
 // SHOW & HIDE
-function showSelectedPokemonWrapper(i) {
+function showSelectedPokemonWrapper() {
     setTimeout(() => {
         let height = document.getElementById(`pokemon-list-wrapper`).clientHeight;
         document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `${height}px`;
@@ -143,7 +151,8 @@ function hideSelectedPokemonWrapper() {
 
 // UNMARK SELECTION
 function unmarkLastSelectedPokemon() {
-    if(selectedPokemonIndex != -1) document.getElementById(`pokemon-list-element-container-${selectedPokemonIndex}`).style = `none`;
+    if(!(onFavoritesPage && (favPokemons.length == 0))) 
+        if(selectedPokemonIndex != -1) document.getElementById(`pokemon-list-element-container-${selectedPokemonIndex}`).style = `none`;
 }
 
 
@@ -178,4 +187,21 @@ function unselectAllTabs() {
         addClasslist(`tab_${i}`, `unselected-tab`);
         document.getElementById(`tab_${i}`).style.borderBottom = `none`;
     }   
+}
+
+
+function addOrRemoveFromFavs() {
+    if(currentPokemonIsInFavs()) {
+        for (let i = 0; i < favPokemons.length; i++)
+            if(favPokemons[i]['name']['en'].includes(currentPokemon['name']['en'])) {
+                favPokemons.splice(i, 1);
+                localStorage.setItem('favPokemons', JSON.stringify(favPokemons));
+                loadStarIconIfPokemonInFavs();
+                if(onFavoritesPage) renderPokemonsPage(0, 40);
+            }
+    } else {
+        favPokemons.push(currentPokemon);
+        localStorage.setItem('favPokemons', JSON.stringify(favPokemons));
+        loadStarIconIfPokemonInFavs();
+    }
 }

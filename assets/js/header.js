@@ -8,6 +8,7 @@ function renderHeader() {
     renderHeaderFunctionalityTemplates(headerFunctionality);
     renderHeaderColor();
     addClasslist(`header`, `tranY-0`);
+    renderHeaderStarIcon();
 }
 
 
@@ -32,13 +33,24 @@ function renderHeaderColor() {
 }
 
 
+function renderHeaderStarIcon() {
+    if(onFavoritesPage) {
+        addClasslist('header-favorites-gray', 'd-none');
+        removeClasslist('header-favorites-dark', 'd-none');
+    } else {
+        addClasslist('header-favorites-dark', 'd-none');
+        removeClasslist('header-favorites-gray', 'd-none');
+    }
+}
+
+
 function templateHeaderWrapper() {
     return `<div class="header-wrapper w-100 h-100 flex" id="header-wrapper"></div>`;
 }
 
 
 function templateHeaderTitle() {
-    return `<a class="header-title cursor-p" onclick="init()">Pokedex</a>`;
+    return `<a href="/index.html" class="header-title cursor-p">Pokedex</a>`;
 }
 
 
@@ -71,8 +83,8 @@ function templateHeaderSearchbar() {
 
 
 function templateHeaderFavorites() {
-    return `<img class="header-favorites cursor-p d-none" id="header-favorites-gray" src="assets/img/outline_star_icon.png" onclick="markFavoritesIcon()">
-            <img class="header-favorites cursor-p d-none" id="header-favorites-dark" src="assets/img/outline_star_icon_dark.png" onclick="markFavoritesIcon()">`;
+    return `<a href="/favorites.html"><img class="header-favorites cursor-p" id="header-favorites-gray" src="assets/img/outline_star_icon.png"></a>
+            <a href="/index.html"><img class="header-favorites cursor-p" id="header-favorites-dark" src="assets/img/outline_star_icon_dark.png"></a>`;
 }
 
 
@@ -238,5 +250,3 @@ function darkmodeOnOff() {
     }
     localStorage.setItem('darkmode', darkmode);
 }
-
-
