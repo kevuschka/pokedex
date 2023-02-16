@@ -1,9 +1,9 @@
-let darkmode;
-let sound;
+let darkmode = false;
+let sound = true;
 let bgSound = 0;
 let currentPageIndex = 0;
-let pokemonsPerPage;
-let pokemonsPerPageMobile;
+let pokemonsPerPage = 30;
+let pokemonsPerPageMobile = 20;
 let pagePokemonsBasicData = []; 
 let pagePokemonsElementData = [];
 
@@ -17,7 +17,7 @@ let onFavoritesPage = false;
 const bgMusic = new Audio('assets/sounds/poke_theme_music.mp3');
 const select = new Audio('assets/sounds/select_sound.mp3');
 let searchResults = [];
-let settingsOpen = 0;
+let settingsOpen = false;
 
 let currentDate;
 let count;
@@ -37,7 +37,7 @@ async function init() {
     await createSavedPokemonsArray();
     cleanValues();
     renderHeader();
-    renderPokemonsPage(0, 40);
+    renderPokemonsPage(0, pokemonsPerPage);
     closeLoadPopup();
 }
 
@@ -46,8 +46,8 @@ async function init() {
 
 async function getLocalStorage() {
     lang = localStorage.getItem('lang') || 'en';
-    darkmode = JSON.parse(localStorage.getItem('darkmode')) || 0;
-    sound = JSON.parse(localStorage.getItem('sound')) || 1;
+    darkmode = JSON.parse(localStorage.getItem('darkmode')) || false;
+    sound = JSON.parse(localStorage.getItem('sound')) || true;
     pokemonsPerPage = JSON.parse(localStorage.getItem('pokemonsPerPage')) || 40;
     pokemonsPerPageMobile = JSON.parse(localStorage.getItem('pokemonsPerPageMobile')) || 40;
     favPokemons = await JSON.parse(localStorage.getItem(`favPokemons`)) || [];
@@ -157,17 +157,15 @@ async function renderPokemonsPage(from, to) {
     content.innerHTML = '';
     if(onFavoritesPage) {
         from = 0;
-        to  = favPokemons.length <= 40 ? favPokemons.length : 40;
+        to  = favPokemons.length <= to ? favPokemons.length : to;
         if(to == 0) {
             noPokemonHere(content);
             return;
         }
     }
-    for (let i = from; i < to; i++) {
-        
+    for (let i = from; i < to; i++) 
         renderPokemonsListContent(i, content);
-        renderPageColor();
-    }
+    renderPageColor();
 }
 
 
@@ -302,6 +300,11 @@ function returnNameformattedMinus(name) {
             if(nameArray.length > (j+1)) finalName += '-';
         }
     return finalName;
+}
+
+
+function doNotClose(event) {
+    event.stopPropagation();
 }
 
 

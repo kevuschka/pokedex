@@ -112,6 +112,7 @@ html {
 .wrapper {
     background-color: white;
     color: black;
+    height: 100vh;
     max-height: 100vh;
     width: 100%;
     overflow: hidden;
@@ -168,14 +169,9 @@ html {
     justify-content: center;
     transform: translateY(-20vh);
     transition: all 1s ease-in-out;
-    /* background-color: white; */
     background-color: rgba(255, 255, 255, 0.733);
     z-index: 1;
     transition: all 1s ease;
-}
-
-.header:hover, .header-wrapper:hover {
-    background-color: white;
 }
 
 .header-wrapper {
@@ -305,7 +301,7 @@ html {
 
 .pokemon-selected-container {
     top: 0;
-    height: 100vh;
+    height: calc(100vh - 130px);
     padding: 22px 10px 22px 0;
 }
 
@@ -692,6 +688,148 @@ html {
 
 .no-pokemon-here {
     transition: all 500ms ease-in-out;
+}
+
+.settings-popup-full {
+    top: 0;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    background-color: rgba(255, 255, 255, 0.4);
+    opacity: 0;
+    transition: all 125ms ease-out;
+}
+
+.settings-popup {
+    align-items: flex-start;
+    width: 70rem;
+    border-radius: 20px;
+    filter: drop-shadow(15px 15px 30px rgba(0,0,0,.1));
+    color: rgb(197, 197, 197)        ;
+    background-color: rgba(0,0,0,0.7);
+    padding: 48px;
+    gap: 42px;
+    font-size: 28px;
+}
+
+.settings-numbers {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.settings-numbers-selection {
+    gap: 24px;
+}
+
+.settings-number-per-page {
+    background-color: #ccc;
+    border-radius: 50%;
+    font-size: 32px;
+    padding: 20px 24px;
+    color: rgb(54, 53, 53);
+}
+
+.choosed-settings-number {
+    background-color: #2196F3;
+}
+
+.settings-sound {
+    justify-content: space-between;
+}
+
+/* SETTINGS SWITCH  */
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+
+  .settings-theme {
+    justify-content: space-between;
+}
+
+.settings-theme-selection {
+    gap: 24px;
+}
+
+.settings-theme-dark {
+    background-color: rgb(54, 53, 53);
+    border: 1px solid rgb(197, 197, 197);
+}
+
+.settings-theme-light {
+    background-color: rgb(247, 247, 247);
+    border: 1px solid rgb(197, 197, 197);
+}
+
+.settings-theme-light, .settings-theme-dark {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+}
+
+.choosed-settings-theme {
+    border: 5px solid #2196F3;
 }
 
 

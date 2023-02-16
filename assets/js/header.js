@@ -8,7 +8,7 @@ function renderHeader() {
     renderHeaderFunctionalityTemplates(headerFunctionality);
     renderHeaderColor();
     addClasslist(`header`, `tranY-0`);
-    renderHeaderStarIcon();
+    // renderHeaderStarIcon();
 }
 
 
@@ -23,25 +23,27 @@ function renderHeaderFunctionalityTemplates(content) {
 
 
 function renderHeaderColor() {
-    if(darkmode) {
-        removeClasslist('header', 'bg-normal');
-        addClasslist('header', 'bg-darkmode');
-    } else {
-        removeClasslist('header', 'bg-darkmode');
-        addClasslist('header', 'bg-normal');
-    }
+    removeAllHeaderAdditionClasses(); 
+    if(darkmode) addClasslist('header', 'bg-darkmode');
+    else addClasslist('header', 'bg-normal');
 }
 
 
-function renderHeaderStarIcon() {
-    if(onFavoritesPage) {
-        addClasslist('header-favorites-gray', 'd-none');
-        removeClasslist('header-favorites-dark', 'd-none');
-    } else {
-        addClasslist('header-favorites-dark', 'd-none');
-        removeClasslist('header-favorites-gray', 'd-none');
-    }
+function removeAllHeaderAdditionClasses() {
+    removeClasslist('header', 'bg-normal');
+    removeClasslist('header', 'bg-darkmode');
 }
+
+
+// function renderHeaderStarIcon() {
+//     if(onFavoritesPage) {
+//         addClasslist('header-favorites-gray', 'd-none');
+//         removeClasslist('header-favorites-dark', 'd-none');
+//     } else {
+//         addClasslist('header-favorites-dark', 'd-none');
+//         removeClasslist('header-favorites-gray', 'd-none');
+//     }
+// }
 
 
 function templateHeaderWrapper() {
@@ -60,10 +62,10 @@ function templateHeaderFunctionalityWrapper() {
 
 
 function templateHeaderMusicIcon() {
-    return `<img class="header-music cursor-p d-none" id="header-music-gray" src="assets/img/music_icon2.png" onclick="unmuteMusic()">
-            <img class="header-music cursor-p d-none" id="header-music-dark" src="assets/img/music_icon_dark2.png" onclick="unmuteMusic()">
-            <img class="header-music cursor-p d-none" id="header-music-mute" src="assets/img/music_icon_pause.png" onclick="muteMusic()">
-            <img class="header-music cursor-p d-none" id="header-music-mute-dark" src="assets/img/music_icon_pause_dark.png" onclick="muteMusic()">`;
+    return `<img class="header-music cursor-p" id="header-music-gray" src="assets/img/music_icon2.png" onclick="unmuteMusic()">
+            <img class="header-music cursor-p" id="header-music-dark" src="assets/img/music_icon_dark2.png" onclick="unmuteMusic()">
+            <img class="header-music cursor-p" id="header-music-mute" src="assets/img/music_icon_pause.png" onclick="muteMusic()">
+            <img class="header-music cursor-p" id="header-music-mute-dark" src="assets/img/music_icon_pause_dark.png" onclick="muteMusic()">`;
 }
 
 
@@ -83,15 +85,16 @@ function templateHeaderSearchbar() {
 
 
 function templateHeaderFavorites() {
-    return `<a href="/favorites.html"><img class="header-favorites cursor-p" id="header-favorites-gray" src="assets/img/outline_star_icon.png"></a>
-            <a href="/index.html"><img class="header-favorites cursor-p" id="header-favorites-dark" src="assets/img/outline_star_icon_dark.png"></a>`;
+    return `<a href="/favorites.html" id="header-favorites-gray"><img class="header-favorites cursor-p" src="assets/img/outline_star_icon.png"></a>
+            <a href="/favorites.html" id="header-favorites-dark"><img class="header-favorites cursor-p" src="assets/img/outline_star_icon_dark.png"></a>`;
 }
 
 
 function templateHeaderSettings() {
-    return `<img class="header-settings cursor-p d-none" id="header-settings-gray" src="assets/img/settings_icon.png" onclick="markSettingsIcon()">
-            <img class="header-settings cursor-p d-none" id="header-settings-dark" src="assets/img/settings_icon_dark.png" onclick="markSettingsIcon()">`;
+    return `<img class="header-settings cursor-p" id="header-settings-gray" src="assets/img/settings_icon.png" onclick="openSettingsPopup()">
+            <img class="header-settings cursor-p" id="header-settings-dark" src="assets/img/settings_icon_dark.png" onclick="openSettingsPopup()">`;
 }
+
 
 
 // RENDER HEADER ICONS 
@@ -108,75 +111,98 @@ function renderHeaderIcons() {
 // FAVORITES
 function renderFavoritesIcon() {
     cleanFavoritesIcon();
-    if(window.location.pathname == 'favorites.html') renderFavoritesIconOnFavorites();
-    else renderFavoritesIconStandard();
+    if(window.location.pathname.includes('favorites.html')) {
+        if(darkmode) addClasslist(`header-favorites-dark`,`d-none`);
+        else addClasslist(`header-favorites-gray`,`d-none`);
+    } else {
+        if(darkmode) addClasslist(`header-favorites-gray`,`d-none`);
+        else addClasslist(`header-favorites-dark`,`d-none`);
+    }
 }
 
 function cleanFavoritesIcon() {
-    addClasslist(`header-favorites-gray`, `d-none`);
-    addClasslist(`header-favorites-dark`,`d-none`);
+    removeClasslist(`header-favorites-gray`, `d-none`);
+    removeClasslist(`header-favorites-dark`,`d-none`);
 }
 
 
-function renderFavoritesIconOnFavorites() {
-    if(darkmode) removeClasslist(`header-favorites-gray`,`d-none`);
-    else removeClasslist(`header-favorites-dark`,`d-none`);
-}
+// function renderFavoritesIconOnFavorites() {
+//     if(darkmode) addClasslist(`header-favorites-dark`,`d-none`);
+//     else addClasslist(`header-favorites-gray`,`d-none`);
+// }
 
 
-function renderFavoritesIconStandard() {
-    if(darkmode) removeClasslist(`header-favorites-dark`,`d-none`);
-    else removeClasslist(`header-favorites-gray`,`d-none`);
-}
+// function renderFavoritesIconStandard() {
+//     if(darkmode) addClasslist(`header-favorites-gray`,`d-none`);
+//     else addClasslist(`header-favorites-dark`,`d-none`);
+// }
 
 
 // SETTINGS
 function renderSettingsIcon() {
     cleanSettingsIcon();
-    if(darkmode) removeClasslist(`header-settings-dark`, `d-none`);
-    else removeClasslist(`header-settings-gray`, `d-none`);
+    if(darkmode) {
+        if(settingsOpen) addClasslist(`header-settings-dark`, `d-none`);
+        else addClasslist(`header-settings-gray`, `d-none`);
+    } else {
+        if(settingsOpen) addClasslist(`header-settings-gray`, `d-none`);
+        else addClasslist(`header-settings-dark`, `d-none`);
+    }
 }
 
 function cleanSettingsIcon() {
-    addClasslist(`header-settings-gray`,`d-none`);
-    addClasslist(`header-settings-dark`, `d-none`); 
-}
-
-
-function markSettingsIcon() {
-    cleanSettingsIcon();
-    if(settingsOpen) {
-        settingsOpen = 0;
-        if(darkmode) removeClasslist(`header-settings-dark`, `d-none`);  
-        else removeClasslist(`header-settings-gray`, `d-none`);  
-    } else {
-        settingsOpen = 1;
-        if(darkmode) removeClasslist(`header-settings-gray`, `d-none`);  
-        else removeClasslist(`header-settings-dark`, `d-none`);  
-    }
+    removeClasslist(`header-settings-gray`,`d-none`);
+    removeClasslist(`header-settings-dark`, `d-none`); 
 }
 
 
 // MUSIC
 function renderMusicIcon() {
     cleanMusicIcon();
-    if(darkmode) removeClasslist('header-music-dark', 'd-none');
-    else removeClasslist('header-music-gray', 'd-none');
+    if(bgSound == 1) renderMusicIconWhenMusicPlays();
+    else renderMusicIconWhenMusicMuted();
 }
 
 
 function cleanMusicIcon() {
-    addClasslist(`header-music-gray`, `d-none`); 
-    addClasslist('header-music-dark', 'd-none');
-    addClasslist(`header-music-mute`, `d-none`);
-    addClasslist(`header-music-mute-dark`, `d-none`);
+    removeClasslist(`header-music-gray`, `d-none`); 
+    removeClasslist('header-music-dark', 'd-none');
+    removeClasslist(`header-music-mute`, `d-none`);
+    removeClasslist(`header-music-mute-dark`, `d-none`);
+}
+
+
+function renderMusicIconWhenMusicPlays() {
+    if(darkmode) {
+        addClasslist(`header-music-gray`, `d-none`); 
+        addClasslist('header-music-dark', 'd-none');
+        addClasslist(`header-music-mute`, `d-none`);
+    } else {
+        addClasslist('header-music-gray', 'd-none');
+        addClasslist(`header-music-dark`, `d-none`);
+        addClasslist(`header-music-mute-dark`, `d-none`);
+    }
+}
+
+
+function renderMusicIconWhenMusicMuted() {
+    if(darkmode) {
+        addClasslist(`header-music-gray`, `d-none`); 
+        addClasslist(`header-music-mute`, `d-none`);
+        addClasslist(`header-music-mute-dark`, `d-none`);
+        
+    } else { 
+        addClasslist('header-music-dark', 'd-none');
+        addClasslist(`header-music-mute`, `d-none`);
+        addClasslist(`header-music-mute-dark`, `d-none`);
+    }
 }
 
 
 function unmuteMusic() {
     cleanMusicIcon();
-    if(darkmode) removeClasslist(`header-music-mute-dark`, `d-none`);
-    else removeClasslist(`header-music-mute`, `d-none`);
+    if(darkmode) unmuteMusicInDarkmode();
+    else muteMusicInDarkmoder();
     bgMusic.volume = 0.1;
     bgMusic.loop = true;
     bgMusic.play(); 
@@ -184,10 +210,32 @@ function unmuteMusic() {
 }
 
 
+function unmuteMusicInDarkmode() {
+    addClasslist(`header-music-gray`, `d-none`); 
+    addClasslist('header-music-dark', 'd-none');
+    addClasslist(`header-music-mute`, `d-none`);
+}
+
+
+function muteMusicInDarkmoder() {
+    addClasslist(`header-music-gray`, `d-none`); 
+    addClasslist('header-music-dark', 'd-none');
+    addClasslist(`header-music-mute-dark`, `d-none`);
+}
+
+
 function muteMusic() {
     cleanMusicIcon();
-    if(darkmode) removeClasslist(`header-music-dark`, `d-none`);
-    else removeClasslist(`header-music-gray`, `d-none`);
+    if(darkmode) {
+        addClasslist(`header-music-gray`, `d-none`); 
+        addClasslist('header-music-dark', 'd-none');
+        addClasslist(`header-music-mute`, `d-none`);
+    }
+    else {
+        addClasslist(`header-music-gray`, `d-none`); 
+        addClasslist('header-music-dark', 'd-none');
+        addClasslist(`header-music-mute-dark`, `d-none`);
+    }
     bgMusic.pause();
     bgSound = 0;
 }
@@ -235,18 +283,18 @@ function searchPokemon() {
 
 
 // DARKMODE
-function darkmodeOnOff() {
-    if(darkmode) {
-        darkmode = 0;
-        renderHeaderColor();
-        document.getElementById(`content-container`).style.backgroundColor = 'white';
+// function darkmodeOnOff() {
+//     if(darkmode) {
+//         darkmode = 0;
+//         renderHeaderColor();
+//         document.getElementById(`content-container`).style.backgroundColor = 'white';
         
         
-    }
-    else {
-        darkmode = 1;
-        renderHeaderColor();
-        document.getElementById(`content-container`).style.backgroundColor = 'rgba(0,0,0,0.5)';
-    }
-    localStorage.setItem('darkmode', darkmode);
-}
+//     }
+//     else {
+//         darkmode = 1;
+//         renderHeaderColor();
+//         document.getElementById(`content-container`).style.backgroundColor = 'rgba(0,0,0,0.5)';
+//     }
+//     localStorage.setItem('darkmode', darkmode);
+// }
