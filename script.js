@@ -2,8 +2,8 @@ let darkmode = false;
 let sound = true;
 let bgSound = 0;
 let currentPageIndex = 0;
-let pokemonsPerPage = 30;
-let pokemonsPerPageMobile = 20;
+let pokemonsPerPage;
+let pokemonsPerPageMobile;
 let pagePokemonsBasicData = []; 
 let pagePokemonsElementData = [];
 
@@ -17,6 +17,7 @@ let onFavoritesPage = false;
 const bgMusic = new Audio('assets/sounds/poke_theme_music.mp3');
 const select = new Audio('assets/sounds/select_sound.mp3');
 let searchResults = [];
+let searching = false;
 let settingsOpen = false;
 
 let currentDate;
@@ -57,9 +58,9 @@ async function getLocalStorage() {
 
 function setLocalStorage() {
     localStorage.setItem('darkmode', darkmode);
-    localStorage.setItem('sound', sound);
-    localStorage.setItem('pokemonsPerPage', pokemonsPerPage);
-    localStorage.setItem('pokemonsPerPageMobile', pokemonsPerPageMobile);
+    localStorage.setItem('sound', JSON.stringify(sound));
+    localStorage.setItem('pokemonsPerPage', JSON.stringify(pokemonsPerPage));
+    localStorage.setItem('pokemonsPerPageMobile', JSON.stringify(pokemonsPerPageMobile));
     localStorage.setItem('savedPokemons', JSON.stringify(savedPokemons));
     localStorage.setItem('favPokemons', JSON.stringify(favPokemons));
 }
@@ -96,11 +97,23 @@ function addToSavedPokemons(i, pokemon) {
 
 
 function availableInPokemonsArray(i) {
-    if(savedPokemons[i].length > 1) {
-        currentPokemon = savedPokemons[i];
-        return true;
-    } 
-    else return false;
+    // if(searching) {
+    //     if(savedPokemons[i].length > 1) 
+    //         for (let j = 0; j < savedPokemons.length; j++) {
+    //             if(savedPokemons[i].length > 1)
+    //                 if(savedPokemons[i]['name']['en'].toLowerCase().includes(searchResults[i]['name']['en'].toLowerCase()) ||
+    //                     savedPokemons[i]['name']['de'].toLowerCase().includes(searchResults[i]['name']['de'].toLowerCase())) {
+    //                         currentPokemon = savedPokemons[i];
+    //                         return true;
+    //                     }
+    //         }
+    // } else {
+        if(savedPokemons[i].length > 1) {
+            currentPokemon = savedPokemons[i];
+            return true;
+        } 
+    //}
+    return false;
 }
 
 ///////////////////////////////  L A T E S T   D A T E  ///////////////////////////////
@@ -158,14 +171,21 @@ async function renderPokemonsPage(from, to) {
     if(onFavoritesPage) {
         from = 0;
         to  = favPokemons.length <= to ? favPokemons.length : to;
-        if(to == 0) {
-            noPokemonHere(content);
-            return;
-        }
+    }
+    if(searching) {
+        from = 0;
+        to = searchResults.length <= to ? searchResults.length : to;
+    }
+    if(to == 0) {
+        noPokemonHere(content);
+        searching = false;
+        return;
     }
     for (let i = from; i < to; i++) 
         renderPokemonsListContent(i, content);
     renderPageColor();
+    if(document.getElementById('header-searchbar-input').value.length == 0)
+        searching = false;
 }
 
 
@@ -188,7 +208,8 @@ function noPokemonHere(content) {
 
 async function renderPokemonsListContent(elementNumber, content) {
     let pokemon;
-    if(onFavoritesPage) pokemon = favPokemons[elementNumber];
+    if(searching) pokemon = searchResults[elementNumber];
+    else if(onFavoritesPage) pokemon = favPokemons[elementNumber];
     else pokemon = allPokemonsBasicData[elementNumber];
     content.innerHTML += templatePokemonsListElement(elementNumber, pokemon);
     renderPokemonTypes(`pokemon-list-element-type-container-${elementNumber}`, pokemon);   
@@ -223,15 +244,16 @@ function renderPokemonTypes(contentId, pokemon) {
 
 function renderPokemonElementContainerColor(i) {
     let color;
-    if(onFavoritesPage) color = favPokemons[i]['background_color'];
+    if(searching) color = searchResults[i]['background_color'];
+    else if(onFavoritesPage) color = favPokemons[i]['background_color'];
     else color = allPokemonsBasicData[i]['background_color'];
     addClasslist(`pokemon-list-element-container-${i}`, `${color}`);
 }
 
 
 function renderPageColor() {
-    if(darkmode) document.getElementById(`content-container`).style.backgroundColor = 'rgba(0,0,0,0.5)';
-    else document.getElementById('content-container').style.backgroundColor = 'white'; 
+    if(darkmode) addClasslist(`wrapper`, 'bg-darkmode');
+    else removeClasslist(`wrapper`, 'bg-darkmode');
 }
 
 

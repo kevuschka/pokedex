@@ -77,10 +77,9 @@ function templateHeaderSoundIcon() {
 
 
 function templateHeaderSearchbar() {
-    return `<form onsubmit="" class="header-searchbar flex" id="header-searchbar">
-                <input type="text" class="header-searchbar-input w-100 h-100" id="header-searchbar-input" placeholder="Search Pokemons" onKeyUp="searchPokemon()">
-                <input type="submit" style="display: none"/>
-            </input></div>`;
+    return `<div class="header-searchbar flex" id="header-searchbar" onKeyUp="searchPokemon()">
+                <input type="text" class="header-searchbar-input w-100 h-100" id="header-searchbar-input" placeholder="Search Pokemons">
+            </div>`;
 }
 
 
@@ -262,19 +261,6 @@ function muteMusic() {
 //     localStorage.setItem('sound', sound);
 // }
 
-
-
-
-// SEARCHBAR & SEARCHING
-function searchPokemon() {
-    let input = document.getElementById(`header-searchbar-input`).value;
-    searchResults = [];
-    if(input)
-        for (let i = 0; i < allPokemons['results'].length; i++)
-            if(allPokemons['results'][i]['name'].includes(input.toLowerCase())) 
-                searchResults.push(i);
-    else searchResults = [];
-}
 
 
 

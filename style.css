@@ -59,6 +59,10 @@ html {
     position: fixed;
 }
 
+.align-center {
+    align-items: center;
+}
+
 .smooth-trans {
     transition: all 125ms ease-in-out;
 }
@@ -112,10 +116,11 @@ html {
 .wrapper {
     background-color: white;
     color: black;
-    height: 100vh;
+    min-height: 100vh;
     max-height: 100vh;
     width: 100%;
     overflow: hidden;
+    transition: all 125ms ease-in-out;
 }
 
 
@@ -357,6 +362,10 @@ html {
     color: white;
 }
 
+.pokemon-selected-header {
+    align-items: flex-start;
+}
+
 .pokemon-selected-header-function-icons {
     justify-content: space-between;
     padding-bottom: 22px;
@@ -398,7 +407,12 @@ html {
 .pokemon-selected-header-status {
     background-color: blue;
     color: white;
-    border-radius: 32px;
+    border-radius: 18px;
+    margin-top: 8px;
+}
+
+.pokemon-selected-header-status > p {
+    padding: 5px 10px;
 }
 
 .pokemon-selected-image {
@@ -657,7 +671,6 @@ html {
     background-color: rgba(0,0,0,0.03);
     font-size: 32px;
     color: rgba(0,0,0,0.1);
-    margin-top: 25%;
     text-decoration: none;
     transition: all 500ms ease-in-out;
 }
@@ -728,10 +741,19 @@ html {
     font-size: 32px;
     padding: 20px 24px;
     color: rgb(54, 53, 53);
+    border: 5px solid transparent;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    /* padding: 20px; */
+}
+
+.settings-number-per-page:hover {
+    background-color: #9ccff8;
 }
 
 .choosed-settings-number {
-    background-color: #2196F3;
+    border: 5px solid #2196F3;
 }
 
 .settings-sound {

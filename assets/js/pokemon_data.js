@@ -20,12 +20,16 @@ async function renderPokemon(i) {
     document.getElementById(`pokemon-list-element-container-${i}`).style.border = `inset`;
     showSelectedPokemonWrapper();
     scrollUpPokemonInfoOverlay();
-    if(onFavoritesPage) {
-        currentPokemon = favPokemons[i];
-    } else {
+    if(searching) {
+        if(onFavoritesPage) currentPokemon = searchResults[i];
+        else {
+            if(availableInPokemonsArray(getRightArrayIndex(searchResults[i]['id']))) pokemonNotSaved = false;
+            if(pokemonNotSaved) await getSelectedPokemonAboutData(getRightArrayIndex(searchResults[i]['id']));
+        }
+    } else if(!onFavoritesPage) {
         if(availableInPokemonsArray(i)) pokemonNotSaved = false;
         if(pokemonNotSaved) await getSelectedPokemonAboutData(i);
-    }
+    } else if(onFavoritesPage) currentPokemon = favPokemons[i];
     if(sideWrapperIsOpen) {
         await renderPokemonContent();
     } else {
@@ -40,7 +44,7 @@ async function renderPokemon(i) {
     if(!onFavoritesPage) await getOtherTabsInfos(i);
     makeOtherSectionTabsVisible();
         
-}
+}   
 
 
 function scrollUpPokemonInfoOverlay() {
@@ -64,6 +68,17 @@ async function getSelectedPokemonAboutData(i) {
     await getSelectedPokemonAboutDatas(i);
     currentPokemon = pokemonData;
     cleanPokemonData();
+}
+
+
+function getRightArrayIndex(id) {
+    if(id <=  1008 ) return id-1;
+    else {
+        let idAsText = (id+7).toString();
+        let idAsTextSection = idAsText.slice(2);
+        let indexAsText = '1' + idAsTextSection;
+        return parseInt(indexAsText);
+    }
 }
 
 

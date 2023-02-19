@@ -169,6 +169,7 @@ function checkThemeSettings() {
 
 
 function selectSettingsPokemonNumberPerPage(number) {
+    if(sideWrapperIsOpen) hideSelectedPokemonWrapper();
     if(pokemonsPerPage != number) {
         unselectAllPerPageNumbersInSettings();
         addClasslist(`settings-numbers-${number}`, 'choosed-settings-number');
@@ -200,13 +201,9 @@ function selectSettingsTheme(theme) {
     removeClasslist('settings-theme-dark', 'choosed-settings-theme');
     removeClasslist('settings-theme-light', 'choosed-settings-theme');
     addClasslist(`settings-theme-${theme}`, 'choosed-settings-theme');
-    if(theme == 'dark') {
-        darkmode = true;
-        document.getElementById('settings-popup').style.color = 'rgb(197, 197, 197)';
-    } else {
-        darkmode = false;
-        // document.getElementById('settings-popup').style.color = 'rgb(54, 53, 53)';
-    }
+    document.getElementById('settings-popup').style.color = 'rgb(197, 197, 197)';
+    if(theme == 'dark') darkmode = true;
+    else darkmode = false;
     setLocalStorage();
     renderHeader();
     renderPageColor();

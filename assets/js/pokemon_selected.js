@@ -29,7 +29,7 @@ function templatePokemonHeaderAndImage() {
                         <img src="assets/img/liked.png" class="pokemon-selected-header-like cursor-p" id="pokemon-selected-header-liked" onclick="addOrRemoveFromFavs()"> 
                         <img src="assets/img/unliked.png" class="pokemon-selected-header-like cursor-p" id="pokemon-selected-header-unliked" onclick="addOrRemoveFromFavs()">
                     </div>
-                    <div class="pokemon-selected-header-name-and-type flex column">
+                    <div class="pokemon-selected-header-name-and-type w-100 flex column">
                         <div class="pokemon-selected-header-name-container flex" id="pokemon-selected-header-name-container"></div>
                         <div class="pokemon-selected-header-type-container flex" id="pokemon-selected-header-type-container"></div>
                     </div>

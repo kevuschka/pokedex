@@ -6,9 +6,9 @@ function renderPokemonInfoEvolutionTemplate() {
     let chain;
     if(chains > 1) renderPokemonInfoEvolutionChains(content, chains, chain);
     else if(chains == 1) {
-        content.innerHTML += templatePokemonInfoEVOLUTION(i);
-        chain = document.getElementById(`pokemon-selected-info-chain-${i}`);
-        chain.innerHTML = templatePokemonInfoEvolutionChainSingle(i);
+        content.innerHTML += templatePokemonInfoEVOLUTION(0);
+        chain = document.getElementById(`pokemon-selected-info-chain-${0}`);
+        chain.innerHTML = templatePokemonInfoEvolutionChainSingle(0);
     }
 }
 
