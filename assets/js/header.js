@@ -227,12 +227,12 @@ function muteMusic() {
     cleanMusicIcon();
     if(darkmode) {
         addClasslist(`header-music-gray`, `d-none`); 
+        addClasslist(`header-music-mute`, `d-none`);
+        addClasslist(`header-music-mute-dark`, `d-none`);
+    }
+    else { 
         addClasslist('header-music-dark', 'd-none');
         addClasslist(`header-music-mute`, `d-none`);
-    }
-    else {
-        addClasslist(`header-music-gray`, `d-none`); 
-        addClasslist('header-music-dark', 'd-none');
         addClasslist(`header-music-mute-dark`, `d-none`);
     }
     bgMusic.pause();

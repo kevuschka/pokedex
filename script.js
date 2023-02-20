@@ -20,9 +20,7 @@ let searchResults = [];
 let searching = false;
 let settingsOpen = false;
 
-let currentDate;
 let count;
-let lang = 'en';
 
 let dataLoaded = false;
 
@@ -44,13 +42,13 @@ async function init() {
     renderPageColor();
     closeLoadPopup();
     renderPageSiteBottomNav();
+    renderFooter();
 }
 
 
 ///////////////////////////////  L O C A L S T O R A G E  ///////////////////////////////
 
 async function getLocalStorage() {
-    lang = localStorage.getItem('lang') || 'en';
     darkmode = JSON.parse(localStorage.getItem('darkmode')) || false;
     sound = JSON.parse(localStorage.getItem('sound')) || true;
     pokemonsPerPage = JSON.parse(localStorage.getItem('pokemonsPerPage')) || 40;
@@ -109,45 +107,6 @@ function availableInPokemonsArray(i) {
         } 
     return false;
 }
-
-///////////////////////////////  L A T E S T   D A T E  ///////////////////////////////
-
-// function dataIsFromLatestDate() {
-//     let date = getDateAsArray();
-//     if(currentDate) {
-//         if(date[0] > currentDate[0]) {
-//             currentDate = [[date[0]], [date[1]], [date[2]]];
-//             return false;
-//         } else return isLatestMonth(date);
-//     } else {
-//         currentDate = [[date[0]], [date[1]], [date[2]]];
-//         return false;
-//     }
-// }
-
-
-// function getDateAsArray() {
-//     let date = new Date();
-//     date = date.toISOString();
-//     date = date.split('T')[0];
-//     return date.split('-');
-// }
-
-
-// function isLatestMonth(date) {
-//     if(date[1] > currentDate[1]) {
-//         currentDate = [[date[0]], [date[1]], [date[2]]];
-//         return false;
-//     } else return isLatestDay(date);
-// }
-
-
-// function isLatestDay(date) {
-//     if(date[2] > currentDate[2]) {
-//         currentDate = [[date[0]], [date[1]], [date[2]]];
-//         return false;
-//     } else return true;
-// }
 
 ///////////////////////////////  R E N D E R   P A G E  ///////////////////////////////
 
@@ -272,13 +231,14 @@ function noSelectSound() {
     }
 }
 
+///////////////////////////////  P A G E   B O T T O M   N A V I G A T I O N  ///////////////////////////////
 
 function renderPageSiteBottomNav() {
     if(!(onFavoritesPage || searching)) {
         calculateLastPageNumber(pokemonsPerPage);
         let content = document.getElementById(`pokemon-list`);
         content.innerHTML += `<div class="bottom-nav-container w-100 flex">
-                                    <div class="bottom-nav flex" id="bottom-nav"></div>
+                                    <div class="bottom-nav align-center flex" id="bottom-nav"></div>
                                 </div>`;
         renderBottomNavNumbers();
         addClasslist(`bottom-nav-number-${currentPageNumber}`, `selected-bottom-nav-number`);
@@ -375,7 +335,7 @@ function renderBottomNavNumbersInLoopFor(loopTimes, startingAt, content) {
 
 function renderPageNumber(i) {
     lastSelected = false;
-    hideSelectedPokemonWrapper();
+    if(sideWrapperIsOpen) hideSelectedPokemonWrapper();
     currentPageNumber = i;
     let from = (i-1)*pokemonsPerPage;
     let to;
@@ -385,6 +345,24 @@ function renderPageNumber(i) {
     renderPageSiteBottomNav();
 }
 
+///////////////////////////////  R E N D E R   F O O T E R  ///////////////////////////////
+
+function renderFooter() {
+    let content = document.getElementById('footer');
+    content.innerHTML = `
+        <div class="footer-container flex w-100 h-100">
+            <div>
+                <p>Icons by <a href="https://iconsdb.com" target="_blank">iconsbd.com</a></p>
+                <p>Design inspired by 
+                    <a href="https://dribbble.com/shots/6545819-Pokedex-App" target="_blank">Saepul Nahwan</a> and 
+                    <a href="https://dribbble.com/shots/11114892-Pok-dex-App" target="_blank">Flavio Farias</a></p>
+                <p>Pokemon information from the <a href="https://pokeapi.co" target="_blank">Pokeapi</a></p>
+            </div>
+            <div>
+                <a class="impressum-link" href="/impressum.html">Impressum</a>
+            </div>
+        </div>`;
+}
 
 ///////////////////////////////  H E L P   F U N C T I O N S  ///////////////////////////////
 

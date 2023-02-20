@@ -880,13 +880,48 @@ html {
     background-color: #2196F3;
 }
 
+.footer {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 16px;
+    font-size: 0px;
+    background-color: #ccc;
+    color: #b4b4b4;
+    cursor: pointer;
+    transition: all 200ms ease-in-out;
+}
+
+.footer:hover {
+    height: 180px;
+    font-size: 18px;
+    cursor: default;
+}
+
+.footer:hover > .footer-container {
+    justify-content: space-between;
+    align-items: center;
+    
+    padding: 32px 32px;
+}
+
+.footer-container div p a, .footer-container div a {
+    text-decoration: none;
+    color: gray;
+    transition: all 125ms ease-in-out;
+}
+
+.footer-container div p a:hover, .footer-container div a:hover {
+    color: var(--red);
+}
+
 @media screen and (min-width: 1400px) {
     .header-wrapper {
         padding: 20px 140px;
     }
 
     .content-container {
-        padding: 0 140px 22px;
+        padding: 0 140px 0;
     }
 
     .pokemon-list {

@@ -120,7 +120,7 @@ function templateSettingsPopupContent() {
                     <p class="settings-number-per-page cursor-p" id="settings-numbers-30" onclick="selectSettingsPokemonNumberPerPage(30)">30</p>
                     <p class="settings-number-per-page cursor-p" id="settings-numbers-40" onclick="selectSettingsPokemonNumberPerPage(40)">40</p>
                     <p class="settings-number-per-page cursor-p" id="settings-numbers-50" onclick="selectSettingsPokemonNumberPerPage(50)">50</p>
-                    <p class="settings-number-per-page cursor-p" id="settings-numbers-70" onclick="selectSettingsPokemonNumberPerPage(70)">70</p>
+                    <p class="settings-number-per-page cursor-p" id="settings-numbers-60" onclick="selectSettingsPokemonNumberPerPage(60)">60</p>
                 </div>
                 
             </div>
@@ -184,7 +184,7 @@ function selectSettingsPokemonNumberPerPage(number) {
 
 
 function unselectAllPerPageNumbersInSettings() {
-    for (let i = 1; i < 6; i++)
+    for (let i = 1; i < 7; i++)
         removeClasslist(`settings-numbers-${i}0`, 'choosed-settings-number')
 }
 
