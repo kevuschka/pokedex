@@ -120,6 +120,7 @@ function templateSettingsPopupContent() {
                     <p class="settings-number-per-page cursor-p" id="settings-numbers-30" onclick="selectSettingsPokemonNumberPerPage(30)">30</p>
                     <p class="settings-number-per-page cursor-p" id="settings-numbers-40" onclick="selectSettingsPokemonNumberPerPage(40)">40</p>
                     <p class="settings-number-per-page cursor-p" id="settings-numbers-50" onclick="selectSettingsPokemonNumberPerPage(50)">50</p>
+                    <p class="settings-number-per-page cursor-p" id="settings-numbers-70" onclick="selectSettingsPokemonNumberPerPage(70)">70</p>
                 </div>
                 
             </div>
@@ -169,6 +170,7 @@ function checkThemeSettings() {
 
 
 function selectSettingsPokemonNumberPerPage(number) {
+    lastSelected = false;
     if(sideWrapperIsOpen) hideSelectedPokemonWrapper();
     if(pokemonsPerPage != number) {
         unselectAllPerPageNumbersInSettings();
@@ -176,6 +178,7 @@ function selectSettingsPokemonNumberPerPage(number) {
         pokemonsPerPage = number;
         setLocalStorage();
         renderPokemonsPage(0, pokemonsPerPage);
+        renderPageSiteBottomNav();
     }
 }
 

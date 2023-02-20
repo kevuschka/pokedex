@@ -1,7 +1,7 @@
 let darkmode = false;
 let sound = true;
 let bgSound = 0;
-let currentPageIndex = 0;
+
 let pokemonsPerPage;
 let pokemonsPerPageMobile;
 let pagePokemonsBasicData = []; 
@@ -27,6 +27,8 @@ let lang = 'en';
 let dataLoaded = false;
 
 let savedPokemons = [];
+let lastPageNumber;
+let currentPageNumber = 1;
 
 
 async function init() {
@@ -36,10 +38,12 @@ async function init() {
     setLocalStorage();
     renderLoadPopup();
     await createSavedPokemonsArray();
-    cleanValues();
+    sideWrapperIsOpen = false;
     renderHeader();
     renderPokemonsPage(0, pokemonsPerPage);
+    renderPageColor();
     closeLoadPopup();
+    renderPageSiteBottomNav();
 }
 
 
@@ -53,6 +57,7 @@ async function getLocalStorage() {
     pokemonsPerPageMobile = JSON.parse(localStorage.getItem('pokemonsPerPageMobile')) || 40;
     favPokemons = await JSON.parse(localStorage.getItem(`favPokemons`)) || [];
     savedPokemons = await JSON.parse(localStorage.getItem(`savedPokemons`)) || [];
+    lastPageNumber = JSON.parse(localStorage.getItem('pokemonsPerPage')) || 32;
 }
 
 
@@ -63,6 +68,7 @@ function setLocalStorage() {
     localStorage.setItem('pokemonsPerPageMobile', JSON.stringify(pokemonsPerPageMobile));
     localStorage.setItem('savedPokemons', JSON.stringify(savedPokemons));
     localStorage.setItem('favPokemons', JSON.stringify(favPokemons));
+    localStorage.setItem('lastPageNumber', JSON.stringify(lastPageNumber));
 }
 
 ///////////////////////////////  P O K E M O N   D A T A  ///////////////////////////////
@@ -97,69 +103,51 @@ function addToSavedPokemons(i, pokemon) {
 
 
 function availableInPokemonsArray(i) {
-    // if(searching) {
-    //     if(savedPokemons[i].length > 1) 
-    //         for (let j = 0; j < savedPokemons.length; j++) {
-    //             if(savedPokemons[i].length > 1)
-    //                 if(savedPokemons[i]['name']['en'].toLowerCase().includes(searchResults[i]['name']['en'].toLowerCase()) ||
-    //                     savedPokemons[i]['name']['de'].toLowerCase().includes(searchResults[i]['name']['de'].toLowerCase())) {
-    //                         currentPokemon = savedPokemons[i];
-    //                         return true;
-    //                     }
-    //         }
-    // } else {
         if(savedPokemons[i].length > 1) {
             currentPokemon = savedPokemons[i];
             return true;
         } 
-    //}
     return false;
 }
 
 ///////////////////////////////  L A T E S T   D A T E  ///////////////////////////////
 
-function dataIsFromLatestDate() {
-    let date = getDateAsArray();
-    if(currentDate) {
-        if(date[0] > currentDate[0]) {
-            currentDate = [[date[0]], [date[1]], [date[2]]];
-            return false;
-        } else return isLatestMonth(date);
-    } else {
-        currentDate = [[date[0]], [date[1]], [date[2]]];
-        return false;
-    }
-}
+// function dataIsFromLatestDate() {
+//     let date = getDateAsArray();
+//     if(currentDate) {
+//         if(date[0] > currentDate[0]) {
+//             currentDate = [[date[0]], [date[1]], [date[2]]];
+//             return false;
+//         } else return isLatestMonth(date);
+//     } else {
+//         currentDate = [[date[0]], [date[1]], [date[2]]];
+//         return false;
+//     }
+// }
 
 
-function getDateAsArray() {
-    let date = new Date();
-    date = date.toISOString();
-    date = date.split('T')[0];
-    return date.split('-');
-}
+// function getDateAsArray() {
+//     let date = new Date();
+//     date = date.toISOString();
+//     date = date.split('T')[0];
+//     return date.split('-');
+// }
 
 
-function isLatestMonth(date) {
-    if(date[1] > currentDate[1]) {
-        currentDate = [[date[0]], [date[1]], [date[2]]];
-        return false;
-    } else return isLatestDay(date);
-}
+// function isLatestMonth(date) {
+//     if(date[1] > currentDate[1]) {
+//         currentDate = [[date[0]], [date[1]], [date[2]]];
+//         return false;
+//     } else return isLatestDay(date);
+// }
 
 
-function isLatestDay(date) {
-    if(date[2] > currentDate[2]) {
-        currentDate = [[date[0]], [date[1]], [date[2]]];
-        return false;
-    } else return true;
-}
-
-///////////////////////////////  C L E A N   V A L U E S   ///////////////////////////////
-
-function cleanValues() {
-    sideWrapperIsOpen = false;
-}
+// function isLatestDay(date) {
+//     if(date[2] > currentDate[2]) {
+//         currentDate = [[date[0]], [date[1]], [date[2]]];
+//         return false;
+//     } else return true;
+// }
 
 ///////////////////////////////  R E N D E R   P A G E  ///////////////////////////////
 
@@ -183,7 +171,6 @@ async function renderPokemonsPage(from, to) {
     }
     for (let i = from; i < to; i++) 
         renderPokemonsListContent(i, content);
-    renderPageColor();
     if(document.getElementById('header-searchbar-input').value.length == 0)
         searching = false;
 }
@@ -284,6 +271,120 @@ function noSelectSound() {
         select.currentTime = 0;
     }
 }
+
+
+function renderPageSiteBottomNav() {
+    if(!(onFavoritesPage || searching)) {
+        calculateLastPageNumber(pokemonsPerPage);
+        let content = document.getElementById(`pokemon-list`);
+        content.innerHTML += `<div class="bottom-nav-container w-100 flex">
+                                    <div class="bottom-nav flex" id="bottom-nav"></div>
+                                </div>`;
+        renderBottomNavNumbers();
+        addClasslist(`bottom-nav-number-${currentPageNumber}`, `selected-bottom-nav-number`);
+    }
+}
+
+
+function calculateLastPageNumber(pokemonPerPageNumber) {
+    let max = allPokemonsBasicData.length;
+    if((max % pokemonPerPageNumber) > 0) lastPageNumber = parseInt((max / pokemonPerPageNumber).toString().split('.')[0]) + 1;
+    else lastPageNumber = (max / pokemonPerPageNumber).toFixed();
+    localStorage.setItem('lastPageNumber', JSON.stringify(lastPageNumber));
+}
+
+
+function renderBottomNavNumbers() {
+    let nav = document.getElementById('bottom-nav');
+    nav.innerHTML = '';
+    if(!searching && !onFavoritesPage) {
+        if(currentPageNumber == 1 || currentPageNumber == lastPageNumber) renderBottomNavNumbersEndPoints(nav);
+        else if(currentPageNumber == 2 || currentPageNumber == (lastPageNumber-1)) renderBottomNavNumbersSecondEndPoints(nav);
+        else if(currentPageNumber == 3 || currentPageNumber == (lastPageNumber-2)) renderBottomNavNumbersThirdEndPoints(nav);
+        else renderBottomNavNumbersMiddle(nav);
+    }
+}
+
+
+function renderBottomNavNumbersEndPoints(content) {
+    if(lastPageNumber > 3) {
+        if(currentPageNumber == 1) {
+            renderBottomNavNumbersInLoopFor(3, 1, content);
+            renderBottomNavEndingPlaceholder(content);
+        } else if(currentPageNumber == lastPageNumber) {
+            renderBottomNavBeginningPlaceholder(content);
+            renderBottomNavNumbersInLoopFor(3, lastPageNumber-2, content);
+        }
+    } else renderBottomNavNumbersInLoopFor(3, 1, content);
+}
+
+
+function renderBottomNavNumbersSecondEndPoints(content) {
+    if(lastPageNumber > 4) {
+        if(currentPageNumber == 2) {
+            renderBottomNavNumbersInLoopFor(4, 1, content);
+            renderBottomNavEndingPlaceholder(content);
+        } else if(currentPageNumber == (lastPageNumber-1)) {
+            renderBottomNavBeginningPlaceholder(content);
+            renderBottomNavNumbersInLoopFor(4, lastPageNumber-3, content);
+        }
+    } else renderBottomNavNumbersInLoopFor(4, 1, content)
+}
+
+
+function renderBottomNavNumbersThirdEndPoints(content) {
+    if(lastPageNumber > 5) {
+        if(currentPageNumber == 3) {
+            renderBottomNavNumbersInLoopFor(5, 1, content);
+            renderBottomNavEndingPlaceholder(content);
+        } else if(currentPageNumber == (lastPageNumber-2)) {
+            renderBottomNavBeginningPlaceholder(content);
+            renderBottomNavNumbersInLoopFor(5, lastPageNumber-4, content);
+        }
+    } else renderBottomNavNumbersInLoopFor(5, 1, content);
+}
+
+
+function renderBottomNavNumbersMiddle(content) {
+    renderBottomNavBeginningPlaceholder(content);
+    renderBottomNavNumbersInLoopFor(5, currentPageNumber-2, content)
+    renderBottomNavEndingPlaceholder(content);
+}
+
+
+
+function renderBottomNavBeginningPlaceholder(content) {
+    content.innerHTML += `<p class="bottom-nav-number cursor-p" id="bottom-nav-number-1" onclick="renderPageNumber(1)">1</p>`;
+    content.innerHTML += `<p class="bottom-nav-placeholder">...</p>`;
+}
+
+
+function renderBottomNavEndingPlaceholder(content) {
+    content.innerHTML += `<p class="bottom-nav-placeholder">...</p>`;
+    content.innerHTML += `<p class="bottom-nav-number cursor-p" id="bottom-nav-number-${lastPageNumber}" onclick="renderPageNumber(${lastPageNumber})">${lastPageNumber}</p>`;
+}
+
+
+function renderBottomNavNumbersInLoopFor(loopTimes, startingAt, content) {
+    for (let i = 0; i < loopTimes; i++) {
+        content.innerHTML += `<p class="bottom-nav-number cursor-p" id="bottom-nav-number-${startingAt}" onclick="renderPageNumber(${startingAt})">${startingAt}</p>`;
+        startingAt++;
+    }
+}
+
+
+function renderPageNumber(i) {
+    lastSelected = false;
+    hideSelectedPokemonWrapper();
+    currentPageNumber = i;
+    let from = (i-1)*pokemonsPerPage;
+    let to;
+    if(i == lastPageNumber) to = from + (allPokemonsBasicData.length % pokemonsPerPage);
+    else to = from + pokemonsPerPage;
+    renderPokemonsPage(from, to);
+    renderPageSiteBottomNav();
+}
+
 
 ///////////////////////////////  H E L P   F U N C T I O N S  ///////////////////////////////
 

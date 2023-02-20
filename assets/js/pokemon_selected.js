@@ -144,8 +144,8 @@ function hideSelectedPokemonWrapper() {
     document.getElementById(`pokemon-selected-wrapper`).style.width = `0`;
     document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `0`;
     }, 260);
+    if(lastSelected) unmarkLastSelectedPokemon();
     sideWrapperIsOpen = false;
-    unmarkLastSelectedPokemon();
 }
 
 

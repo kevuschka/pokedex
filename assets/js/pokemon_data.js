@@ -1,7 +1,7 @@
 let selectedPokemonIndex = -1;
 let sideWrapperIsOpen = false;
 let stats = [];
-let current
+let lastSelected = false;
 let currentPokemon = '';
 let pokemonNotSaved = true;
 let nameVersionsData = {
@@ -38,12 +38,12 @@ async function renderPokemon(i) {
     }
     loadStarIconIfPokemonInFavs();
     showSelectedPokemonInfo();
-    unmarkLastSelectedPokemon(); 
+    if(lastSelected) unmarkLastSelectedPokemon(); 
     selectTab(1);
     selectedPokemonIndex = i;
     if(!onFavoritesPage) await getOtherTabsInfos(i);
     makeOtherSectionTabsVisible();
-        
+    lastSelected = true;
 }   
 
 
