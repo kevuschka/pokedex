@@ -294,6 +294,10 @@ html {
     transition: all 125ms ease-in-out;
 }
 
+.selected-wrapper-width {
+    width: 60%;
+}
+
 .pokemon-selected-container {
     top: 0;
     height: calc(100vh - 130px);
@@ -408,7 +412,7 @@ html {
 .pokemon-selected-image {
     top: 91px;
     right: 17px;
-    width: 348px;
+    width: 58%
 }
 
 
@@ -423,7 +427,8 @@ html {
 
 .pokemon-selected-info-tab-container {
     align-items: center;
-    padding: 22px 22px 0;
+    /* padding: 22px 22px 0; */
+    padding: 22px 22px 16px;
     flex-wrap: nowrap;
     gap: 22px;
     overflow-x: auto;
@@ -432,11 +437,12 @@ html {
 .pokemon-selected-info-tab {
     justify-content: center;
     align-items: center;
-    padding-bottom: 10px;
+    /* padding-bottom: 10px; */
+    padding-bottom: 2px;
     font-size: 22px;
 }
 
-.sp-tab {
+.bs-tab {
     min-width: 112px;
 }
 
@@ -844,7 +850,7 @@ html {
 }
 
 .bottom-nav-container {
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -913,18 +919,4 @@ html {
 
 .footer-container div p a:hover, .footer-container div a:hover {
     color: var(--red);
-}
-
-@media screen and (min-width: 1400px) {
-    .header-wrapper {
-        padding: 20px 140px;
-    }
-
-    .content-container {
-        padding: 0 140px 0;
-    }
-
-    .pokemon-list {
-        padding-top: 150px;
-    }
 }

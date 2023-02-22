@@ -1,0 +1,196 @@
+@media screen and (min-width: 1650px) {
+    .header-wrapper {
+        padding: 20px 140px;
+    }
+
+    .content-container {
+        padding: 0 140px 0;
+    }
+
+    .pokemon-list {
+        padding-top: 150px;
+    }
+}
+
+@media screen and (max-width: 1651px) {
+
+    .selected-wrapper-width {
+        width: 70%;
+    }
+
+    .pad-top-50 {
+        padding-top: 70% !important;
+    }
+
+    .pokemon-selected-image {
+        top: 105px;
+        right: 10px;
+        width: 50%;
+    }
+
+    .selected-wrapper-width {
+        width: 50%;
+    }
+
+    .pokemon-selected-info-tab-container {
+        padding: 22px 22px 16px;
+    }
+    
+    .pokemon-selected-info-tab {
+        padding-bottom: 2px;
+    }
+
+    .damage-icon {
+        width: 40px;
+        height: 40px;
+        padding: 10px;
+    }
+}
+
+@media screen and (max-width: 1351px) {
+
+    .pad-top-50 {
+        padding-top: 74% !important;
+    }
+
+    .gap-10 {
+        gap: 5px;
+    }
+
+    .bs-tab {
+        min-width: 90px;
+    }
+
+    .subTitle {
+        font-size: 22px;
+    }
+
+    .subSubTitle {
+        font-size: 18px;
+    }
+
+    .table-titles {
+        font-size: 14px;
+        min-width: 110px;
+        width: 110px;
+    }
+
+    .pokemon-list-element-container {
+        flex: 1 1 200px;
+    }
+
+    .pokemon-list-element-name-container {
+        font-size: 18px;
+    }
+
+    .pokemon-list-element-type {
+        align-items: center;
+        font-size: 12px;
+        border-radius: 10px;
+        padding: 1px 10px;
+    }
+
+    .pokemon-list-element-image {
+        width: 70px;
+    }
+
+    .pokemon-selected-header-arrow, .pokemon-selected-header-like {
+        width: 28px;
+        height: 28px;
+    }
+
+    .pokemon-selected-header-name-and-type {
+        gap: 12px;
+    }
+
+    .pokemon-selected-header-name-container > p:nth-child(1) {
+        font-size: 28px;
+    }
+
+    .pokemon-selected-header-name-container > p:nth-child(2) {
+        font-size: 18px;
+    }
+
+    .pokemon-selected-image {
+        width: 40%;
+        top: 120px;
+    }
+
+    .pokemon-selected-info-tab-container {
+        gap: 18px;
+        padding: 16px 16px 12px;
+    }
+
+    .pokemon-selected-info-tab {
+        font-size: 18px;
+    }
+
+    .pokemon-selected-info-data-wrapper {
+        font-size: 16px;
+    }
+
+    .weakness-icons {
+        width: 28px;
+        height: 28px;
+    }
+
+    .damage-icon {
+        width: 32px;
+        height: 32px;
+        padding: 5px;
+    }
+
+    .pokemon-selected-info-chain-pokemon-image {
+        width: 70px;
+    }
+
+    .pokemon-selected-info-chain-pokemon-name {
+        font-size: 14px;
+    }
+
+    .pokemon-selected-info-chain-arrow > img {
+        width: 30px;
+    }
+
+    .pokemon-selected-info-chain-arrow-description > p {
+        font-size: 12px;
+    }
+
+    .collapse-table-content > tr > td {
+        font-size: 16px;
+    }
+
+    .collapse-element-content {
+        overflow-x: hidden;
+    }
+
+    .table-titles-short {
+        min-width: 23px;
+        width: 23px;
+    }
+
+    .damage-value-half {
+        font-size: 12px;
+        padding-top: 3px;
+    }
+
+}
+
+@media screen and (max-height: 800px) {
+    .header {
+        height: 100px;
+        min-height: 100px;
+    }
+
+    .pokemon-list {
+        padding: 115px 22px 22px;
+    }
+
+    .pokemon-selected-container {
+        height: calc(100vh - 100px);
+    }
+
+    .pokemon-selected-wrapper {
+        padding-top: 93px;
+    }
+}

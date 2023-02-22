@@ -52,7 +52,7 @@ function templateMoveTable(i) {
     return `<table class="w-100">
                 <thead>
                     <tr>
-                        <td class="table-titles">Game Version</td><td class="table-titles">Method</td><td class="table-titles">Lvl.</td>
+                        <td class="table-titles">Game Version</td><td class="table-titles">Method</td><td class="table-titles table-titles-short">Lvl.</td>
                     </tr>
                 </thead>
                 <tbody class="collapse-table-content" id="collapse-table-content-${i}"></tbody>

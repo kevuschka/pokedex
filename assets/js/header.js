@@ -8,7 +8,6 @@ function renderHeader() {
     renderHeaderFunctionalityTemplates(headerFunctionality);
     renderHeaderColor();
     addClasslist(`header`, `tranY-0`);
-    // renderHeaderStarIcon();
 }
 
 
@@ -102,7 +101,6 @@ function renderHeaderIcons() {
     renderFavoritesIcon();
     renderSettingsIcon();
     renderMusicIcon();
-    // renderSoundIcon();
     
 }
 

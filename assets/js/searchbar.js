@@ -18,4 +18,5 @@ function searchPokemon() {
             }
     }  else searching = false;
     renderPokemonsPage(0, pokemonsPerPage);
+    if(searching == false) renderPageSiteBottomNav();
 }

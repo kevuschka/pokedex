@@ -53,7 +53,7 @@ function templatePokemonInfoWrapper() {
 function templatePokemonInfoTabs() {
     let wrapper = document.getElementById(`pokemon-selected-info-tab-container`);
     wrapper.innerHTML = `<p class="pokemon-selected-info-tab flex cursor-p" id="tab_1" onclick="selectTab(1)">About</p>`;
-    wrapper.innerHTML += `<p class="pokemon-selected-info-tab c-white flex sp-tab cursor-p" id="tab_2" onclick="selectTab(2)">Base Stats</p>`;
+    wrapper.innerHTML += `<p class="pokemon-selected-info-tab c-white flex bs-tab cursor-p" id="tab_2" onclick="selectTab(2)">Base Stats</p>`;
     wrapper.innerHTML += `<p class="pokemon-selected-info-tab c-white flex cursor-p" id="tab_3" onclick="selectTab(3)">Evolution</p>`;
     wrapper.innerHTML += `<p class="pokemon-selected-info-tab c-white flex cursor-p" id="tab_4" onclick="selectTab(4)">Moves</p>`;
     wrapper.innerHTML += `<p class="pokemon-selected-info-tab c-white flex cursor-p" id="tab_5" onclick="selectTab(5)">Locations</p>`;
@@ -119,8 +119,9 @@ function showSelectedPokemonWrapper() {
         let height = document.getElementById(`pokemon-list-wrapper`).clientHeight;
         document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `${height}px`;
     }, 135);
-    if(window.innerWidth > 999) document.getElementById(`pokemon-selected-wrapper`).style.width = `60%`;
-    else document.getElementById(`pokemon-selected-wrapper`).style.width = `100%`;
+    // if(window.innerWidth > 999) document.getElementById(`pokemon-selected-wrapper`).style.width = `60%`;
+    // else document.getElementById(`pokemon-selected-wrapper`).style.width = `100%`;
+    addClasslist('pokemon-selected-wrapper', 'selected-wrapper-width');
 }
 
 
@@ -141,8 +142,8 @@ function hideSelectedPokemonWrapper() {
         removeClasslist(`pokemon-selected`, `tranX-0`);
     }, 130);
     setTimeout(() => {
-    document.getElementById(`pokemon-selected-wrapper`).style.width = `0`;
-    document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `0`;
+        removeClasslist('pokemon-selected-wrapper', 'selected-wrapper-width');
+        document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `0`;
     }, 260);
     if(lastSelected) unmarkLastSelectedPokemon();
     sideWrapperIsOpen = false;
@@ -160,7 +161,7 @@ function selectTab(i) {
     unselectAllTabs();
     removeClasslist(`tab_${i}`, `unselected-tab`);
     addClasslist(`tab_${i}`, `selected-tab`);
-    document.getElementById(`tab_${i}`).style.borderBottom = `2px solid var(--${currentPokemon['background_color']})`;
+    document.getElementById(`tab_${i}`).style.borderBottom = `4px solid var(--${currentPokemon['background_color']})`;
     selectPokemonTab(i);
 }
 
