@@ -110,7 +110,7 @@ function availableInPokemonsArray(i) {
 
 ///////////////////////////////  R E N D E R   P A G E  ///////////////////////////////
 
-async function renderPokemonsPage(from, to) {
+function renderPokemonsPage(from, to) {
     let wrapper = document.getElementById(`pokemon-list-wrapper`);
     wrapper.innerHTML = templatePokemonList();
     let content = document.getElementById(`pokemon-list`);
@@ -152,7 +152,7 @@ function noPokemonHere(content) {
 
 // ########## RENDER POKEMON LIST CONTENT ##########
 
-async function renderPokemonsListContent(elementNumber, content) {
+function renderPokemonsListContent(elementNumber, content) {
     let pokemon;
     if(searching) pokemon = searchResults[elementNumber];
     else if(onFavoritesPage) pokemon = favPokemons[elementNumber];
@@ -169,7 +169,7 @@ function currentPage() {
 
 
 function templatePokemonsListElement(i, pokemon) {
-    return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="renderPokemon(${i})" onmousedown="clickOnElement(${i})" onmouseup="clickOutElement(${i})">
+    return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="renderPokemon(${i})" onmousedown="clickOnElement(${i})">
                 <div class="pokemon-list-element flex column">
                     <div class="pokemon-list-element-id-container flex absolute"><p>#${returnPokemonId(pokemon['id'])}</p></div>
                     <div class="pokemon-list-element-name-container"><p>${pokemon['name']['en']}</p></div>
@@ -207,13 +207,15 @@ function renderPageColor() {
 function clickOnElement(i) {
     selectSound();
     document.getElementById(`pokemon-list-element-container-${i}`).style.boxShadow = 'none';
-    document.getElementById(`pokemon-list-element-container-${i}`).style.borderStyle = 'inset';
+    document.getElementById(`pokemon-list-element-container-${i}`).style.opacity = '1';
+    document.getElementById(`pokemon-list-element-container-${i}`).style.cursor = 'default'
+    // background-image: linear-gradient(165deg, rgba(255, 255, 255, 0.4) 10%, transparent);
 }
 
 
-function clickOutElement(i) {
-    document.getElementById(`pokemon-list-element-container-${i}`).style.borderStyle = 'none';
-}
+// function clickOutElement(i) {
+//     document.getElementById(`pokemon-list-element-container-${i}`).style.borderStyle = 'none';
+// }
 
 
 // SOUND 

@@ -30,7 +30,7 @@ function renderPokemonInfoEvolutionChains(content, chains, chain) {
 
 function templatePokemonInfoEVOLUTION(i) {
     return `<div class="pokemon-selected-info-chain flex" id="pokemon-selected-info-chain-${i}">
-                <div class="pokemon-selected-info-chain-pokemon flex column cursor-p" onclick="renderPokemon(${currentPokemon['evolution'][i]['id']}-1)">
+                <div class="pokemon-selected-info-chain-pokemon flex column cursor-p" onclick="checkIfPokemonIsOnThisPage(${getRightArrayIndex(currentPokemon['evolution'][i]['id'])})">
                     <img class="pokemon-selected-info-chain-pokemon-image" src="${currentPokemon['evolution'][i]['image']}">
                     <p class="pokemon-selected-info-chain-pokemon-name">${currentPokemon['evolution'][i]['name']}</p>
                 </div>
@@ -43,7 +43,7 @@ function templatePokemonInfoEvolutionChain(i, chains) {
                 <img src="assets/img/evolution_arrow.png">
                 <div class="pokemon-selected-info-chain-arrow-description flex" id="pokemon-selected-info-chain-arrow-description-${i}"></div>
             </div>
-            <div class="pokemon-selected-info-chain-pokemon flex column cursor-p" onclick="renderPokemon(${currentPokemon['evolution'][i+1]['id']}-1)">
+            <div class="pokemon-selected-info-chain-pokemon flex column cursor-p" onclick="checkIfPokemonIsOnThisPage(${getRightArrayIndex(currentPokemon['evolution'][i+1]['id'])})">
                 <img class="pokemon-selected-info-chain-pokemon-image" src="${currentPokemon['evolution'][i+1]['image']}">
                 <p class="pokemon-selected-info-chain-pokemon-name">${currentPokemon['evolution'][i+1]['name']}</p>
             </div>`;

@@ -16,8 +16,9 @@ let nameMethodsData = {
 
 
 async function renderPokemon(i) {
+    if(currentPokemon['id'] && getRightArrayIndex(currentPokemon['id']) === i) return;
     currentPokemon = '';
-    document.getElementById(`pokemon-list-element-container-${i}`).style.border = `inset`;
+    document.getElementById(`pokemon-list-element-container-${i}`).style.border = `5px inset`;
     showSelectedPokemonWrapper();
     scrollUpPokemonInfoOverlay();
     if(searching) {
@@ -45,6 +46,23 @@ async function renderPokemon(i) {
     makeOtherSectionTabsVisible();
     lastSelected = true;
 }   
+
+
+async function checkIfPokemonIsOnThisPage(i) {
+    let page;
+    let pokemonIndexRelativeToPageNumber = i+1;
+    if(pokemonIndexRelativeToPageNumber > pokemonsPerPage) {
+        if((pokemonIndexRelativeToPageNumber % pokemonsPerPage) > 0)
+            page = parseInt((pokemonIndexRelativeToPageNumber / pokemonsPerPage).toString().split('.')[0]) + 1;
+        else page = parseInt((pokemonIndexRelativeToPageNumber / pokemonsPerPage).toFixed());
+    } else page = 1;
+    if(searching) document.getElementById('header-searchbar-input').value = '';
+    if(onFavoritesPage) window.location.href = '/index.html';
+    if(page != currentPageNumber) renderPageNumber(page);
+    setTimeout(() => {
+        renderPokemon(pokemonIndexRelativeToPageNumber - 1);
+    }, 400);
+}
 
 
 function scrollUpPokemonInfoOverlay() {

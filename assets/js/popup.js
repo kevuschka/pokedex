@@ -177,8 +177,7 @@ function selectSettingsPokemonNumberPerPage(number) {
         addClasslist(`settings-numbers-${number}`, 'choosed-settings-number');
         pokemonsPerPage = number;
         setLocalStorage();
-        renderPokemonsPage(0, pokemonsPerPage);
-        renderPageSiteBottomNav();
+        renderPageNumber(1);
     }
 }
 
