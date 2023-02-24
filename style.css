@@ -73,10 +73,15 @@ html {
 
 .selected-tab {
     color: black;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
 }
 
 .unselected-tab {
     color: rgba(0,0,0,0.1);
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-bottom-color: transparent;
 }
 
 .opa-off {
@@ -184,6 +189,7 @@ html {
 .header-functionality-wrapper {
     gap: 20px;
     align-self: flex-end;
+    align-items: center;
 }
 
 .header-searchbar {
@@ -201,7 +207,7 @@ html {
     border: none;
     background-color: transparent;
     border-radius: 32px;
-    padding: 5px 12px;
+    padding: 12px;
 }
 
 .header-searchbar-input:focus {
@@ -282,7 +288,7 @@ html {
     font-size: 14px;
 }
 
-.pokemon-list-element > img {
+.pokemon-list-element-image {
     width: 90px;
     bottom: 6px;
     right: 1px;
@@ -300,7 +306,8 @@ html {
 
 .pokemon-selected-container {
     top: 0;
-    height: calc(100vh - 130px);
+    /* height: calc(100vh - 130px); */
+    height: 100vh;
     padding: 22px 10px 22px 0;
 }
 

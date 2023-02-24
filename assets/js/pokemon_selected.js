@@ -119,8 +119,6 @@ function showSelectedPokemonWrapper() {
         let height = document.getElementById(`pokemon-list-wrapper`).clientHeight;
         document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `${height}px`;
     }, 135);
-    // if(window.innerWidth > 999) document.getElementById(`pokemon-selected-wrapper`).style.width = `60%`;
-    // else document.getElementById(`pokemon-selected-wrapper`).style.width = `100%`;
     addClasslist('pokemon-selected-wrapper', 'selected-wrapper-width');
 }
 
@@ -146,6 +144,8 @@ function hideSelectedPokemonWrapper() {
         document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `0`;
     }, 260);
     if(lastSelected) unmarkLastSelectedPokemon();
+    currentPokemon = '';
+    lastSelected = false;
     sideWrapperIsOpen = false;
 }
 
@@ -153,7 +153,7 @@ function hideSelectedPokemonWrapper() {
 // UNMARK SELECTION
 function unmarkLastSelectedPokemon() {
     if(!(onFavoritesPage && (favPokemons.length == 0))) 
-        if(selectedPokemonIndex != -1) document.getElementById(`pokemon-list-element-container-${selectedPokemonIndex}`).style = `none`;
+        if(selectedPokemonIndex != -1) document.getElementById(`pokemon-list-element-container-${selectedPokemonIndex}`).style.border = `unset`;
 }
 
 
@@ -161,8 +161,17 @@ function selectTab(i) {
     unselectAllTabs();
     removeClasslist(`tab_${i}`, `unselected-tab`);
     addClasslist(`tab_${i}`, `selected-tab`);
-    document.getElementById(`tab_${i}`).style.borderBottom = `4px solid var(--${currentPokemon['background_color']})`;
+    document.getElementById(`tab_${i}`).style.borderBottomColor = `var(--${currentPokemon['background_color']})`;
     selectPokemonTab(i);
+}
+
+
+function unselectAllTabs() {
+    for (let i = 1; i <= 5; i++) {
+        removeClasslist(`tab_${i}`, `selected-tab`);
+        addClasslist(`tab_${i}`, `unselected-tab`);
+        document.getElementById(`tab_${i}`).style.borderBottomColor = `transparent`;
+    }   
 }
 
 
@@ -179,15 +188,6 @@ function selectPokemonTab(i) {
 function coloringSubtitles() {
     document.querySelectorAll('.subTitle').forEach(el => el.style.color = 'unset');
     document.querySelectorAll('.subTitle').forEach(el => el.style.color = `var(--${currentPokemon[`background_color`]})`);
-}
-
-
-function unselectAllTabs() {
-    for (let i = 1; i <= 5; i++) {
-        removeClasslist(`tab_${i}`, `selected-tab`);
-        addClasslist(`tab_${i}`, `unselected-tab`);
-        document.getElementById(`tab_${i}`).style.borderBottom = `none`;
-    }   
 }
 
 
