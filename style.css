@@ -136,6 +136,7 @@ html {
 
 .loadPopup-image {
     object-fit: scale-down;
+    max-width: 100%;
 }
 
 .loadPopup-image-overlay {
@@ -736,6 +737,7 @@ html {
 
 .settings-numbers-selection {
     gap: 24px;
+    flex-wrap: wrap;
 }
 
 .settings-number-per-page {

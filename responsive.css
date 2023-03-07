@@ -583,6 +583,10 @@
         max-width: 100%;
     }
 
+    .bottom-nav {
+        gap: 10px;
+    }
+
     .footer:hover {
         font-size: 14px;
     }
