@@ -232,6 +232,7 @@ html {
 /*//////////////////////////////  P O K E M O N  L I S T  //////////////////////////////*/
 .pokemon-list-wrapper {
     justify-content: center;
+    transition: all 125ms ease-in-out;
 }
 
 .pokemon-list {

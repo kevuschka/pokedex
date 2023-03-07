@@ -6,6 +6,7 @@ function renderLoadPopup() {
     content.innerHTML +=  templateSettingsPopup();
     let settingsContent = document.getElementById('settings-popup');
     settingsContent.innerHTML = templateSettingsPopupContent();
+    content.innerHTML += templateTopMenu();
     openLoadPopup();
 }
 
@@ -209,4 +210,26 @@ function selectSettingsTheme(theme) {
     setLocalStorage();
     renderHeader();
     renderPageColor();
+}
+
+
+function templateTopMenu() {
+    return `<div class="top-menu-popup-full absolute d-none" onclick="closeMenuPopup()" id="top-menu-popup-full">
+                <div class="top-menu-popup-full-container w-100 h-100 relative">
+                    <div class="top-menu-popup-container absolute" onclick="doNotClose(event)" id="top-menu-popup-container">
+                        <div class="top-menu-popup w-100 h-100 flex column">
+                            <a class="impressum-link" href="/impressum.html">Impressum</a>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+}
+
+
+function closeMenuPopup() {
+    removeClasslist('top-menu-popup-container', 'slideDown');
+    setTimeout(() => {
+        addClasslist('top-menu-popup-full', 'd-none');
+    }, 125);
+    
 }

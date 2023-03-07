@@ -1,8 +1,3 @@
-////////////////////  E V O L U T I O N   T A B  ////////////////////
-
-
-////////////////////  M O V E S   &   L O C A T I O N S   T A B  ////////////////////
-
 function templatePokemonInfoLocationsContainer() {
     return `<div class="pokemon-selected-info-locations-container flex column w-100" id="pokemon-selected-info-locations-container"></div>`;
 }

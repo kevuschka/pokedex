@@ -45,7 +45,7 @@ async function renderPokemon(i) {
     if(!onFavoritesPage) await getOtherTabsInfos(i);
     makeOtherSectionTabsVisible();
     lastSelected = true;
-}   
+} 
 
 
 async function checkIfPokemonIsOnThisPage(i) {

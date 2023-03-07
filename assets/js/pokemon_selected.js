@@ -120,6 +120,14 @@ function showSelectedPokemonWrapper() {
         document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `${height}px`;
     }, 135);
     addClasslist('pokemon-selected-wrapper', 'selected-wrapper-width');
+    if(window.innerWidth < 700) renderPokemonResp();
+}
+
+
+function renderPokemonResp() {
+    addClasslist('header', 'd-none');
+    addClasslist('footer', 'd-none');
+    addClasslist('pokemon-list-wrapper', 'd-none');
 }
 
 
@@ -134,6 +142,7 @@ function showSelectedPokemonInfo() {
 }
 
 
+
 function hideSelectedPokemonWrapper() {
     removeClasslist(`pokemon-selected-overlay-wrapper`, `pad-top-50`);
     setTimeout(() => {
@@ -142,6 +151,7 @@ function hideSelectedPokemonWrapper() {
     setTimeout(() => {
         removeClasslist('pokemon-selected-wrapper', 'selected-wrapper-width');
         document.getElementById(`pokemon-selected-wrapper`).style.minHeight = `0`;
+        hideSelectedPokemonWrapperResp();
     }, 260);
     if(lastSelected) unmarkLastSelectedPokemon();
     currentPokemon = '';
@@ -149,6 +159,11 @@ function hideSelectedPokemonWrapper() {
     sideWrapperIsOpen = false;
 }
 
+function hideSelectedPokemonWrapperResp() {
+    removeClasslist('header', 'd-none');
+    removeClasslist('footer', 'd-none');
+    removeClasslist('pokemon-list-wrapper', 'd-none');
+}
 
 // UNMARK SELECTION
 function unmarkLastSelectedPokemon() {
