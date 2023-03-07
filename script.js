@@ -169,7 +169,7 @@ function currentPage() {
 
 
 function templatePokemonsListElement(i, pokemon) {
-    return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="renderPokemon(${i})" onmousedown="clickOnElement(${i})">
+    return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="renderPokemon(${i})">
                 <div class="pokemon-list-element flex column">
                     <div class="pokemon-list-element-id-container flex absolute"><p>#${returnPokemonId(pokemon['id'])}</p></div>
                     <div class="pokemon-list-element-name-container"><p>${pokemon['name']['en']}</p></div>

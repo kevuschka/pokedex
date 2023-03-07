@@ -584,17 +584,34 @@
     }
 
     .bottom-nav {
-        gap: 10px;
+        gap: 8px;
+    }
+
+    .selected-bottom-nav-number {
+        width: 28px;
     }
 
     .footer:hover {
         font-size: 14px;
+    }
+
+    .settings-popup {
+        font-size: 26px;
     }
 }
 
 @media screen and (max-width: 361px) {
     .pokemon-list-element-image {
         width: 93px;
+    }
+
+    .bottom-nav {
+        gap: 5px;
+    }
+
+    .settings-popup {
+        font-size: 20px;
+        padding: 32px;
     }
 }
 

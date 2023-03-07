@@ -16,6 +16,7 @@ let nameMethodsData = {
 
 
 async function renderPokemon(i) {
+    clickOnElement(i);
     if(currentPokemon['id'] && getRightArrayIndex(currentPokemon['id']) === i) return;
     currentPokemon = '';
     document.getElementById(`pokemon-list-element-container-${i}`).style.border = `5px inset`;
