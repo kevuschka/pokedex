@@ -16,7 +16,6 @@ let nameMethodsData = {
 
 
 async function renderPokemon(i) {
-    clickOnElement(i);
     if(currentPokemon['id'] && getRightArrayIndex(currentPokemon['id']) === i) return;
     currentPokemon = '';
     document.getElementById(`pokemon-list-element-container-${i}`).style.border = `5px inset`;
@@ -58,11 +57,12 @@ async function checkIfPokemonIsOnThisPage(i) {
         else page = parseInt((pokemonIndexRelativeToPageNumber / pokemonsPerPage).toFixed());
     } else page = 1;
     if(searching) document.getElementById('header-searchbar-input').value = '';
+    searching = false;
     if(onFavoritesPage) window.location.href = '/index.html';
     if(page != currentPageNumber) renderPageNumber(page);
     setTimeout(() => {
         renderPokemon(pokemonIndexRelativeToPageNumber - 1);
-    }, 400);
+    }, 500);
 }
 
 
