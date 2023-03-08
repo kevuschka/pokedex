@@ -13,7 +13,7 @@ function renderHeader() {
 
 function renderHeaderFunctionalityTemplates(content) {
     content.innerHTML = templateHeaderMusicIcon();
-    content.innerHTML += templateHeaderSoundIcon();
+    // content.innerHTML += templateHeaderSoundIcon();
     content.innerHTML += templateHeaderSearchbar();
     content.innerHTML += templateHeaderFavorites();
     content.innerHTML += templateHeaderSettings();
@@ -34,24 +34,13 @@ function removeAllHeaderAdditionClasses() {
 }
 
 
-// function renderHeaderStarIcon() {
-//     if(onFavoritesPage) {
-//         addClasslist('header-favorites-gray', 'd-none');
-//         removeClasslist('header-favorites-dark', 'd-none');
-//     } else {
-//         addClasslist('header-favorites-dark', 'd-none');
-//         removeClasslist('header-favorites-gray', 'd-none');
-//     }
-// }
-
-
 function templateHeaderWrapper() {
     return `<div class="header-wrapper w-100 h-100 flex" id="header-wrapper"></div>`;
 }
 
 
 function templateHeaderTitle() {
-    return `<a href="/index.html" class="header-title cursor-p">Pokedex</a>`;
+    return `<a href="./index.html" class="header-title cursor-p">Pokedex</a>`;
 }
 
 
@@ -68,11 +57,11 @@ function templateHeaderMusicIcon() {
 }
 
 
-function templateHeaderSoundIcon() {
-    return `<img class="header-sound cursor-p d-none" id="header-sound-gray" src="assets/img/sound_icon.png" onclick="muteSound()">
-            <img class="header-sound cursor-p d-none" id="header-sound-dark" src="assets/img/sound_icon_dark.png" onclick="muteSound()"> 
-            <img class="header-sound cursor-p d-none" id="header-sound-mute" src="assets/img/sound_icon_mute.png" onclick="unmuteSound()">`;
-}
+// function templateHeaderSoundIcon() {
+//     return `<img class="header-sound cursor-p d-none" id="header-sound-gray" src="assets/img/sound_icon.png" onclick="muteSound()">
+//             <img class="header-sound cursor-p d-none" id="header-sound-dark" src="assets/img/sound_icon_dark.png" onclick="muteSound()"> 
+//             <img class="header-sound cursor-p d-none" id="header-sound-mute" src="assets/img/sound_icon_mute.png" onclick="unmuteSound()">`;
+// }
 
 
 function templateHeaderSearchbar() {
@@ -83,8 +72,8 @@ function templateHeaderSearchbar() {
 
 
 function templateHeaderFavorites() {
-    return `<a href="/favorites.html" id="header-favorites-gray"><img class="header-favorites cursor-p" src="assets/img/outline_star_icon.png"></a>
-            <a href="/favorites.html" id="header-favorites-dark"><img class="header-favorites cursor-p" src="assets/img/outline_star_icon_dark.png"></a>`;
+    return `<a href="./favorites.html" id="header-favorites-gray"><img class="header-favorites cursor-p" src="assets/img/outline_star_icon.png"></a>
+            <a href="./favorites.html" id="header-favorites-dark"><img class="header-favorites cursor-p" src="assets/img/outline_star_icon_dark.png"></a>`;
 }
 
 

@@ -100,6 +100,10 @@ html {
     transform: translateX(0) !important;
 }
 
+.tranX-100-minus {
+    transform: translateX(-100vh) !important;
+}
+
 .pad-top-50 {
     padding-top: 70% !important;
 }
@@ -320,7 +324,7 @@ html {
     background-image: linear-gradient(145deg, rgba(255, 255, 255, 0.4) 0%, transparent 28%);
 
     transition: all 125ms ease-in-out;
-    transform: translateX(50vw);
+    transform: translateX(100vw);
     overflow: hidden;
 }
 
@@ -758,80 +762,23 @@ html {
 }
 
 .choosed-settings-number {
-    border: 5px solid #2196F3;
+    border: 5px solid var(--lightblue);
 }
 
 .settings-sound {
     justify-content: space-between;
 }
 
-/* SETTINGS SWITCH  */
+.settings-sound-selection {
+    gap: 32px;
+}
 
-/* The switch - the box around the slider */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-  }
-  
-  /* Hide default HTML checkbox */
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  
-  /* The slider */
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-  
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-  
-  input:checked + .slider {
-    background-color: #2196F3;
-  }
-  
-  input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-  }
-  
-  input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
-    border-radius: 34px;
-  }
-  
-  .slider.round:before {
-    border-radius: 50%;
-  }
+.settings-sound-icon {
+    width: 48px;
+    height: 48px;
+}
 
-
-  .settings-theme {
+.settings-theme {
     justify-content: space-between;
 }
 
@@ -856,7 +803,7 @@ html {
 }
 
 .choosed-settings-theme {
-    border: 5px solid #2196F3;
+    border: 5px solid var(--lightblue);
 }
 
 .bottom-nav-container {
@@ -884,7 +831,7 @@ html {
 .selected-bottom-nav-number {
     width: 64px;
     cursor: default;
-    background-color: #2196F3;
+    background-color: var(--lightblue);
 }
 
 .bottom-nav-placeholder {
@@ -893,7 +840,7 @@ html {
 }
 
 .selected-bottom-nav-number:hover {
-    background-color: #2196F3;
+    background-color: var(--lightblue);
 }
 
 .footer {
@@ -929,4 +876,8 @@ html {
 
 .footer-container div p a:hover, .footer-container div a:hover {
     color: var(--red);
+}
+
+.impressum-container {
+    padding: 32px;
 }

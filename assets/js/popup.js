@@ -26,6 +26,46 @@ function templateLoadPopup() {
 }
 
 
+function templateSettingsPopup() {
+    return `<div class="settings-popup-full w-100 absolute flex d-none" onclick="closeSettingsPopup()" id="settings-popup-full">
+                <div class="settings-popup flex column" id="settings-popup" onclick="doNotClose(event)"></div>    
+            </div>`;
+}
+
+
+function templateSettingsPopupContent() {
+    return `<div class="settings-numbers flex w-100">
+                <p>Pokemons per Page</p>
+                <div class="settings-numbers-selection flex">
+                    <p class="settings-number-per-page cursor-p" id="settings-numbers-10" onclick="selectSettingsPokemonNumberPerPage(10)">10</p>
+                    <p class="settings-number-per-page cursor-p" id="settings-numbers-20" onclick="selectSettingsPokemonNumberPerPage(20)">20</p>
+                    <p class="settings-number-per-page cursor-p" id="settings-numbers-30" onclick="selectSettingsPokemonNumberPerPage(30)">30</p>
+                    <p class="settings-number-per-page cursor-p" id="settings-numbers-40" onclick="selectSettingsPokemonNumberPerPage(40)">40</p>
+                    <p class="settings-number-per-page cursor-p" id="settings-numbers-50" onclick="selectSettingsPokemonNumberPerPage(50)">50</p>
+                    <p class="settings-number-per-page cursor-p" id="settings-numbers-60" onclick="selectSettingsPokemonNumberPerPage(60)">60</p>
+                </div>
+                
+            </div>
+            <div class="settings-sound flex w-100">
+                <p>Sound</p>
+                <div class="settings-sound-selection flex">
+                    <img src="assets/img/sound_icon.png" class="settings-sound-icon cursor-p" onclick="unmuteSound()" id="sound-icon">    
+                    <img src="assets/img/sound_icon_selected.png" class="settings-sound-icon cursor-d" id="sound-icon-selected">    
+                    <img src="assets/img/sound_icon_mute.png" class="settings-sound-icon cursor-p" onclick="muteSound()" id="sound-icon-mute">    
+                    <img src="assets/img/sound_icon_mute_selected.png" class="settings-sound-icon cursor-d" id="sound-icon-mute-selected">    
+                </div>
+            </div>
+            <div class="settings-theme flex w-100">
+                <p>Theme</p>
+                <div class="settings-theme-selection flex">
+                    <div class="settings-theme-dark cursor-p" onclick="selectSettingsTheme('dark')" id="settings-theme-dark"></div>
+                    <div class="settings-theme-light cursor-p" onclick="selectSettingsTheme('light')" id="settings-theme-light"></div>
+                </div>
+            </div>
+            `;
+}
+
+
 function openLoadPopup() {
     document.getElementById('popups').style.minHeight = '100vh';
     addClasslist('loadPopup-full', 'opa-off');
@@ -103,42 +143,23 @@ function closeSettingsPopup() {
     renderHeader();
 }
 
-
-function templateSettingsPopup() {
-    return `<div class="settings-popup-full w-100 absolute flex d-none" onclick="closeSettingsPopup()" id="settings-popup-full">
-                <div class="settings-popup flex column" id="settings-popup" onclick="doNotClose(event)"></div>    
-            </div>`;
+function muteSound() {
+    addClasslist('sound-icon-mute', 'd-none');
+    addClasslist('sound-icon-selected', 'd-none');
+    removeClasslist('sound-icon', 'd-none');
+    removeClasslist('sound-icon-mute-selected', 'd-none');
+    sound = 0;
+    localStorage.setItem('sound', sound);
 }
 
 
-function templateSettingsPopupContent() {
-    return `<div class="settings-numbers flex w-100">
-                <p>Pokemons per Page</p>
-                <div class="settings-numbers-selection flex">
-                    <p class="settings-number-per-page cursor-p" id="settings-numbers-10" onclick="selectSettingsPokemonNumberPerPage(10)">10</p>
-                    <p class="settings-number-per-page cursor-p" id="settings-numbers-20" onclick="selectSettingsPokemonNumberPerPage(20)">20</p>
-                    <p class="settings-number-per-page cursor-p" id="settings-numbers-30" onclick="selectSettingsPokemonNumberPerPage(30)">30</p>
-                    <p class="settings-number-per-page cursor-p" id="settings-numbers-40" onclick="selectSettingsPokemonNumberPerPage(40)">40</p>
-                    <p class="settings-number-per-page cursor-p" id="settings-numbers-50" onclick="selectSettingsPokemonNumberPerPage(50)">50</p>
-                    <p class="settings-number-per-page cursor-p" id="settings-numbers-60" onclick="selectSettingsPokemonNumberPerPage(60)">60</p>
-                </div>
-                
-            </div>
-            <div class="settings-sound flex w-100">
-                <p>Sound</p>
-                <label class="switch">
-                    <input type="checkbox" id="sound-switch" onclick="selectSettingsSoundSwitch()">
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            <div class="settings-theme flex w-100">
-                <p>Theme</p>
-                <div class="settings-theme-selection flex">
-                    <div class="settings-theme-dark cursor-p" onclick="selectSettingsTheme('dark')" id="settings-theme-dark"></div>
-                    <div class="settings-theme-light cursor-p" onclick="selectSettingsTheme('light')" id="settings-theme-light"></div>
-                </div>
-            </div>
-            `;
+function unmuteSound() {
+    addClasslist('sound-icon', 'd-none');
+    addClasslist('sound-icon-mute-selected', 'd-none');
+    removeClasslist('sound-icon-mute', 'd-none');
+    removeClasslist('sound-icon-selected', 'd-none');
+    sound = 1;
+    localStorage.setItem('sound', sound);
 }
 
 
@@ -156,8 +177,8 @@ function checkPokemonPerPageSettings() {
 
 
 function checkSoundSettings() {
-    if(sound) document.getElementById('sound-switch').checked = false;
-    else document.getElementById('sound-switch').checked = true;
+    if(sound) unmuteSound();
+    else muteSound();
 }
 
 

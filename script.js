@@ -1,5 +1,5 @@
-let darkmode = false;
-let sound = true;
+let darkmode;
+let sound;
 let bgSound = 0;
 
 let pokemonsPerPage;
@@ -50,7 +50,7 @@ async function init() {
 
 async function getLocalStorage() {
     darkmode = JSON.parse(localStorage.getItem('darkmode')) || false;
-    sound = JSON.parse(localStorage.getItem('sound')) || true;
+    sound = JSON.parse(localStorage.getItem('sound')) || 1;
     pokemonsPerPage = JSON.parse(localStorage.getItem('pokemonsPerPage')) || 40;
     pokemonsPerPageMobile = JSON.parse(localStorage.getItem('pokemonsPerPageMobile')) || 40;
     favPokemons = await JSON.parse(localStorage.getItem(`favPokemons`)) || [];
@@ -61,7 +61,7 @@ async function getLocalStorage() {
 
 function setLocalStorage() {
     localStorage.setItem('darkmode', darkmode);
-    localStorage.setItem('sound', JSON.stringify(sound));
+    localStorage.setItem('sound', sound);
     localStorage.setItem('pokemonsPerPage', JSON.stringify(pokemonsPerPage));
     localStorage.setItem('pokemonsPerPageMobile', JSON.stringify(pokemonsPerPageMobile));
     localStorage.setItem('savedPokemons', JSON.stringify(savedPokemons));
@@ -142,7 +142,7 @@ function templatePokemonList() {
 
 function noPokemonHere(content) {
     content.innerHTML = `<div class="empty-fav-sign-container w-100 h-100 flex align-center">
-                            <a class="relative "href="/index.html">
+                            <a class="relative "href="./index.html">
                                 <span class="no-pokemon-here">No Pokemon here.</span>
                                 <span class="go-catch-pokemon absolute">Go, catch em all!</span>
                             </a>
@@ -209,7 +209,6 @@ function clickOnElement(i) {
     document.getElementById(`pokemon-list-element-container-${i}`).style.boxShadow = 'none';
     document.getElementById(`pokemon-list-element-container-${i}`).style.opacity = '1';
     document.getElementById(`pokemon-list-element-container-${i}`).style.cursor = 'default'
-    // background-image: linear-gradient(165deg, rgba(255, 255, 255, 0.4) 10%, transparent);
 }
 
 
@@ -361,7 +360,7 @@ function renderFooter() {
                 <p>Pokemon information from the <a href="https://pokeapi.co" target="_blank">Pokeapi</a></p>
             </div>
             <div>
-                <a class="impressum-link" href="/impressum.html">Impressum</a>
+                <a class="impressum-link" href="./impressum.html">Impressum</a>
             </div>
         </div>`;
 }
