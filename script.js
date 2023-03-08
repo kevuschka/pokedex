@@ -1,5 +1,5 @@
 let darkmode;
-let sound;
+let sound = true;
 let bgSound = 0;
 
 let pokemonsPerPage;
@@ -50,7 +50,7 @@ async function init() {
 
 async function getLocalStorage() {
     darkmode = JSON.parse(localStorage.getItem('darkmode')) || false;
-    sound = JSON.parse(localStorage.getItem('sound')) || 1;
+    sound = localStorage.getItem('sound') || true;
     pokemonsPerPage = JSON.parse(localStorage.getItem('pokemonsPerPage')) || 40;
     pokemonsPerPageMobile = JSON.parse(localStorage.getItem('pokemonsPerPageMobile')) || 40;
     favPokemons = await JSON.parse(localStorage.getItem(`favPokemons`)) || [];
@@ -101,7 +101,7 @@ function addToSavedPokemons(i, pokemon) {
 
 
 function availableInPokemonsArray(i) {
-        if(savedPokemons[i].length > 1) {
+        if(savedPokemons[i].id > 0) {
             currentPokemon = savedPokemons[i];
             return true;
         } 
@@ -212,24 +212,12 @@ function clickOnElement(i) {
 }
 
 
-// function clickOutElement(i) {
-//     document.getElementById(`pokemon-list-element-container-${i}`).style.borderStyle = 'none';
-// }
-
-
 // SOUND 
 function selectSound() {
     select.pause();
     select.currentTime = 0;
     select.volume = 0.5;
-    if(sound) select.play();
-}
-
-function noSelectSound() {
-    if(sound) {
-        select.pause();
-        select.currentTime = 0;
-    }
+    if(sound == "true" || sound == true) select.play();
 }
 
 ///////////////////////////////  P A G E   B O T T O M   N A V I G A T I O N  ///////////////////////////////

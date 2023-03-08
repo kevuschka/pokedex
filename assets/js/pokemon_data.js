@@ -21,19 +21,14 @@ async function renderPokemon(i) {
     document.getElementById(`pokemon-list-element-container-${i}`).style.border = `5px inset`;
     showSelectedPokemonWrapper();
     scrollUpPokemonInfoOverlay();
-    if(searching) {
-        if(onFavoritesPage) currentPokemon = searchResults[i];
-        else {
-            if(availableInPokemonsArray(getRightArrayIndex(searchResults[i]['id']))) pokemonNotSaved = false;
-            if(pokemonNotSaved) await getSelectedPokemonAboutData(getRightArrayIndex(searchResults[i]['id']));
-        }
-    } else if(!onFavoritesPage) {
+    if(searching) await renderPokemonWhileSearching(i);
+    else if(!onFavoritesPage) {
         if(availableInPokemonsArray(i)) pokemonNotSaved = false;
+        else pokemonNotSaved = true;
         if(pokemonNotSaved) await getSelectedPokemonAboutData(i);
     } else if(onFavoritesPage) currentPokemon = favPokemons[i];
-    if(sideWrapperIsOpen) {
-        await renderPokemonContent();
-    } else {
+    if(sideWrapperIsOpen) await renderPokemonContent();
+    else {
         renderPokemonTemplate();
         await renderPokemonContent();
     }
@@ -42,10 +37,21 @@ async function renderPokemon(i) {
     if(lastSelected) unmarkLastSelectedPokemon(); 
     selectTab(1);
     selectedPokemonIndex = i;
-    if(!onFavoritesPage) await getOtherTabsInfos(i);
+    if(!onFavoritesPage) await getOtherTabsInfos(getRightArrayIndex(currentPokemon['id']));
     makeOtherSectionTabsVisible();
     lastSelected = true;
+    // pokemonNotSaved = true
 } 
+
+
+async function renderPokemonWhileSearching(i) {
+    if(onFavoritesPage) currentPokemon = searchResults[i];
+    else {
+        if(availableInPokemonsArray(getRightArrayIndex(searchResults[i]['id']))) pokemonNotSaved = false;
+        else pokemonNotSaved = true;
+        if(pokemonNotSaved) await getSelectedPokemonAboutData(getRightArrayIndex(searchResults[i]['id']));
+    }
+}
 
 
 async function checkIfPokemonIsOnThisPage(i) {
@@ -75,7 +81,7 @@ async function getOtherTabsInfos(i) {
     if(pokemonNotSaved) {
         await getSelectedPokemonOtherSectionsData(i);
         addToSavedPokemons(i, currentPokemon);
-        pokemonNotSaved = true;
+        // pokemonNotSaved = true;
     }
 }
 
@@ -138,8 +144,7 @@ async function getSelectedPokemonAboutSpeciesData(pokemon) {
 
 async function getSelectedPokemonOtherSectionsData(i) {
     currentPokemon['name']['de'] = allPokemonsBasicData[i]['name']['de'];
-    await getSelectedPokemonOtherSectionsDatas(i);
-    // makeOtherSectionTabsVisible();
+    await getSelectedPokemonOtherSectionsDatas();
 }
 
 
@@ -147,7 +152,7 @@ function makeOtherSectionTabsVisible() {
     document.querySelectorAll('.c-white').forEach(el => el.classList.remove('c-white'));
 }
 
-async function getSelectedPokemonOtherSectionsDatas(i) {
+async function getSelectedPokemonOtherSectionsDatas() {
     let url = `https://pokeapi.co/api/v2/pokemon/${currentPokemon['id']}`;
     let response = await fetch(url);
     let pokemon = await response.json();

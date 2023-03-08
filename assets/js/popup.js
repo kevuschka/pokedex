@@ -148,7 +148,7 @@ function muteSound() {
     addClasslist('sound-icon-selected', 'd-none');
     removeClasslist('sound-icon', 'd-none');
     removeClasslist('sound-icon-mute-selected', 'd-none');
-    sound = 0;
+    sound = false;
     localStorage.setItem('sound', sound);
 }
 
@@ -158,7 +158,7 @@ function unmuteSound() {
     addClasslist('sound-icon-mute-selected', 'd-none');
     removeClasslist('sound-icon-mute', 'd-none');
     removeClasslist('sound-icon-selected', 'd-none');
-    sound = 1;
+    sound = true;
     localStorage.setItem('sound', sound);
 }
 
@@ -177,7 +177,7 @@ function checkPokemonPerPageSettings() {
 
 
 function checkSoundSettings() {
-    if(sound) unmuteSound();
+    if(sound == "true" || sound == true) unmuteSound();
     else muteSound();
 }
 
@@ -210,7 +210,7 @@ function unselectAllPerPageNumbersInSettings() {
 
 
 function selectSettingsSoundSwitch() {
-    if(sound) {
+    if(sound = "true" || sound == true) {
         sound = false;
         document.getElementById('sound-switch').checked = false;
     } else {
