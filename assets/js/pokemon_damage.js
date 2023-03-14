@@ -1,6 +1,7 @@
 let doubleDamageFrom = [];
 let halfDamageFrom = [];
 let noDamageFrom = [];
+
 let doubleDamageTo = [];
 let halfDamageTo = [];
 let noDamageTo = [];
@@ -175,24 +176,34 @@ function isNotInThatArray(currentArray, currentIndex, targetArray, resultArray) 
 
 
 function  copyDamageValues() {
+    copyDamageValuesFrom();
+    copyDamageValuesTo();
+}
+
+
+function copyDamageValuesFrom() {
     if(doubleDamageFrom.length > 0)
         for (let i = 0; i < doubleDamageFrom.length; i++) 
             damageFrom.push(doubleDamageFrom[i]);
     if(halfDamageFrom.length > 0)
         for (let i = 0; i < halfDamageFrom.length; i++)
-        damageFrom.push(halfDamageFrom[i]);
+            damageFrom.push(halfDamageFrom[i]);
     if(noDamageFrom.length > 0)
         for (let i = 0; i < noDamageFrom.length; i++)
-        damageFrom.push(noDamageFrom[i]);
+            damageFrom.push(noDamageFrom[i]);
+}
+
+
+function copyDamageValuesTo() {
     if(doubleDamageTo.length > 0)
         for (let i = 0; i < doubleDamageTo.length; i++) 
-        damageTo.push(doubleDamageTo[i]);
+            damageTo.push(doubleDamageTo[i]);
     if(halfDamageTo.length > 0)
         for (let i = 0; i < halfDamageTo.length; i++)
-        damageTo.push(halfDamageTo[i]);
+            damageTo.push(halfDamageTo[i]);
     if(noDamageTo.length > 0)
         for (let i = 0; i < noDamageTo.length; i++)
-        damageTo.push(noDamageTo[i]);
+            damageTo.push(noDamageTo[i]);
 }
 
 

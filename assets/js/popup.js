@@ -4,6 +4,7 @@ function renderLoadPopup() {
     let content = document.getElementById('popups');
     content.innerHTML = templateLoadPopup();
     content.innerHTML +=  templateSettingsPopup();
+    content.innerHTML += templateAbilityDescriptionPopup();
     let settingsContent = document.getElementById('settings-popup');
     settingsContent.innerHTML = templateSettingsPopupContent();
     openLoadPopup();
@@ -230,4 +231,11 @@ function selectSettingsTheme(theme) {
     setLocalStorage();
     renderHeader();
     renderPageColor();
+}
+
+
+function templateAbilityDescriptionPopup() {
+    return `<div class="ability-description-popup-full absolute flex d-none" id="ability-description-popup-full" onclick="closeAbilityDescription()">
+                <div class="ability-description-popup flex" id="ability-description" onclick="doNotClose(event)"></div>
+            </div>`;
 }

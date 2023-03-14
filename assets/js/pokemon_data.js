@@ -4,6 +4,7 @@ let stats = [];
 let lastSelected = false;
 let currentPokemon = '';
 let pokemonNotSaved = true;
+
 let nameVersionsData = {
     'name': '',
     'versions': [],   
@@ -40,7 +41,6 @@ async function renderPokemon(i) {
     if(!onFavoritesPage) await getOtherTabsInfos(getRightArrayIndex(currentPokemon['id']));
     makeOtherSectionTabsVisible();
     lastSelected = true;
-    // pokemonNotSaved = true
 } 
 
 
@@ -151,6 +151,7 @@ async function getSelectedPokemonOtherSectionsData(i) {
 function makeOtherSectionTabsVisible() {
     document.querySelectorAll('.c-white').forEach(el => el.classList.remove('c-white'));
 }
+
 
 async function getSelectedPokemonOtherSectionsDatas() {
     let url = `https://pokeapi.co/api/v2/pokemon/${currentPokemon['id']}`;

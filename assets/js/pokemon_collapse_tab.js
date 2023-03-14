@@ -110,5 +110,3 @@ function getCurrentTab() {
     if(onMoveTab) return 'move';
     else return 'locations';
 }
-
-

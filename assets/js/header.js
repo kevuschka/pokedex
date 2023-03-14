@@ -13,7 +13,6 @@ function renderHeader() {
 
 function renderHeaderFunctionalityTemplates(content) {
     content.innerHTML = templateHeaderMusicIcon();
-    // content.innerHTML += templateHeaderSoundIcon();
     content.innerHTML += templateHeaderSearchbar();
     content.innerHTML += templateHeaderFavorites();
     content.innerHTML += templateHeaderSettings();
@@ -57,13 +56,6 @@ function templateHeaderMusicIcon() {
 }
 
 
-// function templateHeaderSoundIcon() {
-//     return `<img class="header-sound cursor-p d-none" id="header-sound-gray" src="assets/img/sound_icon.png" onclick="muteSound()">
-//             <img class="header-sound cursor-p d-none" id="header-sound-dark" src="assets/img/sound_icon_dark.png" onclick="muteSound()"> 
-//             <img class="header-sound cursor-p d-none" id="header-sound-mute" src="assets/img/sound_icon_mute.png" onclick="unmuteSound()">`;
-// }
-
-
 function templateHeaderSearchbar() {
     return `<div class="header-searchbar flex" id="header-searchbar" onKeyUp="searchPokemon()">
                 <input type="text" class="header-searchbar-input w-100 h-100" id="header-searchbar-input" placeholder="Search Pokemons">
@@ -81,7 +73,6 @@ function templateHeaderSettings() {
     return `<img class="header-settings cursor-p" id="header-settings-gray" src="assets/img/settings_icon.png" onclick="openSettingsPopup()">
             <img class="header-settings cursor-p" id="header-settings-dark" src="assets/img/settings_icon_dark.png" onclick="openSettingsPopup()">`;
 }
-
 
 
 // RENDER HEADER ICONS 
@@ -112,18 +103,6 @@ function cleanFavoritesIcon() {
 }
 
 
-// function renderFavoritesIconOnFavorites() {
-//     if(darkmode) addClasslist(`header-favorites-dark`,`d-none`);
-//     else addClasslist(`header-favorites-gray`,`d-none`);
-// }
-
-
-// function renderFavoritesIconStandard() {
-//     if(darkmode) addClasslist(`header-favorites-gray`,`d-none`);
-//     else addClasslist(`header-favorites-dark`,`d-none`);
-// }
-
-
 // SETTINGS
 function renderSettingsIcon() {
     cleanSettingsIcon();
@@ -135,6 +114,7 @@ function renderSettingsIcon() {
         else addClasslist(`header-settings-dark`, `d-none`);
     }
 }
+
 
 function cleanSettingsIcon() {
     removeClasslist(`header-settings-gray`,`d-none`);
@@ -225,49 +205,3 @@ function muteMusic() {
     bgMusic.pause();
     bgSound = 0;
 }
-
-
-
-// SOUND
-
-//function renderSoundIcon() {};
-// function muteSound() {
-//     addClasslist(`header-sound-gray`, `d-none`);
-//     addClasslist(`header-sound-dark`, `d-none`);
-//     removeClasslist(`header-sound-mute`, `d-none`);
-//     sound = 0;
-//     localStorage.setItem('sound', sound);
-// }
-
-
-// function unmuteSound() {
-//     addClasslist(`header-sound-mute`, `d-none`);
-//     if(darkmode) removeClasslist(`header-sound-dark`, `d-none`); 
-//     else removeClasslist(`header-sound-gray`, `d-none`);
-//     sound = 1;
-//     localStorage.setItem('sound', sound);
-// }
-
-
-
-
-
-
-
-
-// DARKMODE
-// function darkmodeOnOff() {
-//     if(darkmode) {
-//         darkmode = 0;
-//         renderHeaderColor();
-//         document.getElementById(`content-container`).style.backgroundColor = 'white';
-        
-        
-//     }
-//     else {
-//         darkmode = 1;
-//         renderHeaderColor();
-//         document.getElementById(`content-container`).style.backgroundColor = 'rgba(0,0,0,0.5)';
-//     }
-//     localStorage.setItem('darkmode', darkmode);
-// }

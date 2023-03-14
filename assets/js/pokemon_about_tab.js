@@ -53,7 +53,7 @@ function renderPokemonAboutPokedexAbilitiesData(content) {
     content.innerHTML += `<tr><td class="table-titles">Abilities</td><td class="flex gap-10" id="pokedex-data-abilities-tr"></td></tr>`;
     let tblRow = document.getElementById(`pokedex-data-abilities-tr`);
     for (let i = 0; i < currentPokemon['about']['abilities'].length; i++) 
-        tblRow.innerHTML += `<p>${currentPokemon['about']['abilities'][i][0]}</p>`;
+        tblRow.innerHTML += `<p class="cursor-p" id="currentPokemon-ability-${i}" onclick="showAbilityDescription(${i})">${currentPokemon['about']['abilities'][i][0]}</p>`;
 }
 
 
@@ -125,4 +125,17 @@ function renderPokemonAboutBreedingEggCycleData(content) {
     content.innerHTML += '<tr><td class="table-titles pad-0">Egg Cycles</td><td class="flex gap-10 pad-0" id="breeding-egg-cycles-tr"></td></tr>';
     let tblRow = document.getElementById('breeding-egg-cycles-tr');
     tblRow.innerHTML = `<p>${currentPokemon['hatch_counter']} (${(currentPokemon['hatch_counter']+1) * 255} steps)</p>`;
+}
+
+
+function showAbilityDescription(i) {
+    let description = currentPokemon['about']['abilities'][i][1];
+    let content = document.getElementById('ability-description');
+    content.innerHTML = `<p>${description}</p>`;
+    removeClasslist('ability-description-popup-full', 'd-none');
+}
+
+
+function closeAbilityDescription() {
+    addClasslist('ability-description-popup-full', 'd-none');
 }

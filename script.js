@@ -1,29 +1,20 @@
 let darkmode;
 let sound = true;
 let bgSound = 0;
-
 let pokemonsPerPage;
-let pokemonsPerPageMobile;
 let pagePokemonsBasicData = []; 
 let pagePokemonsElementData = [];
-
 let allPokemons = [];
 let pokemonData;
-
-
 let favPokemons = [];
 let onFavoritesPage = false;
-
 const bgMusic = new Audio('assets/sounds/poke_theme_music.mp3');
 const select = new Audio('assets/sounds/select_sound.mp3');
 let searchResults = [];
 let searching = false;
 let settingsOpen = false;
-
 let count;
-
 let dataLoaded = false;
-
 let savedPokemons = [];
 let lastPageNumber;
 let currentPageNumber = 1;
@@ -52,7 +43,6 @@ async function getLocalStorage() {
     darkmode = JSON.parse(localStorage.getItem('darkmode')) || false;
     sound = localStorage.getItem('sound') || true;
     pokemonsPerPage = JSON.parse(localStorage.getItem('pokemonsPerPage')) || 40;
-    pokemonsPerPageMobile = JSON.parse(localStorage.getItem('pokemonsPerPageMobile')) || 40;
     favPokemons = await JSON.parse(localStorage.getItem(`favPokemons`)) || [];
     savedPokemons = await JSON.parse(localStorage.getItem(`savedPokemons`)) || [];
     lastPageNumber = JSON.parse(localStorage.getItem('pokemonsPerPage')) || 32;
@@ -63,7 +53,6 @@ function setLocalStorage() {
     localStorage.setItem('darkmode', darkmode);
     localStorage.setItem('sound', sound);
     localStorage.setItem('pokemonsPerPage', JSON.stringify(pokemonsPerPage));
-    localStorage.setItem('pokemonsPerPageMobile', JSON.stringify(pokemonsPerPageMobile));
     localStorage.setItem('savedPokemons', JSON.stringify(savedPokemons));
     localStorage.setItem('favPokemons', JSON.stringify(favPokemons));
     localStorage.setItem('lastPageNumber', JSON.stringify(lastPageNumber));
@@ -115,23 +104,21 @@ function renderPokemonsPage(from, to) {
     wrapper.innerHTML = templatePokemonList();
     let content = document.getElementById(`pokemon-list`);
     content.innerHTML = '';
-    if(onFavoritesPage) {
-        from = 0;
-        to  = favPokemons.length <= to ? favPokemons.length : to;
-    }
-    if(searching) {
-        from = 0;
-        to = searchResults.length <= to ? searchResults.length : to;
-    }
+    if(onFavoritesPage || searching) from = 0;
+    if(onFavoritesPage) to  = favPokemons.length <= to ? favPokemons.length : to;
+    if(searching) to = searchResults.length <= to ? searchResults.length : to;
+    renderNoPokemonHereIfNecessary(content);
+    for (let i = from; i < to; i++) renderPokemonsListContent(i, content);
+    if(document.getElementById('header-searchbar-input').value.length == 0) searching = false;
+}
+
+
+function renderNoPokemonHereIfNecessary(content, to) {
     if(to == 0) {
         noPokemonHere(content);
         searching = false;
         return;
     }
-    for (let i = from; i < to; i++) 
-        renderPokemonsListContent(i, content);
-    if(document.getElementById('header-searchbar-input').value.length == 0)
-        searching = false;
 }
 
 
@@ -220,137 +207,27 @@ function selectSound() {
     if(sound == "true" || sound == true) select.play();
 }
 
-///////////////////////////////  P A G E   B O T T O M   N A V I G A T I O N  ///////////////////////////////
-
-function renderPageSiteBottomNav() {
-    if(!(onFavoritesPage || searching)) {
-        calculateLastPageNumber(pokemonsPerPage);
-        let content = document.getElementById(`pokemon-list`);
-        content.innerHTML += `<div class="bottom-nav-container w-100 flex">
-                                    <div class="bottom-nav align-center flex" id="bottom-nav"></div>
-                                </div>`;
-        renderBottomNavNumbers();
-        addClasslist(`bottom-nav-number-${currentPageNumber}`, `selected-bottom-nav-number`);
-    }
-}
-
-
-function calculateLastPageNumber(pokemonPerPageNumber) {
-    let max = allPokemonsBasicData.length;
-    if((max % pokemonPerPageNumber) > 0) lastPageNumber = parseInt((max / pokemonPerPageNumber).toString().split('.')[0]) + 1;
-    else lastPageNumber = (max / pokemonPerPageNumber).toFixed();
-    localStorage.setItem('lastPageNumber', JSON.stringify(lastPageNumber));
-}
-
-
-function renderBottomNavNumbers() {
-    let nav = document.getElementById('bottom-nav');
-    nav.innerHTML = '';
-    if(!searching && !onFavoritesPage) {
-        if(currentPageNumber == 1 || currentPageNumber == lastPageNumber) renderBottomNavNumbersEndPoints(nav);
-        else if(currentPageNumber == 2 || currentPageNumber == (lastPageNumber-1)) renderBottomNavNumbersSecondEndPoints(nav);
-        else if(currentPageNumber == 3 || currentPageNumber == (lastPageNumber-2)) renderBottomNavNumbersThirdEndPoints(nav);
-        else renderBottomNavNumbersMiddle(nav);
-    }
-}
-
-
-function renderBottomNavNumbersEndPoints(content) {
-    if(lastPageNumber > 3) {
-        if(currentPageNumber == 1) {
-            renderBottomNavNumbersInLoopFor(3, 1, content);
-            renderBottomNavEndingPlaceholder(content);
-        } else if(currentPageNumber == lastPageNumber) {
-            renderBottomNavBeginningPlaceholder(content);
-            renderBottomNavNumbersInLoopFor(3, lastPageNumber-2, content);
-        }
-    } else renderBottomNavNumbersInLoopFor(3, 1, content);
-}
-
-
-function renderBottomNavNumbersSecondEndPoints(content) {
-    if(lastPageNumber > 4) {
-        if(currentPageNumber == 2) {
-            renderBottomNavNumbersInLoopFor(4, 1, content);
-            renderBottomNavEndingPlaceholder(content);
-        } else if(currentPageNumber == (lastPageNumber-1)) {
-            renderBottomNavBeginningPlaceholder(content);
-            renderBottomNavNumbersInLoopFor(4, lastPageNumber-3, content);
-        }
-    } else renderBottomNavNumbersInLoopFor(4, 1, content)
-}
-
-
-function renderBottomNavNumbersThirdEndPoints(content) {
-    if(lastPageNumber > 5) {
-        if(currentPageNumber == 3) {
-            renderBottomNavNumbersInLoopFor(5, 1, content);
-            renderBottomNavEndingPlaceholder(content);
-        } else if(currentPageNumber == (lastPageNumber-2)) {
-            renderBottomNavBeginningPlaceholder(content);
-            renderBottomNavNumbersInLoopFor(5, lastPageNumber-4, content);
-        }
-    } else renderBottomNavNumbersInLoopFor(5, 1, content);
-}
-
-
-function renderBottomNavNumbersMiddle(content) {
-    renderBottomNavBeginningPlaceholder(content);
-    renderBottomNavNumbersInLoopFor(5, currentPageNumber-2, content)
-    renderBottomNavEndingPlaceholder(content);
-}
-
-
-
-function renderBottomNavBeginningPlaceholder(content) {
-    content.innerHTML += `<p class="bottom-nav-number cursor-p" id="bottom-nav-number-1" onclick="renderPageNumber(1)">1</p>`;
-    content.innerHTML += `<p class="bottom-nav-placeholder">...</p>`;
-}
-
-
-function renderBottomNavEndingPlaceholder(content) {
-    content.innerHTML += `<p class="bottom-nav-placeholder">...</p>`;
-    content.innerHTML += `<p class="bottom-nav-number cursor-p" id="bottom-nav-number-${lastPageNumber}" onclick="renderPageNumber(${lastPageNumber})">${lastPageNumber}</p>`;
-}
-
-
-function renderBottomNavNumbersInLoopFor(loopTimes, startingAt, content) {
-    for (let i = 0; i < loopTimes; i++) {
-        content.innerHTML += `<p class="bottom-nav-number cursor-p" id="bottom-nav-number-${startingAt}" onclick="renderPageNumber(${startingAt})">${startingAt}</p>`;
-        startingAt++;
-    }
-}
-
-
-function renderPageNumber(i) {
-    lastSelected = false;
-    if(sideWrapperIsOpen) hideSelectedPokemonWrapper();
-    currentPageNumber = i;
-    let from = (i-1)*pokemonsPerPage;
-    let to;
-    if(i == lastPageNumber) to = from + (allPokemonsBasicData.length % pokemonsPerPage);
-    else to = from + pokemonsPerPage;
-    renderPokemonsPage(from, to);
-    renderPageSiteBottomNav();
-}
-
 ///////////////////////////////  R E N D E R   F O O T E R  ///////////////////////////////
 
 function renderFooter() {
     let content = document.getElementById('footer');
-    content.innerHTML = `
-        <div class="footer-container flex w-100 h-100">
-            <div>
-                <p>Icons by <a href="https://iconsdb.com" target="_blank">iconsbd.com</a></p>
-                <p>Design inspired by 
-                    <a href="https://dribbble.com/shots/6545819-Pokedex-App" target="_blank">Saepul Nahwan</a> and 
-                    <a href="https://dribbble.com/shots/11114892-Pok-dex-App" target="_blank">Flavio Farias</a></p>
-                <p>Pokemon information from the <a href="https://pokeapi.co" target="_blank">Pokeapi</a></p>
-            </div>
-            <div>
-                <a class="impressum-link" href="./impressum.html">Impressum</a>
-            </div>
-        </div>`;
+    content.innerHTML = templateFooter();
+}
+
+
+function templateFooter() {
+    return ` <div class="footer-container flex w-100 h-100">
+                <div>
+                    <p>Icons by <a href="https://iconsdb.com" target="_blank">iconsbd.com</a></p>
+                    <p>Design inspired by 
+                        <a href="https://dribbble.com/shots/6545819-Pokedex-App" target="_blank">Saepul Nahwan</a> and 
+                        <a href="https://dribbble.com/shots/11114892-Pok-dex-App" target="_blank">Flavio Farias</a></p>
+                    <p>Pokemon information from the <a href="https://pokeapi.co" target="_blank">Pokeapi</a></p>
+                </div>
+                <div>
+                    <a class="impressum-link" href="./impressum.html">Impressum</a>
+                </div>
+            </div>`;
 }
 
 ///////////////////////////////  H E L P   F U N C T I O N S  ///////////////////////////////
