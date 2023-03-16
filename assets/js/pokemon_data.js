@@ -18,14 +18,10 @@ let nameMethodsData = {
 
 async function renderPokemon(i) {
     if(currentPokemon['id'] && getRightArrayIndex(currentPokemon['id']) === i) return;
-    currentPokemon = '';
-    document.getElementById(`pokemon-list-element-container-${i}`).style.border = `5px inset`;
-    showSelectedPokemonWrapper();
-    scrollUpPokemonInfoOverlay();
+    renderCurrentPokemonWrapper(i);
     if(searching) await renderPokemonWhileSearching(i);
     else if(!onFavoritesPage) {
-        if(availableInPokemonsArray(i)) pokemonNotSaved = false;
-        else pokemonNotSaved = true;
+        pokemonNotSaved = availableInPokemonsArray(i) ? false : true;
         if(pokemonNotSaved) await getSelectedPokemonAboutData(i);
     } else if(onFavoritesPage) currentPokemon = favPokemons[i];
     if(sideWrapperIsOpen) await renderPokemonContent();
@@ -33,6 +29,19 @@ async function renderPokemon(i) {
         renderPokemonTemplate();
         await renderPokemonContent();
     }
+    await loadCurrentPokemon(i);
+} 
+
+
+function renderCurrentPokemonWrapper(i) {
+    currentPokemon = '';
+    document.getElementById(`pokemon-list-element-container-${i}`).style.border = `5px inset`;
+    showSelectedPokemonWrapper();
+    scrollUpPokemonInfoOverlay();
+}
+
+
+async function loadCurrentPokemon(i) {
     loadStarIconIfPokemonInFavs();
     showSelectedPokemonInfo();
     if(lastSelected) unmarkLastSelectedPokemon(); 
@@ -41,7 +50,7 @@ async function renderPokemon(i) {
     if(!onFavoritesPage) await getOtherTabsInfos(getRightArrayIndex(currentPokemon['id']));
     makeOtherSectionTabsVisible();
     lastSelected = true;
-} 
+}
 
 
 async function renderPokemonWhileSearching(i) {
@@ -66,8 +75,13 @@ async function checkIfPokemonIsOnThisPage(i) {
     searching = false;
     if(onFavoritesPage) window.location.href = '/index.html';
     if(page != currentPageNumber) renderPageNumber(page);
+    await renderPokemonWithDelay(pokemonIndexRelativeToPageNumber - 1);
+}
+
+
+async function renderPokemonWithDelay(pokemonIndex) {
     setTimeout(() => {
-        renderPokemon(pokemonIndexRelativeToPageNumber - 1);
+        renderPokemon(pokemonIndex);
     }, 500);
 }
 
@@ -281,12 +295,17 @@ async function getPokemonAbilities(pokemon) {
         let url = pokemon['abilities'][i]['ability']['url'];
         let resp = await fetch(url);
         let ability = await resp.json();
-        for (let j = 0; j < ability['effect_entries'].length; j++)
-            if (ability['effect_entries'][j]['language']['name'] == 'en') {
-                abilityArray.push(ability['effect_entries'][j]['effect']);
-                break;
-            }
+        renderAbilityEffect(ability, abilityArray);
         pokemonData['about']['abilities'].push(abilityArray);
+    }
+}
+
+
+function renderAbilityEffect(ability, abilityArray) {
+    for (let j = 0; j < ability['effect_entries'].length; j++)
+    if (ability['effect_entries'][j]['language']['name'] == 'en') {
+        abilityArray.push(ability['effect_entries'][j]['effect']);
+        break;
     }
 }
 

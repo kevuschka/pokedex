@@ -33,55 +33,12 @@ function removeAllHeaderAdditionClasses() {
 }
 
 
-function templateHeaderWrapper() {
-    return `<div class="header-wrapper w-100 h-100 flex" id="header-wrapper"></div>`;
-}
-
-
-function templateHeaderTitle() {
-    return `<a href="./index.html" class="header-title cursor-p">Pokedex</a>`;
-}
-
-
-function templateHeaderFunctionalityWrapper() {
-    return `<div class="header-functionality-wrapper flex" id="header-functionality-wrapper"></div>`;
-}
-
-
-function templateHeaderMusicIcon() {
-    return `<img class="header-music cursor-p" id="header-music-gray" src="assets/img/music_icon2.png" onclick="unmuteMusic()">
-            <img class="header-music cursor-p" id="header-music-dark" src="assets/img/music_icon_dark2.png" onclick="unmuteMusic()">
-            <img class="header-music cursor-p" id="header-music-mute" src="assets/img/music_icon_pause.png" onclick="muteMusic()">
-            <img class="header-music cursor-p" id="header-music-mute-dark" src="assets/img/music_icon_pause_dark.png" onclick="muteMusic()">`;
-}
-
-
-function templateHeaderSearchbar() {
-    return `<div class="header-searchbar flex" id="header-searchbar" onKeyUp="searchPokemon()">
-                <input type="text" class="header-searchbar-input w-100 h-100" id="header-searchbar-input" placeholder="Search Pokemons">
-            </div>`;
-}
-
-
-function templateHeaderFavorites() {
-    return `<a href="./favorites.html" id="header-favorites-gray"><img class="header-favorites cursor-p" src="assets/img/outline_star_icon.png"></a>
-            <a href="./favorites.html" id="header-favorites-dark"><img class="header-favorites cursor-p" src="assets/img/outline_star_icon_dark.png"></a>`;
-}
-
-
-function templateHeaderSettings() {
-    return `<img class="header-settings cursor-p" id="header-settings-gray" src="assets/img/settings_icon.png" onclick="openSettingsPopup()">
-            <img class="header-settings cursor-p" id="header-settings-dark" src="assets/img/settings_icon_dark.png" onclick="openSettingsPopup()">`;
-}
-
-
 // RENDER HEADER ICONS 
 
 function renderHeaderIcons() {
     renderFavoritesIcon();
     renderSettingsIcon();
     renderMusicIcon();
-    
 }
 
 

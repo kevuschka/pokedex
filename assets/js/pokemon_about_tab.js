@@ -5,22 +5,6 @@ function renderPokemonInfoAboutTemplate() {
 }
 
 
-function templatePokemonInfoABOUT() {
-    return `
-        <div class="pokemon-selected-info-about-wrapper w-100 flex column">
-            <p class="pokemon-selected-info-about-description" id="pokemon-selected-info-about-description"></p>
-            <div class="pokemon-selected-info-about-pokedex-data-wrapper flex column">
-                <p class="subTitle">Pokédex Data</p>
-                <div class="pokemon-selected-info-about-pokedex-data-container" id="pokemon-selected-info-about-pokedex-data-container"></div>
-            </div>
-            <div class="pokemon-selected-info-about-breeding-wrapper flex column">
-                <p class="subTitle">Breeding</p>
-                <div class="pokemon-selected-info-about-breeding-container" id="pokemon-selected-info-about-breeding-container"></div>
-            </div>
-        </div>`;
-}
-
-
 function renderPokemonInfoAbout() {
     let descriptionContent = document.getElementById('pokemon-selected-info-about-description');
     descriptionContent.innerHTML = currentPokemon['description'];

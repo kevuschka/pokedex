@@ -107,7 +107,7 @@ function renderPokemonsPage(from, to) {
     if(onFavoritesPage || searching) from = 0;
     if(onFavoritesPage) to  = favPokemons.length <= to ? favPokemons.length : to;
     if(searching) to = searchResults.length <= to ? searchResults.length : to;
-    renderNoPokemonHereIfNecessary(content);
+    renderNoPokemonHereIfNecessary(content, to);
     for (let i = from; i < to; i++) renderPokemonsListContent(i, content);
     if(document.getElementById('header-searchbar-input').value.length == 0) searching = false;
 }
@@ -126,17 +126,6 @@ function templatePokemonList() {
     return `<div class="pokemon-list flex w-100" id="pokemon-list"></div>`;
 }
 
-
-function noPokemonHere(content) {
-    content.innerHTML = `<div class="empty-fav-sign-container w-100 h-100 flex align-center">
-                            <a class="relative "href="./index.html">
-                                <span class="no-pokemon-here">No Pokemon here.</span>
-                                <span class="go-catch-pokemon absolute">Go, catch em all!</span>
-                            </a>
-                        </div>`;
-}
-
-
 // ########## RENDER POKEMON LIST CONTENT ##########
 
 function renderPokemonsListContent(elementNumber, content) {
@@ -152,18 +141,6 @@ function renderPokemonsListContent(elementNumber, content) {
 
 function currentPage() {
     return window.location.pathname;
-}
-
-
-function templatePokemonsListElement(i, pokemon) {
-    return `<div class="pokemon-list-element-container relative cursor-p" id="pokemon-list-element-container-${i}" onclick="renderPokemon(${i});clickOnElement(${i})">
-                <div class="pokemon-list-element flex column">
-                    <div class="pokemon-list-element-id-container flex absolute"><p>#${returnPokemonId(pokemon['id'])}</p></div>
-                    <div class="pokemon-list-element-name-container"><p>${pokemon['name']['en']}</p></div>
-                    <div class="pokemon-list-element-type-container flex" id="pokemon-list-element-type-container-${i}"></div>
-                    <img src="${pokemon['image']}" class="pokemon-list-element-image absolute" id="pokemon-list-element-image-${i}">
-                </div>
-            </div>`;
 }
 
 
@@ -212,22 +189,6 @@ function selectSound() {
 function renderFooter() {
     let content = document.getElementById('footer');
     content.innerHTML = templateFooter();
-}
-
-
-function templateFooter() {
-    return ` <div class="footer-container flex w-100 h-100">
-                <div>
-                    <p>Icons by <a href="https://iconsdb.com" target="_blank">iconsbd.com</a></p>
-                    <p>Design inspired by 
-                        <a href="https://dribbble.com/shots/6545819-Pokedex-App" target="_blank">Saepul Nahwan</a> and 
-                        <a href="https://dribbble.com/shots/11114892-Pok-dex-App" target="_blank">Flavio Farias</a></p>
-                    <p>Pokemon information from the <a href="https://pokeapi.co" target="_blank">Pokeapi</a></p>
-                </div>
-                <div>
-                    <a class="impressum-link" href="./impressum.html">Impressum</a>
-                </div>
-            </div>`;
 }
 
 ///////////////////////////////  H E L P   F U N C T I O N S  ///////////////////////////////
