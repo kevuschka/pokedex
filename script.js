@@ -19,7 +19,10 @@ let savedPokemons = [];
 let lastPageNumber;
 let currentPageNumber = 1;
 
-
+/**
+ * That is the body onload function.
+ * It renders the load-popup, the header, the localstorage, the pokemon list and tghe footer.
+ */
 async function init() {
     if(window.location.pathname.includes('favorites.html')) onFavoritesPage = true;
     await includeHTML();
@@ -38,7 +41,9 @@ async function init() {
 
 
 ///////////////////////////////  L O C A L S T O R A G E  ///////////////////////////////
-
+/**
+ * That function loads the storad data in the localstorage.
+ */
 async function getLocalStorage() {
     darkmode = JSON.parse(localStorage.getItem('darkmode')) || false;
     sound = localStorage.getItem('sound') || true;
@@ -48,7 +53,9 @@ async function getLocalStorage() {
     lastPageNumber = JSON.parse(localStorage.getItem('pokemonsPerPage')) || 32;
 }
 
-
+/**
+ * That function sets and saves some data to the localstorage.
+ */
 function setLocalStorage() {
     localStorage.setItem('darkmode', darkmode);
     localStorage.setItem('sound', sound);
@@ -59,7 +66,10 @@ function setLocalStorage() {
 }
 
 ///////////////////////////////  P O K E M O N   D A T A  ///////////////////////////////
-
+/**
+ * That function fetches and returns the number of all available pokemons from this api.
+ * @returns - The total number of all available pokemons (from this pokeAPI).
+ */
 async function getCount() {
     let url = `https://pokeapi.co/api/v2/pokemon`;
     let response = await fetch(url);
@@ -68,7 +78,10 @@ async function getCount() {
     return count;
 }
 
-
+/**
+ * That function creates (if not allready done) an array with many (amount of all pokemons number) '{}' 
+ * for storing pokemons which had been already rendered and fetched (clicked on).
+ */
 async function createSavedPokemonsArray() {
     let url = `https://pokeapi.co/api/v2/pokemon/?offset=0&limit=${await getCount()}`;
     let response = await fetch(url);
@@ -82,13 +95,21 @@ async function createSavedPokemonsArray() {
     dataLoaded = true;
 } 
 
-
+/**
+ * That function adds the rendered pokemon to the savedPokemons array with its index.
+ * @param {number} i - is the index of that pokemon (from 0 to [total number of pokemons] - 1).
+ * @param {JSON} pokemon - is the current (opened) rendered pokemon with all its data fetched. 
+ */
 function addToSavedPokemons(i, pokemon) {
     savedPokemons[i] = pokemon;
     localStorage.setItem('savedPokemons', JSON.stringify(savedPokemons));
 }
 
-
+/**
+ * That function checks whether that rendered pokemon is allready available in the savedPokemons array.
+ * @param {number} i - is the index of that pokemon (from 0 to [total number of pokemons - 1]).
+ * @returns a boolean: true if the pokemon is available in the savedPokemons array, else it return false.
+ */
 function availableInPokemonsArray(i) {
         if(savedPokemons[i].id > 0) {
             currentPokemon = savedPokemons[i];
@@ -98,7 +119,11 @@ function availableInPokemonsArray(i) {
 }
 
 ///////////////////////////////  R E N D E R   P A G E  ///////////////////////////////
-
+/**
+ * That function renders the page with all its pokemons, including while searching or when on the favorites url.
+ * @param {number} from - is the minimum pokemon index number from which the rest pokemons will be rendered.
+ * @param {number} to - is the number of pokemons that will be rendered and shown on that page.
+ */
 function renderPokemonsPage(from, to) {
     let wrapper = document.getElementById(`pokemon-list-wrapper`);
     wrapper.innerHTML = templatePokemonList();
@@ -112,7 +137,12 @@ function renderPokemonsPage(from, to) {
     if(document.getElementById('header-searchbar-input').value.length == 0) searching = false;
 }
 
-
+/**
+ * That function renders a sign (its also a button) if there are no pokemons to render (invalid search or empty on favorites).
+ * @param {element} content - is the div element where the 'noPokemonHere' sign will be loaded.
+ * @param {number} to - is the number of pokemons that will be rendered and shown on that page.
+ * @returns void - for not executing the next functions in the 'renderPokemonsPage' function.
+ */
 function renderNoPokemonHereIfNecessary(content, to) {
     if(to == 0) {
         noPokemonHere(content);
@@ -127,7 +157,11 @@ function templatePokemonList() {
 }
 
 // ########## RENDER POKEMON LIST CONTENT ##########
-
+/**
+ * That function renders all the pokemons in the pokemon-list element on this page, also depending on searching and on favorites page.
+ * @param {number} elementNumber - is the index of that pokemon in the array 'allPokemonsBasicData'.
+ * @param {element} content - is the current div element, where the pokemon data is rendered to.
+ */
 function renderPokemonsListContent(elementNumber, content) {
     let pokemon;
     if(searching) pokemon = searchResults[elementNumber];
@@ -136,11 +170,6 @@ function renderPokemonsListContent(elementNumber, content) {
     content.innerHTML += templatePokemonsListElement(elementNumber, pokemon);
     renderPokemonTypes(`pokemon-list-element-type-container-${elementNumber}`, pokemon);   
     renderPokemonElementContainerColor(elementNumber);
-}
-
-
-function currentPage() {
-    return window.location.pathname;
 }
 
 
