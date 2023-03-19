@@ -4,7 +4,9 @@ let defense = [
     'rock', 'ghost', 'dragon', 'dark', 'steel', 'fairy'
 ]
 
-
+/**
+ * 
+ */
 function renderPokemonInfoStatsTemplate() {
     let content = document.getElementById('pokemon-selected-info-data-wrapper');
     content.innerHTML = templatePokemonInfoSTATS();

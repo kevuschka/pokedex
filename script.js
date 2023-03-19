@@ -172,7 +172,11 @@ function renderPokemonsListContent(elementNumber, content) {
     renderPokemonElementContainerColor(elementNumber);
 }
 
-
+/**
+ * That function renders the types of that pokemon in the pokemon list.
+ * @param {string} contentId - is the id of a div element where the pokemon type should be rendered in
+ * @param {JSON} pokemon - is the current pokemon from the array 'allPokemonsBasicData'.
+ */
 function renderPokemonTypes(contentId, pokemon) {
     let content = document.getElementById(contentId);
     content.innerHTML = '';
@@ -180,7 +184,10 @@ function renderPokemonTypes(contentId, pokemon) {
         content.innerHTML += `<div class="pokemon-list-element-type flex"><p>${pokemon['types'][j]}</p></div>`;
 }
 
-
+/**
+ * That function colors the pokemon container in the pokemon list, depending from that pokemons background color.
+ * @param {number} i - is the current pokemon index number from the array 'allPokemonsBasicData'.
+ */
 function renderPokemonElementContainerColor(i) {
     let color;
     if(searching) color = searchResults[i]['background_color'];
@@ -189,7 +196,9 @@ function renderPokemonElementContainerColor(i) {
     addClasslist(`pokemon-list-element-container-${i}`, `${color}`);
 }
 
-
+/**
+ * That function renders the background page color (lightmode or darkmode).
+ */
 function renderPageColor() {
     if(darkmode) addClasslist(`wrapper`, 'bg-darkmode');
     else removeClasslist(`wrapper`, 'bg-darkmode');
@@ -197,6 +206,11 @@ function renderPageColor() {
 
 
 // CLICK ON LIST ELEMENT (POKEMON)
+/**
+ * That function is renders a click sound when clicking on a pokemon from the pokemon list und alters the css properties of that element, 
+ * like boxShadow, opacity and cursor.
+ * @param {number} i - is the pokemon index number from the array 'allPokemonsBasicData'.
+ */
 function clickOnElement(i) {
     selectSound();
     document.getElementById(`pokemon-list-element-container-${i}`).style.boxShadow = 'none';
@@ -206,6 +220,9 @@ function clickOnElement(i) {
 
 
 // SOUND 
+/**
+ * That function plays a sound when clicking on a pokemon from the pokemon list (if not muted).
+ */
 function selectSound() {
     select.pause();
     select.currentTime = 0;
@@ -214,24 +231,38 @@ function selectSound() {
 }
 
 ///////////////////////////////  R E N D E R   F O O T E R  ///////////////////////////////
-
+/**
+ * That function renders the footer of that page.
+ */
 function renderFooter() {
     let content = document.getElementById('footer');
     content.innerHTML = templateFooter();
 }
 
 ///////////////////////////////  H E L P   F U N C T I O N S  ///////////////////////////////
-
+/**
+ * That function adds the css class 'classe' to the element with the id 'id'.
+ * @param {string} id - is the id of that element
+ * @param {string} classe - is the css class thats gonna be added to that element with the id 'id'
+ */
 function addClasslist(id, classe) {
     document.getElementById(id).classList.add(classe);
 }
 
-
+/**
+ * That function removes the css class 'classe' from the element with the id 'id'.
+ * @param {string} id - is the id of that element.
+ * @param {string} classe - is the css class thats gonna be removed from that element with the id 'id'.
+ */
 function removeClasslist(id, classe) {
     document.getElementById(id).classList.remove(classe);
 }
 
-
+/**
+ * That function takes a string (name) and returns it formatted: no '-' and first letter is uppercase.
+ * @param {string} name - a string that will be formatted to a prettier style.
+ * @returns a formatted string.
+ */
 function returnNameFormatted(name) {
     let nameArray = name.split('-');
     let betterArray = [];
@@ -245,7 +276,11 @@ function returnNameFormatted(name) {
     return finalName;
 }
 
-
+/**
+ * That function takes a string (name) and returns it formatted: first letter of a word is uppercase.
+ * @param {string} name - a string that will be formatted to a prettier style.
+ * @returns a formatted string.
+ */
 function returnNameformattedMinus(name) {
     let nameArray = name.split('-');
     let betterArray = [];
@@ -259,12 +294,17 @@ function returnNameformattedMinus(name) {
     return finalName;
 }
 
-
+/**
+ * That function prevents an action from execution like from closing a popup when having a 'closePopup' onclick function on the background while clicking on a window in the middle.
+ * @param {*} event - current onclick event (often a closePopup function)
+ */
 function doNotClose(event) {
     event.stopPropagation();
 }
 
-
+/**
+ * That function cleans the values of the pokemonData JSON.
+ */
 function cleanPokemonData() {
     pokemonData = {
         'name': 
