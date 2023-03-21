@@ -9,7 +9,9 @@ let noDamageTo = [];
 let damageFrom = [];
 let damageTo = [];
 
-
+/**
+ * That function cleans all damage arrays for fetching and storing the damage data of a pokemon.
+ */
 function cleanDamageArrays() { 
     damageFrom = [];    
     damageTo = [];   
@@ -21,7 +23,10 @@ function cleanDamageArrays() {
     noDamageTo = [];
 }
 
-
+/**
+ * That function renders the type-damage-values from the pokeapi.
+ * @param {JSON} pokemon - is a JSON data from a specific pokemon, fetched from the pokeapi.
+ */
 async function renderTypeDamageValues(pokemon) {
     for (let i = 0; i < pokemon['types'].length; i++) {
         let url = pokemon['types'][i]['type']['url'];
@@ -33,7 +38,10 @@ async function renderTypeDamageValues(pokemon) {
     checkTypeDamageValues(pokemon['types'].length);
 }
 
-
+/**
+ * That function renders the damage-from (other pokemons) values.
+ * @param {JSON} type - is a JSON type data from a specific pokemon, fetched from the pokeapi.
+ */
 function getTypeDamageFromValues(type) {
     if(type['damage_relations']['double_damage_from'].length > 0) 
         for (let j = 0; j < type['damage_relations']['double_damage_from'].length; j++) 
@@ -46,7 +54,10 @@ function getTypeDamageFromValues(type) {
             noDamageFrom.push([type['damage_relations']['no_damage_from'][j]['name'], 0]);
 }
 
-
+/**
+ * That function renders the damage-to (other pokemons) values.
+ * @param {JSON} type - is a JSON type data from a specific pokemon, fetched from the pokeapi.
+ */
 function getTypeDamageToValues(type) {
     if(type['damage_relations']['double_damage_to'].length > 0) 
         for (let j = 0; j < type['damage_relations']['double_damage_to'].length; j++) 
@@ -59,7 +70,10 @@ function getTypeDamageToValues(type) {
             noDamageTo.push([type['damage_relations']['no_damage_to'][j]['name'], 0]);
 }
 
-
+/**
+ * That function checks the number of types (of a pokemon) and renders if necessary the type-damage-values again.
+ * @param {number} typesNumber - is the length number of types of a specific pokemon.
+ */
 function checkTypeDamageValues(typesNumber) {
     if(typesNumber > 1) {
         renderTypeDamageFromValues();
@@ -68,14 +82,20 @@ function checkTypeDamageValues(typesNumber) {
     renderDamageImages();
 }
 
-
+/**
+ * That function renders the specific type-damage-values for the damage FROM other pokemons:
+ *  double damage, half damage, no damage for damage-from
+ */
 function renderTypeDamageFromValues() {
     renderDoubleDamageFrom();
     renderHalfDamageFrom();
     renderNoDamageFrom();
 }
 
-
+/**
+ * That function renders the specific type-damage-values for the damage TO other pokemons:
+ *  double damage, half damage, no damage for damage-from
+ */
 function renderTypeDamageToValues() {
     renderDoubleDamageTo();
     renderHalfDamageTo();
@@ -83,6 +103,9 @@ function renderTypeDamageToValues() {
 }
 
 ////////////  D A M A G E   F R O M  ////////////
+/**
+ * That function renders the double-damage values for damage from other pokemons.
+ */
 function renderDoubleDamageFrom() {
     if(doubleDamageFrom.length > 0)
         for (let i = 0; i < doubleDamageFrom.length; i++) 
@@ -93,7 +116,9 @@ function renderDoubleDamageFrom() {
                             damageFrom.push(doubleDamageFrom[i]);
 }
 
-
+/**
+ * That function renders the half-damage values for damage from other pokemons.
+ */
 function renderHalfDamageFrom() {
     if(halfDamageFrom.length > 0)
         for (let i = 0; i < halfDamageFrom.length; i++) 
@@ -103,7 +128,9 @@ function renderHalfDamageFrom() {
                         damageFrom.push(halfDamageFrom[i]);
 }
 
-
+/**
+ * That function renders the no-damage values for damage from other pokemons.
+ */
 function renderNoDamageFrom() {
     if(noDamageFrom.length > 0)
         for (let i = 0; i < noDamageFrom.length; i++) 
@@ -113,6 +140,9 @@ function renderNoDamageFrom() {
 
 
 ////////////  D A M A G E   T O  ////////////
+/**
+ * That function renders the double-damage values for damage to other pokemons.
+ */
 function renderDoubleDamageTo() {
     if(doubleDamageTo.length > 0)
         for (let i = 0; i < doubleDamageTo.length; i++) 
@@ -123,7 +153,9 @@ function renderDoubleDamageTo() {
                             damageTo.push(doubleDamageTo[i]);
 }
 
-
+/**
+ * That function renders the double-damage values for damage to other pokemons.
+ */
 function renderHalfDamageTo() {
     if(halfDamageTo.length > 0)
         for (let i = 0; i < halfDamageTo.length; i++) 
@@ -133,7 +165,9 @@ function renderHalfDamageTo() {
                         damageTo.push(halfDamageTo[i]);
 }
 
-
+/**
+ * That function renders the double-damage values for damage to other pokemons.
+ */
 function renderNoDamageTo() {
     if(noDamageTo.length > 0)
         for (let i = 0; i < noDamageTo.length; i++) 
@@ -143,6 +177,13 @@ function renderNoDamageTo() {
 
 
 //GENERAL
+/**
+ * That function checks if a safed damage-value is already rendered and stored or not.
+ * @param {array} array - is the array where the damage-values are fetched and stored into.
+ * @param {number} i - is the index number of a array where the damage-values are fetched and stored into.
+ * @param {array} checkArray - is the final damage array, where all damage-values (depending on damageFrom and damageTo) will be rendered into.
+ * @returns a boolean.
+ */
 function isNotAlreadyAdded(array, i, checkArray) {
     if(checkArray.length > 0)
         for (let j = 0; j < checkArray.length; j++)
@@ -151,7 +192,13 @@ function isNotAlreadyAdded(array, i, checkArray) {
     return true;
 }
 
-
+/**
+ * That function checks if a safed damage-value is already rendered and stored or not, in the array 'array'.
+ * @param {array} array - is the array where the damage-values are fetched and stored into.
+ * @param {number} i - is the index number of a array where the damage-values are fetched and stored into.
+ * @param {array} targetArray - is the final damage array, where all damage-values (depending on damageFrom and damageTo) will be rendered into.
+ * @returns a boolean.
+ */
 function isNotInOwnArray(array, i, targetArray) {
     if(array.length > i+1) 
         for (let j = i+1; j < array.length; j++) 
@@ -163,7 +210,14 @@ function isNotInOwnArray(array, i, targetArray) {
     return true;
 }
 
-
+/**
+ * That function checks if a safed damage-value-name from 'currentArray' is also rendered and stored in the 'targetArray'.
+ * @param {*} currentArray - is the array where the damage-values are fetched and stored into.
+ * @param {*} currentIndex - is the index number of a array where the damage-values are fetched and stored into.
+ * @param {*} targetArray - is the array where to check for similar type-damage names
+ * @param {*} resultArray - is the final damage array, where all damage-values (depending on damageFrom and damageTo) will be rendered into.
+ * @returns - a boolean.
+ */
 function isNotInThatArray(currentArray, currentIndex, targetArray, resultArray) {
     if(targetArray.length > 0)
         for (let j = 0; j < targetArray.length; j++) 
@@ -174,13 +228,17 @@ function isNotInThatArray(currentArray, currentIndex, targetArray, resultArray) 
     return true;
 }
 
-
+/**
+ * Taht function copies all damage values to the final damage arrays, depending on damageFrom and damageTo.
+ */
 function  copyDamageValues() {
     copyDamageValuesFrom();
     copyDamageValuesTo();
 }
 
-
+/**
+ * Taht function copies all type-damage-from (double, half, no) values to the final damage array damageFrom.
+ */
 function copyDamageValuesFrom() {
     if(doubleDamageFrom.length > 0)
         for (let i = 0; i < doubleDamageFrom.length; i++) 
@@ -193,7 +251,9 @@ function copyDamageValuesFrom() {
             damageFrom.push(noDamageFrom[i]);
 }
 
-
+/**
+ * Taht function copies all type-damage-to (double, half, no) values to the final damage array damageTo.
+ */
 function copyDamageValuesTo() {
     if(doubleDamageTo.length > 0)
         for (let i = 0; i < doubleDamageTo.length; i++) 
@@ -206,7 +266,9 @@ function copyDamageValuesTo() {
             damageTo.push(noDamageTo[i]);
 }
 
-
+/**
+ * That function renders the type-damage images.
+ */
 function renderDamageImages() {
     for (let i = 0; i < damageTo.length; i++) 
         damageTo[i].push(`assets/img/${damageTo[i][0]}.png`);
